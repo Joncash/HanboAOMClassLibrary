@@ -56,7 +56,7 @@
       <Project>{11ee3837-fcab-4492-b7c8-333429ea6d1c}</Project>
       <Name>Hanbo.Image.Grab</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PD3_Ethernet_LightControl\LightControl\LightControl.csproj">
+    <ProjectReference Include="..\LightControl\LightControl.csproj">
       <Project>{e21f80eb-cb40-469e-b1f0-0494ac4b40e9}</Project>
       <Name>LightControl</Name>
     </ProjectReference>

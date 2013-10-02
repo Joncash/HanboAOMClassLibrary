@@ -125,7 +125,7 @@
       <Project>{af11882b-41bd-423f-be54-262554ecc943}</Project>
       <Name>Hanbo.System.SingleInstance</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LightControl\LightControl.csproj">
+    <ProjectReference Include="..\..\LightControl\LightControl.csproj">
       <Project>{e21f80eb-cb40-469e-b1f0-0494ac4b40e9}</Project>
       <Name>LightControl</Name>
     </ProjectReference>

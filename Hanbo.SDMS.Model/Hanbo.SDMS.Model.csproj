@@ -93,7 +93,7 @@
       <Project>{374acc46-4c98-4de9-8ed8-fbfeb769f1f2}</Project>
       <Name>Hanbo.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PD3_Ethernet_LightControl\LightControl\LightControl.csproj">
+    <ProjectReference Include="..\LightControl\LightControl.csproj">
       <Project>{e21f80eb-cb40-469e-b1f0-0494ac4b40e9}</Project>
       <Name>LightControl</Name>
     </ProjectReference>
