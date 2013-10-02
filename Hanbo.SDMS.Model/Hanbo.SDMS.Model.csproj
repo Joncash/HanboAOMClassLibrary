@@ -97,7 +97,7 @@
       <Project>{e21f80eb-cb40-469e-b1f0-0494ac4b40e9}</Project>
       <Name>LightControl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PD3_Ethernet_LightControl\PD3_Ethernet_LightControl\PD3_Ethernet_LightControl.csproj">
+    <ProjectReference Include="..\PD3_Ethernet_LightControl\PD3_Ethernet_LightControl.csproj">
       <Project>{6c4fded4-cdb4-444f-8798-1d5d223636ab}</Project>
       <Name>PD3_Ethernet_LightControl</Name>
     </ProjectReference>
