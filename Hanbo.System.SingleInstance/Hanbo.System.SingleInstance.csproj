@@ -52,7 +52,7 @@
       <Project>{d3f62b01-465c-4ff3-9ae7-5e4eb14f2aac}</Project>
       <Name>Hanbo.Configuration.Settings</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Hanbo.Image.Grab\Hanbo.Image.Grab\Hanbo.Image.Grab.csproj">
+    <ProjectReference Include="..\Hanbo.Image.Grab\Hanbo.Image.Grab.csproj">
       <Project>{11ee3837-fcab-4492-b7c8-333429ea6d1c}</Project>
       <Name>Hanbo.Image.Grab</Name>
     </ProjectReference>
