@@ -11,7 +11,7 @@ namespace ViewROI
 	{
 		None = 0, Point = 1, Line = 2, Circle = 4, Distance = 8,
 		PointCircle = 16, Angle = 32, SymmetryLine = 64,
-		CrossPoint = 128, DistanceX = 256, DistanceY = 512,
+		CrossPoint = 128, DistanceX = 256, DistanceY = 512, FitLine = 1024
 	};
 
 	/// <summary>

@@ -90,6 +90,9 @@ namespace MeasureModule
 				case MeasureType.Line:
 					mROIType = ROI.ROI_TYPE_LINE;
 					break;
+				case MeasureType.FitLine:
+					mROIType = ROI.ROI_TYPE_LINE;
+					break;
 				case MeasureType.Circle:
 					mROIType = ROI.ROI_TYPE_CIRCLE;
 					break;
@@ -146,8 +149,10 @@ namespace MeasureModule
 						mMeasROI = GenSurCircle2(mROICoord, mMeasAssist.mRoiWidth);
 
 						break;
+
 					case ROI.ROI_TYPE_LINE:
 					case ROI.ROI_TYPE_POINT:
+
 
 						mMeasROI = GenSurRect2(mROICoord, mROICoord[4]);
 						mHandle = new HMeasure(mMeasROI[0].D, mMeasROI[1].D,
@@ -483,7 +488,6 @@ namespace MeasureModule
 						distance[i].D = length;
 						contour.Dispose();
 					}
-
 				}
 				else if (mROIType == ROI.ROI_TYPE_LINE)
 				{

@@ -92,6 +92,7 @@
     <Compile Include="MeasurementDistanceX.cs" />
     <Compile Include="MeasurementDistanceY.cs" />
     <Compile Include="MeasurementEdge.cs" />
+    <Compile Include="MeasurementFitLine.cs" />
     <Compile Include="MeasurementPair.cs" />
     <Compile Include="MeasurementResult.cs" />
     <Compile Include="MeasurementSymmetryLine.cs" />

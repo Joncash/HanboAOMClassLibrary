@@ -645,14 +645,28 @@ namespace MeasureModule
 		/// <returns>New measure object</returns>
 		public static Measurement CreateMeasure(ROI roi, MeasureAssistant parent)
 		{
-			if (parent.mSelPair)
-				return new MeasurementPair(roi, parent);
-			else if (roi.ROIMeasureType == MeasureType.Circle)
+			Measurement mMeasurement = null;
+			switch (roi.ROIMeasureType)
 			{
-				return new MeasurementCircle(roi, parent);
+				case MeasureType.Circle:
+					mMeasurement = new MeasurementCircle(roi, parent);
+					break;
+				case MeasureType.FitLine:
+					mMeasurement = new MeasurementFitLine(roi, parent);
+					break;
+				default:
+					mMeasurement = new MeasurementEdge(roi, parent);
+					break;
 			}
-			else
-				return new MeasurementEdge(roi, parent);
+			//if (parent.mSelPair)
+			//	return new MeasurementPair(roi, parent);
+			//else if (roi.ROIMeasureType == MeasureType.Circle)
+			//{
+			//	return new MeasurementCircle(roi, parent);
+			//}
+			//else
+			//	return new MeasurementEdge(roi, parent);
+			return mMeasurement;
 		}
 
 		/// <summary>
