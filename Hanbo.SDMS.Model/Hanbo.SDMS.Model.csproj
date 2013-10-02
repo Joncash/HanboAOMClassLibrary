@@ -89,7 +89,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hanbo.Models\Hanbo.Models\Hanbo.Models.csproj">
+    <ProjectReference Include="..\Hanbo.Models\Hanbo.Models.csproj">
       <Project>{374acc46-4c98-4de9-8ed8-fbfeb769f1f2}</Project>
       <Name>Hanbo.Models</Name>
     </ProjectReference>

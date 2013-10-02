@@ -76,7 +76,7 @@
       <Project>{c4f5c5de-7ea8-47fe-8218-48138f48965f}</Project>
       <Name>ViewROI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Hanbo.Models\Hanbo.Models\Hanbo.Models.csproj">
+    <ProjectReference Include="..\Hanbo.Models\Hanbo.Models.csproj">
       <Project>{374acc46-4c98-4de9-8ed8-fbfeb769f1f2}</Project>
       <Name>Hanbo.Models</Name>
     </ProjectReference>

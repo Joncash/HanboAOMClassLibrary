@@ -71,7 +71,7 @@
       <Project>{a5b3b77c-7f30-4109-8ef6-8ce30dd1317e}</Project>
       <Name>MeasureModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Hanbo.Models\Hanbo.Models\Hanbo.Models.csproj">
+    <ProjectReference Include="..\Hanbo.Models\Hanbo.Models.csproj">
       <Project>{374acc46-4c98-4de9-8ed8-fbfeb769f1f2}</Project>
       <Name>Hanbo.Models</Name>
     </ProjectReference>
