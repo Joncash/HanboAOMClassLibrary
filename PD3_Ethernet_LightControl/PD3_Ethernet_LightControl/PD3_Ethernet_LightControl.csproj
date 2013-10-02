@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6C4FDED4-CDB4-444F-8798-1D5D223636AB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PD3_Ethernet_LightControl</RootNamespace>
+    <AssemblyName>PD3_Ethernet_LightControl</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AsyncConnectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AsyncConnectionForm.Designer.cs">
+      <DependentUpon>AsyncConnectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CCSLightControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CCSLightControlForm.Designer.cs">
+      <DependentUpon>CCSLightControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LightChannel.cs" />
+    <Compile Include="LightControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LightControlForm.Designer.cs">
+      <DependentUpon>LightControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DemoForm.Designer.cs">
+      <DependentUpon>DemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProbeConnectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProbeConnectionForm.Designer.cs">
+      <DependentUpon>ProbeConnectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AsyncConnectionForm.resx">
+      <DependentUpon>AsyncConnectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CCSLightControlForm.resx">
+      <DependentUpon>CCSLightControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LightControlForm.resx">
+      <DependentUpon>LightControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DemoForm.resx">
+      <DependentUpon>DemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProbeConnectionForm.resx">
+      <DependentUpon>ProbeConnectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Hanbo.Helper\Hanbo.Helper.csproj">
+      <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
+      <Name>Hanbo.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hanbo.System.SingleInstance\Hanbo.System.SingleInstance.csproj">
+      <Project>{af11882b-41bd-423f-be54-262554ecc943}</Project>
+      <Name>Hanbo.System.SingleInstance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LightControl\LightControl.csproj">
+      <Project>{e21f80eb-cb40-469e-b1f0-0494ac4b40e9}</Project>
+      <Name>LightControl</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\power_On_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\power_Off_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\power_Off.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

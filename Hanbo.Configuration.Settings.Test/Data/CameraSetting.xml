@@ -1,0 +1,18 @@
+<CameraSetting>
+	<Name>GigEVision</Name>
+	<HorizontalResolution>0</HorizontalResolution>
+	<VerticalResolution>0</VerticalResolution>
+	<ImageWidth>0</ImageWidth>
+	<ImageHeight>0</ImageHeight>
+	<StartRow>0</StartRow>
+	<StartColumn>0</StartColumn>
+	<Field>progressive</Field>
+	<BitsPerChannel>-1</BitsPerChannel>
+	<ColorSpace></ColorSpace>
+	<Generic></Generic>
+	<ExternalTrigger></ExternalTrigger>
+	<CameraType></CameraType>
+	<Device></Device>
+	<Port></Port>
+	<LineIn></LineIn>
+</CameraSetting>

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A8E93382-C038-4921-9D70-ACDFE2F23AB5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SDMSRepoTest</RootNamespace>
+    <AssemblyName>SDMSRepoTest</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="halcondotnet">
+      <HintPath>C:\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\AOM_SDMS\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\AOM_SDMS\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SDMSRepoTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Data\importMacroPlan.data">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MatchingModule\MatchingModule\MatchingModule.csproj">
+      <Project>{8a6b99f7-82ef-4bd2-bfd3-2e2a7bc225e3}</Project>
+      <Name>MatchingModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MeasureModule\MeasureModule.csproj">
+      <Project>{a5b3b77c-7f30-4109-8ef6-8ce30dd1317e}</Project>
+      <Name>MeasureModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Models\Hanbo.Models\Hanbo.Models.csproj">
+      <Project>{374acc46-4c98-4de9-8ed8-fbfeb769f1f2}</Project>
+      <Name>Hanbo.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PD3_Ethernet_LightControl\LightControl\LightControl.csproj">
+      <Project>{e21f80eb-cb40-469e-b1f0-0494ac4b40e9}</Project>
+      <Name>LightControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PD3_Ethernet_LightControl\PD3_Ethernet_LightControl\PD3_Ethernet_LightControl.csproj">
+      <Project>{6c4fded4-cdb4-444f-8798-1d5d223636ab}</Project>
+      <Name>PD3_Ethernet_LightControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Helper\Hanbo.Helper.csproj">
+      <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
+      <Name>Hanbo.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.SDMS.Model\Hanbo.SDMS.Model.csproj">
+      <Project>{b475d500-2f9e-42d2-8e5c-3f3cf15af7fe}</Project>
+      <Name>Hanbo.SDMS.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

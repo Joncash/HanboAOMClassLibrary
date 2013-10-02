@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CameraSetting>
+  <Name>GigEVision</Name>
+  <HorizontalResolution>0</HorizontalResolution>
+  <VerticalResolution>0</VerticalResolution>
+  <ImageWidth>0</ImageWidth>
+  <ImageHeight>0</ImageHeight>
+  <StartRow>0</StartRow>
+  <StartColumn>0</StartColumn>
+  <Field>progressive</Field>
+  <BitsPerChannel>-1</BitsPerChannel>
+  <ColorSpace>default</ColorSpace>
+  <Generic>GtlForceIP=00305313b6ec,169.254.0.82/16</Generic>
+  <ExternalTrigger>false</ExternalTrigger>
+  <CameraType>default</CameraType>
+  <Device>GigEVision</Device>
+  <Port>0</Port>
+  <LineIn>-1</LineIn>
+</CameraSetting>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SystemDevice>
+	<Device Name="影像裝置" Description="CCD 影像裝置">
+		<Check StaticClassName="DeviceChecker" InvokeMethod="CCDCheck" Params=""></Check>
+	</Device>
+	<Device Name="資料庫" Description="SQL Server Express 2012">
+		<Check StaticClassName="DeviceChecker" InvokeMethod="DBCheck" Params=""></Check>
+	</Device>
+	<Device Name="光源控制器" Description="光源控制裝置">
+		<Check StaticClassName="DeviceChecker" InvokeMethod="LightControlCheck" Params=""></Check>
+	</Device>
+</SystemDevice>

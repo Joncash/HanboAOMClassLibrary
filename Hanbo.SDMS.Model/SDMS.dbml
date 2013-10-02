@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="AOM_SDMS" Class="SDMSDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=johnnb\sqlexpress;Initial Catalog=AOM_SDMS;User ID=hanbo_user" SettingsObjectName="Hanbo.SDMS.Model.Properties.Settings" SettingsPropertyName="AOM_SDMSConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.ActionLog" Member="ActionLog">
+    <Type Name="ActionLog">
+      <Column Name="SN" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ActionType" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="ActionData" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="UserID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="CreateOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Note" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Code_Function" Member="Code_Function">
+    <Type Name="Code_Function">
+      <Column Name="SN" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Code" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="FunctionDescription" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Association Name="Code_Function_UserAuthorizedFunction" Member="UserAuthorizedFunction" ThisKey="SN" OtherKey="FunctionSN" Type="UserAuthorizedFunction" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserMember" Member="UserMember">
+    <Type Name="UserMember">
+      <Column Name="UserID" Type="System.String" DbType="NVarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DeptName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CreateOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ModifiedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreateBy" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="ModifiedBy" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Salt" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Disabled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="UserMember_UserAuthorizedFunction" Member="UserAuthorizedFunction" ThisKey="UserID" OtherKey="UserID" Type="UserAuthorizedFunction" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserAuthorizedFunction" Member="UserAuthorizedFunction">
+    <Type Name="UserAuthorizedFunction">
+      <Column Name="SN" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="FunctionSN" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Authorized" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Code_Function_UserAuthorizedFunction" Member="Code_Function" ThisKey="FunctionSN" OtherKey="SN" Type="Code_Function" IsForeignKey="true" />
+      <Association Name="UserMember_UserAuthorizedFunction" Member="UserMember" ThisKey="UserID" OtherKey="UserID" Type="UserMember" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MacroPlan" Member="MacroPlan">
+    <Type Name="MacroPlan">
+      <Column Name="SN" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MacroName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="MacroGuid" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Note" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ShapeModelFilepath" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="TrainingImageFilepath" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="TrainingImage" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="MatchingParamBinaryData" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="MeasureBinaryData" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="MeasureAssistantBinaryData" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="ModelRow" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="ModelCol" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="ModelAngle" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="ExportUnit" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="UpperLightValue" Type="System.String" DbType="NVarChar(3)" CanBeNull="true" />
+      <Column Name="BottomLigthValue" Type="System.String" DbType="NVarChar(3)" CanBeNull="true" />
+      <Column Name="UpperLightSwitch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="BottomLightSiwtch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="CreateBy" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="ModifiedBy" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CreateOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ModifiedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

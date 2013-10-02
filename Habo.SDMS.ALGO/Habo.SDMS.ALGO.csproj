@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1921EE9A-9C60-4F82-8CE3-DBDD2DFCC4FD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Habo.SDMS.ALGO</RootNamespace>
+    <AssemblyName>Habo.SDMS.ALGO</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="halcondotnet">
+      <HintPath>C:\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MSD\FirstFingerMidLine_New.cs" />
+    <Compile Include="MSD\FirstFingerMidLine.cs" />
+    <Compile Include="MSD\LastFingerMidLine.cs" />
+    <Compile Include="MSD\LastFingerMidLine_New.cs" />
+    <Compile Include="MSD\SDMS_A.cs" />
+    <Compile Include="MSD\SDMS_A1.cs" />
+    <Compile Include="MSD\SDMS_A2.cs" />
+    <Compile Include="MSD\SDMS_A2Plus.cs" />
+    <Compile Include="MSD\SDMS_A3.cs" />
+    <Compile Include="MSD\SDMS_A3New.cs" />
+    <Compile Include="MSD\SDMS_A4.cs" />
+    <Compile Include="MSD\SDMS_A5.cs" />
+    <Compile Include="MSD\SDMS_A8.cs" />
+    <Compile Include="MSD\SDMS_Alpha.cs" />
+    <Compile Include="MSD\SDMS_B.cs" />
+    <Compile Include="MSD\SDMS_B1.cs" />
+    <Compile Include="MSD\SDMS_B10.cs" />
+    <Compile Include="MSD\SDMS_B11.cs" />
+    <Compile Include="MSD\SDMS_B1Plus.cs" />
+    <Compile Include="MSD\SDMS_B7.cs" />
+    <Compile Include="MSD\SDMS_B8.cs" />
+    <Compile Include="MSD\SDMS_CL.cs" />
+    <Compile Include="MSD\SDMS_R1.cs" />
+    <Compile Include="MSD\SDMS_R17.cs" />
+    <Compile Include="MSD\SDMS_R18.cs" />
+    <Compile Include="MSD\SDMS_R19.cs" />
+    <Compile Include="MSD\SDMS_R2.cs" />
+    <Compile Include="MSD\SDMS_R3.cs" />
+    <Compile Include="MSD\SDMS_R4.cs" />
+    <Compile Include="MSD\SDMS_R5.cs" />
+    <Compile Include="MSD\SDMS_R6.cs" />
+    <Compile Include="MSD\SecondFingerMidLine.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Obsolete\SDMS_A.cs" />
+    <Compile Include="Obsolete\SDMS_A1.cs" />
+    <Compile Include="Obsolete\SDMS_A2.cs" />
+    <Compile Include="Obsolete\SDMS_A3.cs" />
+    <Compile Include="Obsolete\SDMS_A4.cs" />
+    <Compile Include="Obsolete\SDMS_A5.cs" />
+    <Compile Include="Obsolete\SDMS_A8.cs" />
+    <Compile Include="Obsolete\SDMS_B.cs" />
+    <Compile Include="Obsolete\SDMS_B1.cs" />
+    <Compile Include="Obsolete\SDMS_B10.cs" />
+    <Compile Include="Obsolete\SDMS_B7.cs" />
+    <Compile Include="Obsolete\SDMS_B8.cs" />
+    <Compile Include="Obsolete\SDMS_R1.cs" />
+    <Compile Include="Obsolete\SDMS_R17.cs" />
+    <Compile Include="Obsolete\SDMS_R18.cs" />
+    <Compile Include="Obsolete\SDMS_R19.cs" />
+    <Compile Include="Obsolete\SDMS_R2.cs" />
+    <Compile Include="Obsolete\SDMS_R3.cs" />
+    <Compile Include="Obsolete\SDMS_R4.cs" />
+    <Compile Include="Obsolete\SDMS_R5.cs" />
+    <Compile Include="Obsolete\SDMS_R6.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Interface\Hanbo.Interface.csproj">
+      <Project>{7a2754fe-0bf8-4e53-a2b1-06f23132cf24}</Project>
+      <Name>Hanbo.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MeasureModule\MeasureModule.csproj">
+      <Project>{a5b3b77c-7f30-4109-8ef6-8ce30dd1317e}</Project>
+      <Name>MeasureModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewROI\ViewROI.csproj">
+      <Project>{c4f5c5de-7ea8-47fe-8218-48138f48965f}</Project>
+      <Name>ViewROI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Helper\Hanbo.Helper.csproj">
+      <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
+      <Name>Hanbo.Helper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
