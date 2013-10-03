@@ -33,14 +33,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="halcondotnet">
-      <HintPath>..\..\References\halcondotnet.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
-      <HintPath>..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
+      <HintPath>..\..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PylonC.NET, Version=3.0.0.2900, Culture=neutral, PublicKeyToken=a77e8471c5919d5a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Basler\pylon 3.0\pylonc.net\bin\PylonC.NET.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files\Basler\pylon 2.3\pylonc.net\bin\PylonC.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

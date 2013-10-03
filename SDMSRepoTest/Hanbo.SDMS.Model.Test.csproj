@@ -45,10 +45,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="xunit">
-      <HintPath>..\..\AOM_SDMS\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+      <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
     </Reference>
     <Reference Include="xunit.extensions">
-      <HintPath>..\..\AOM_SDMS\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
+      <HintPath>..\..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -63,14 +63,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MatchingModule\MatchingModule.csproj">
-      <Project>{8a6b99f7-82ef-4bd2-bfd3-2e2a7bc225e3}</Project>
-      <Name>MatchingModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MeasureModule\MeasureModule.csproj">
-      <Project>{a5b3b77c-7f30-4109-8ef6-8ce30dd1317e}</Project>
-      <Name>MeasureModule</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Models\Hanbo.Models.csproj">
       <Project>{374acc46-4c98-4de9-8ed8-fbfeb769f1f2}</Project>
       <Name>Hanbo.Models</Name>
@@ -79,9 +71,13 @@
       <Project>{e21f80eb-cb40-469e-b1f0-0494ac4b40e9}</Project>
       <Name>LightControl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PD3_Ethernet_LightControl\PD3_Ethernet_LightControl.csproj">
-      <Project>{6c4fded4-cdb4-444f-8798-1d5d223636ab}</Project>
-      <Name>PD3_Ethernet_LightControl</Name>
+    <ProjectReference Include="..\MatchingModule\MatchingModule.csproj">
+      <Project>{8a6b99f7-82ef-4bd2-bfd3-2e2a7bc225e3}</Project>
+      <Name>MatchingModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MeasureModule\MeasureModule.csproj">
+      <Project>{a5b3b77c-7f30-4109-8ef6-8ce30dd1317e}</Project>
+      <Name>MeasureModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hanbo.Helper\Hanbo.Helper.csproj">
       <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
@@ -90,6 +86,10 @@
     <ProjectReference Include="..\Hanbo.SDMS.Model\Hanbo.SDMS.Model.csproj">
       <Project>{b475d500-2f9e-42d2-8e5c-3f3cf15af7fe}</Project>
       <Name>Hanbo.SDMS.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PD3_Ethernet_LightControl\PD3_Ethernet_LightControl.csproj">
+      <Project>{6c4fded4-cdb4-444f-8798-1d5d223636ab}</Project>
+      <Name>PD3_Ethernet_LightControl</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

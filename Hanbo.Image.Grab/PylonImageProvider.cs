@@ -426,7 +426,7 @@ namespace Hanbo.Image.Grab
 		public void Dispose()
 		{
 			/* ... Shut down the pylon runtime system. Don't call any pylon method after 
-                   calling Pylon.Terminate(). */
+				   calling Pylon.Terminate(). */
 			Pylon.Terminate();
 		}
 	}
