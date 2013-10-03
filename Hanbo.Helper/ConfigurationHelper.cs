@@ -218,5 +218,38 @@ namespace Hanbo.Helper
 			}
 			return heartbeat;
 		}
+
+		public static bool GetMacroListPlugin()
+		{
+			var doPlugin = ConfigurationManager.AppSettings["MacroListPlugin"];
+			bool hasPlugin;
+			if (!Boolean.TryParse(doPlugin, out hasPlugin))
+			{
+				hasPlugin = false;
+			}
+			return hasPlugin;
+		}
+
+		public static HalconDotNet.HTuple GetGlobalShapeFinderMinScore()
+		{
+			var score = ConfigurationManager.AppSettings["GlobalShapeFinderScore"];
+			double val;
+			if (!Double.TryParse(score, out val))
+			{
+				val = 0.5;
+			}
+			return new HalconDotNet.HTuple(val);
+		}
+
+		public static bool GetDoFitLineAlgo()
+		{
+			var doFitLineAlgo = ConfigurationManager.AppSettings["DoFitLineAlgo"];
+			bool hasPlugin;
+			if (!Boolean.TryParse(doFitLineAlgo, out hasPlugin))
+			{
+				hasPlugin = false;
+			}
+			return hasPlugin;
+		}
 	}
 }

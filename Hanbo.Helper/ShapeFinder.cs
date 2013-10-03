@@ -37,7 +37,7 @@ namespace Hanbo.Helper
 
 		public ShapeFinder()
 		{
-
+			_minScore = ConfigurationHelper.GetGlobalShapeFinderMinScore();
 		}
 		/// <summary>
 		/// 設定 Finder 參數
