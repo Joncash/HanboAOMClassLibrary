@@ -9,8 +9,8 @@ namespace MeasureModule
 {
 	public class MeasurementFitLine : Measurement
 	{
-		private LineResult mResult;
-		private LineResult mResultWorld;
+		private FitLineResult mResult;
+		private FitLineResult mResultWorld;
 
 		#region Edge sub pixel 演算法參數
 		/*
@@ -60,7 +60,7 @@ namespace MeasureModule
 		public MeasurementFitLine(ROI roi, MeasureAssistant mAssist)
 			: base(roi, mAssist)
 		{
-			mResult = new LineResult();
+			mResult = new FitLineResult();
 			UpdateMeasure();
 		}
 		/// <summary>
@@ -113,15 +113,14 @@ namespace MeasureModule
 				{
 					preDistance = new HTuple(distance);
 					//Answer
-					mResult = new LineResult()
+					mResult = new FitLineResult()
 					{
 						Row1 = new HTuple(rowBegin),
 						Col1 = new HTuple(colBegin),
 						Row2 = new HTuple(rowEnd),
 						Col2 = new HTuple(colEnd),
-						Distance = new HTuple(distance),
 					};
-					mResultWorld = new LineResult(mResult);
+					mResultWorld = new FitLineResult(mResult);
 				}
 			}
 			UpdateXLD();
@@ -148,7 +147,7 @@ namespace MeasureModule
 
 		public override void ClearResultData()
 		{
-			mResultWorld = new LineResult();
+			mResultWorld = new FitLineResult();
 		}
 
 		public override MeasureViewModel GetViewModel()
@@ -162,7 +161,6 @@ namespace MeasureModule
 					Col1 = mResult.Col1,
 					Row2 = mResult.Row2,
 					Col2 = mResult.Col2,
-					Distance = mResult.Distance,
 				};
 			}
 			return viewMoel;

@@ -83,6 +83,7 @@
     <Compile Include="CircleResult.cs" />
     <Compile Include="DistanceHelper.cs" />
     <Compile Include="DistanceResult.cs" />
+    <Compile Include="FitLineResult.cs" />
     <Compile Include="IMeasureGeoModel.cs" />
     <Compile Include="LineResult.cs" />
     <Compile Include="MeasureAssistant.cs" />
@@ -107,6 +108,10 @@
     <Compile Include="ViewModel\GeoDataGridViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Helper\Hanbo.Helper.csproj">
+      <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
+      <Name>Hanbo.Helper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ViewROI\ViewROI.csproj">
       <Project>{c4f5c5de-7ea8-47fe-8218-48138f48965f}</Project>
       <Name>ViewROI</Name>
