@@ -581,6 +581,7 @@ namespace Hanbo.WindowControlWrapper
 		private void DataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
 			//顯示幾何量測圖形
+			if (e.RowIndex < 0) return;
 			GeoDataGridViewModel geoModel = _DataList[e.RowIndex];
 			HObject displayObject = displayObject = DistanceHelper.GenContour(geoModel);
 			var isShow = (displayObject != null) ? true : false;
