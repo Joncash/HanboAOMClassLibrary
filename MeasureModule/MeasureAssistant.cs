@@ -2,6 +2,7 @@ using System;
 using HalconDotNet;
 using System.Collections;
 using ViewROI;
+using Hanbo.Helper;
 
 
 
@@ -160,6 +161,8 @@ namespace MeasureModule
 
 		public MeasureDelegate NotifyMeasureObserver;
 
+
+		private static bool _doFitLineAlgo = ConfigurationHelper.GetDoFitLineAlgo();
 
 		/* To create the measure controller class the ROI 
 		   controller has to be provided for initialization */
@@ -651,8 +654,14 @@ namespace MeasureModule
 				case MeasureType.Circle:
 					mMeasurement = new MeasurementCircle(roi, parent);
 					break;
-				case MeasureType.FitLine:
-					mMeasurement = new MeasurementFitLine(roi, parent);
+				case MeasureType.Line:
+					if (_doFitLineAlgo)
+						mMeasurement = new MeasurementFitLine(roi, parent);
+					else
+						mMeasurement = new MeasurementEdge(roi, parent);
+					break;
+				case MeasureType.Point:
+					mMeasurement = new MeasurementEdge(roi, parent);
 					break;
 				default:
 					mMeasurement = new MeasurementEdge(roi, parent);
