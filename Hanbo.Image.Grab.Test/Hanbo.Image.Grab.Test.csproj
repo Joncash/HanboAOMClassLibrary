@@ -34,15 +34,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions">
-      <HintPath>..\Hanbo.Image.Grab\packages\FluentAssertions.2.1.0.0\lib\net40\FluentAssertions.dll</HintPath>
+      <HintPath>..\..\packages\FluentAssertions.2.1.0.0\lib\net40\FluentAssertions.dll</HintPath>
     </Reference>
     <Reference Include="halcondotnet, Version=10.0.0.0, Culture=neutral, PublicKeyToken=4973bed59ddbf2b8, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\halcondotnet.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
     <Reference Include="PylonC.NET, Version=3.2.3.3215, Culture=neutral, PublicKeyToken=a77e8471c5919d5a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Basler\pylon 3.2\pylonc.net\bin\PylonC.NET.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files\Basler\pylon 2.3\pylonc.net\bin\PylonC.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -53,10 +53,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="xunit">
-      <HintPath>..\Console.GrabImage\packages\xunit.1.9.1\lib\net20\xunit.dll</HintPath>
+      <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
     </Reference>
     <Reference Include="xunit.extensions">
-      <HintPath>..\Console.GrabImage\packages\xunit.extensions.1.9.1\lib\net20\xunit.extensions.dll</HintPath>
+      <HintPath>..\..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -66,15 +66,15 @@
     <Compile Include="PylonImageProviderTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Hanbo.Configuration.Settings\Hanbo.Configuration.Settings.csproj">
+    <ProjectReference Include="..\Hanbo.Configuration.Settings\Hanbo.Configuration.Settings.csproj">
       <Project>{d3f62b01-465c-4ff3-9ae7-5e4eb14f2aac}</Project>
       <Name>Hanbo.Configuration.Settings</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Hanbo.Extensions\Hanbo.Extensions.csproj">
+    <ProjectReference Include="..\Hanbo.Extensions\Hanbo.Extensions.csproj">
       <Project>{8ef04c32-1282-4008-a062-e34ba0750459}</Project>
       <Name>Hanbo.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Hanbo.Image.Grab\Hanbo.Image.Grab\Hanbo.Image.Grab.csproj">
+    <ProjectReference Include="..\Hanbo.Image.Grab\Hanbo.Image.Grab.csproj">
       <Project>{11ee3837-fcab-4492-b7c8-333429ea6d1c}</Project>
       <Name>Hanbo.Image.Grab</Name>
     </ProjectReference>
