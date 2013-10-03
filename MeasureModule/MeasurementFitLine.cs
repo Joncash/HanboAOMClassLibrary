@@ -131,6 +131,7 @@ namespace MeasureModule
 		/// </summary>
 		public override void UpdateXLD()
 		{
+			if (mResult.Row1 == null) return;
 			mEdgeXLD.Dispose();
 			mEdgeXLD.GenEmptyObj();
 			HXLDCont edge = new HXLDCont();
