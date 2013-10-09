@@ -100,6 +100,7 @@ namespace PD3_Ethernet_LightControl
 			if (_isConnected)
 			{
 				this.ResetButton.Image = global::PD3_Ethernet_LightControl.Properties.Resources.power_On_48;
+				ControlPanel.Enabled = true;
 				StatusLabel.Text = "狀態: 已連線";
 
 				//binding Event
@@ -113,8 +114,7 @@ namespace PD3_Ethernet_LightControl
 				numericUpDown3.ValueChanged += new EventHandler(intensityChanged);
 
 				//init panel value
-				_lightControlManager.GetChannelStatusAsync(new string[] { "00", "01", "02" });
-				ControlPanel.Enabled = true;
+				_lightControlManager.GetChannelStatusAsync(new string[] { "00", "01", "02" });				
 				_lightControlManager.On_ProbeConnectionWorked += _lightControlManager_On_ProbeConnectionWorked;
 				//_lightControlManager.StartProbeConnetion(null);
 			}

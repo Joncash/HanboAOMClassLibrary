@@ -320,8 +320,16 @@ namespace LightControl
 				}
 				else
 				{
-					var pingStatus = _ping.Send(ControllerIPAddress.ToString(), _pingTimeout).Status;
-					_hardwareConnectionStatus = (pingStatus == System.Net.NetworkInformation.IPStatus.Success);
+					try
+					{
+						var pingStatus = _ping.Send(ControllerIPAddress.ToString(), _pingTimeout).Status;
+						_hardwareConnectionStatus = (pingStatus == System.Net.NetworkInformation.IPStatus.Success);
+					}
+					catch (System.Net.NetworkInformation.PingException ex)
+					{
+						_hardwareConnectionStatus = false;
+						_ExceptionMessage = ex.Message;
+					}
 					worker.ReportProgress(1, _hardwareConnectionStatus);
 					Thread.Sleep(_heartbeat);
 				}
