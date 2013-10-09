@@ -18,6 +18,11 @@ namespace MeasureModule
 	public class MeasureAssistant
 	{
 		public int SubpixThreadhold = 128;
+		public void SetSubpixThreadhold(int val)
+		{
+			SubpixThreadhold = val;
+			UpdateExecute(ALL_ROI);
+		}
 
 		/// <summary>Index of the selected ROI.</summary>
 		public int mActRoiIdx;
