@@ -172,7 +172,6 @@ namespace Hanbo.Image.Grab
 			{
 				_hFrameGrabber.GrabImageStart(_delay);
 				if (GrabImageStart != null) GrabImageStart(sender, e);
-				var i = 0;
 				while (true)
 				{
 					if (worker.CancellationPending)
@@ -182,15 +181,26 @@ namespace Hanbo.Image.Grab
 					}
 					else
 					{
-						var himage = _hFrameGrabber.GrabImageAsync(_delay);
-						worker.ReportProgress(i++, himage);
-						_currentImage = himage;
+						try
+						{
+							var himage = _hFrameGrabber.GrabImageAsync(_delay);
+							worker.ReportProgress(1, himage);
+							_currentImage = himage;
+						}
+						catch (HalconDotNet.HOperatorException ex)
+						{
+							_logger.Error(ex);
+							if (GrabImageException != null)
+							{
+								GrabImageException(ex);
+							}
+						}
 					}
 				}
 			}
-			catch (HalconDotNet.HOperatorException ex)
+			catch (Exception ex)
 			{
-				_logger.Debug("[GrabImageWorkingMan._bgworker_DoWork()] Exception:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+				_logger.Error(ex);
 				if (GrabImageException != null)
 				{
 					GrabImageException(ex);
