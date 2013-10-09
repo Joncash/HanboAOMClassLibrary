@@ -482,6 +482,7 @@ namespace Hanbo.WindowControlWrapper
 			initColumn();
 
 			//Event
+			_GridViewContainer.CellEndEdit += _GridViewContainer_CellEndEdit;
 			_GridViewContainer.CellContentClick += DataGridView_CellContentClick;
 			_GridViewContainer.CellDoubleClick += DataGridView_CellDoubleClick;
 			_GridViewContainer.UserDeletingRow += DataGridView_UserDeletingRow;
@@ -489,6 +490,62 @@ namespace Hanbo.WindowControlWrapper
 			//Default value
 			_ExportUnit = "mm";
 
+		}
+
+		void _GridViewContainer_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+		{
+			if (_TreeViewContainer != null)
+			{
+				var gridview = sender as DataGridView;
+				if (gridview != null)
+				{
+					var columnName = gridview.Columns[e.ColumnIndex].Name;
+
+					try
+					{
+						if (columnName == "Name")
+						{
+							DataGridViewRow row = gridview.Rows[e.RowIndex];
+							var recordID = (string)row.Cells["RecordID"].Value;
+
+							var newCellValue = (string)gridview[e.ColumnIndex, e.RowIndex].Value;
+							//相依的 ROI 資料列
+							var dependsRecordIDs = _DataList.Where(p => p.RecordID == recordID)
+													.Select(p => p.DependGeoRowNames).FirstOrDefault();
+
+							var parentID = _DataList.Where(p => p.RecordID == recordID).SingleOrDefault();
+							if (parentID != null)
+							{
+								var nodes = _TreeViewContainer.Nodes.Cast<TreeNode>().Where(p => p.Name == parentID.RecordID);
+								foreach (TreeNode parentNode in nodes)
+								{
+									parentNode.ToolTipText = parentNode.Text = newCellValue;
+								}
+							}
+
+							//找到樹狀結構中相對應的 ROI 節點
+							if (dependsRecordIDs != null)
+							{
+								var nodes = _TreeViewContainer.Nodes.Cast<TreeNode>().Where(p => dependsRecordIDs.Contains(p.Name));
+								foreach (TreeNode parentNode in nodes)
+								{
+									var node = parentNode.Nodes.Cast<TreeNode>().SingleOrDefault(p => p.Name == recordID);
+									if (node != null)
+									{
+										node.ToolTipText = node.Text = newCellValue;
+									}
+								}
+							}
+						}
+
+					}
+					catch (Exception ex)
+					{
+						logger.Error(ex);
+					}
+
+				}
+			}
 		}
 
 		private void DataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
