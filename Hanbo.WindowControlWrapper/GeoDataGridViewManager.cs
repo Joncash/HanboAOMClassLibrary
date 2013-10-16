@@ -71,12 +71,12 @@ namespace Hanbo.WindowControlWrapper
 					reloadROI.ROIMeasureType = geoModel.GeoType;
 
 					addTreeNode(reloadROI, geoModel);
-					On_RecordChanged(GeoDataGridViewNotifyType.ReloadData, reloadROI);
+					notifyRecordChanged(GeoDataGridViewNotifyType.ReloadData, reloadROI);
 				}
 				else
 				{
 					addMeasuredViewModel(geoModel);
-					On_RecordChanged(GeoDataGridViewNotifyType.ReloadData, "");
+					notifyRecordChanged(GeoDataGridViewNotifyType.ReloadData, "");
 				}
 			}
 			this.Refresh();
@@ -627,12 +627,17 @@ namespace Hanbo.WindowControlWrapper
 					_DataList.Remove(row);
 				}
 				_DataList.Remove(model);
-				if (On_RecordChanged != null)
-				{
-					On_RecordChanged(GeoDataGridViewNotifyType.DeleteRow, modelROIID);
-				}
+				notifyRecordChanged(GeoDataGridViewNotifyType.DeleteRow, modelROIID);
 			}
 			return confirmDelete;
+		}
+
+		private void notifyRecordChanged(GeoDataGridViewNotifyType notifyType, object notifyData)
+		{
+			if (On_RecordChanged != null)
+			{
+				On_RecordChanged(notifyType, notifyData);
+			}
 		}
 
 		private void DataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -642,12 +647,9 @@ namespace Hanbo.WindowControlWrapper
 			GeoDataGridViewModel geoModel = _DataList[e.RowIndex];
 			HObject displayObject = displayObject = DistanceHelper.GenContour(geoModel);
 			var isShow = (displayObject != null) ? true : false;
-			if (On_RecordChanged != null)
+			if (isShow)
 			{
-				if (isShow)
-				{
-					On_RecordChanged(GeoDataGridViewNotifyType.ShowGeoImage, displayObject);
-				}
+				notifyRecordChanged(GeoDataGridViewNotifyType.ShowGeoImage, displayObject);
 			}
 		}
 
@@ -1209,10 +1211,7 @@ namespace Hanbo.WindowControlWrapper
 		{
 			var roi = e.Node.Tag as ROI;
 			roi.Visiable = e.Node.Checked;
-			if (On_RecordChanged != null)
-			{
-				On_RecordChanged(GeoDataGridViewNotifyType.TreeView_AfterCheck, e);
-			}
+			notifyRecordChanged(GeoDataGridViewNotifyType.TreeView_AfterCheck, e);
 		}
 
 		void _TreeViewContainer_KeyDown(object sender, KeyEventArgs e)
@@ -1230,11 +1229,8 @@ namespace Hanbo.WindowControlWrapper
 
 		void _TreeViewContainer_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			if (On_RecordChanged != null)
-			{
-				ROI roi = e.Node.Tag as ROI;
-				On_RecordChanged(GeoDataGridViewNotifyType.TreeView_AfterSelect, roi);
-			}
+			ROI roi = e.Node.Tag as ROI;
+			notifyRecordChanged(GeoDataGridViewNotifyType.TreeView_AfterSelect, roi);
 		}
 		#region TreeView  原生方法
 		private const int TVIF_STATE = 0x8;
