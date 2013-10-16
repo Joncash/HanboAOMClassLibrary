@@ -192,11 +192,13 @@ namespace MeasureModule
 				case 8:
 				case 17:
 				case 20:
+				case 129:
 					//point, point
 					//point, circle
 					//circle, circle
 					//point, pointCircle
 					//circle, pointCircle
+					//crosspoint, point
 					distance = PointToPoint(firstModel, secondModel);
 					newModel = new MeasureViewModel()
 					{

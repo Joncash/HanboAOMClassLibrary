@@ -71,6 +71,7 @@ namespace MeasureModule
 			this.EndPhi = new HTuple(EndPhi);
 			this.PointOrder = new HTuple(pointOrder);
 		}
+		#endregion
 
 		/// <summary>
 		/// 圓的顯示模式，文字顯示在圓心
@@ -97,6 +98,5 @@ namespace MeasureModule
 				PositionY = row,
 			};
 		}
-		#endregion
 	}
 }
