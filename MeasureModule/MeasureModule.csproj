@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="AngleResult.cs" />
     <Compile Include="CircleResult.cs" />
+    <Compile Include="ContourDisplayHelper.cs" />
     <Compile Include="DistanceHelper.cs" />
     <Compile Include="DistanceResult.cs" />
     <Compile Include="FitLineResult.cs" />
