@@ -170,7 +170,7 @@ namespace MeasureModule
 
 			//act
 			HTuple distanceMin;
-			HOperatorSet.DistancePp(pointA.Row1, pointA.Col1, pointB.Row1, pointB.Col2, out distanceMin);
+			HOperatorSet.DistancePp(pointA.Row1, pointA.Col1, pointB.Row1, pointB.Col1, out distanceMin);
 			return distanceMin.D;
 		}
 
