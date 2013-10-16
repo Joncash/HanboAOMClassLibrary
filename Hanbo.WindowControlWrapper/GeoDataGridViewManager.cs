@@ -16,7 +16,7 @@ using ViewROI;
 
 namespace Hanbo.WindowControlWrapper
 {
-	public enum GeoDataGridViewNotifyType { DeleteRow, ShowGeoImage, TreeView_AfterCheck, TreeView_AfterSelect, ReloadData }
+	public enum GeoDataGridViewNotifyType { DeleteRow, ShowGeoImage, TreeView_AfterCheck, TreeView_AfterSelect, ReloadData, UpdateData }
 	public delegate void GeoDataGridViewRecordChangeNotify(GeoDataGridViewNotifyType notifyType, object data);
 	public class GeoDataGridViewManager
 	{
@@ -130,6 +130,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			this.Refresh();
 			setTreeNodeFocus(updateTreeNodeID);
+			notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, tmpGeoDataViewModel);
 		}
 
 		/// <summary>
@@ -521,6 +522,7 @@ namespace Hanbo.WindowControlWrapper
 								{
 									parentNode.ToolTipText = parentNode.Text = newCellValue;
 								}
+
 							}
 
 							//找到樹狀結構中相對應的 ROI 節點
@@ -536,8 +538,9 @@ namespace Hanbo.WindowControlWrapper
 									}
 								}
 							}
+							if (dependsRecordIDs != null || parentID != null)
+								notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, null);
 						}
-
 					}
 					catch (Exception ex)
 					{
@@ -707,6 +710,7 @@ namespace Hanbo.WindowControlWrapper
 				{
 					var columnIndex = e.ColumnIndex;
 					restoreGridviewState(columnIndex, gridView, checkRows);
+					notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, null);
 				}
 			}
 		}
