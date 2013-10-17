@@ -87,7 +87,9 @@ namespace MeasureModule
 			var col = 0.0;
 			for (int i = 0; i < this.Row.Length; i++)
 			{
-				dispXLD.GenCircleContourXld(this.Row[i].D, this.Col[i].D, this.Radius[i].D, 0.0, 6.28318, "positive", 1.0);
+				var diameter = this.Radius[i].D;
+				var radius = diameter / 2.0;
+				dispXLD.GenCircleContourXld(this.Row[i].D, this.Col[i].D, radius, 0.0, 6.28318, "positive", 1.0);
 				row = this.Row[0].D;
 				col = this.Col[0].D;
 			}

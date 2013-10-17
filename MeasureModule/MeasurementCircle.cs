@@ -1,4 +1,7 @@
 ﻿using HalconDotNet;
+using Hanbo.Helper;
+using System;
+using System.IO;
 using ViewROI;
 
 namespace MeasureModule
@@ -86,6 +89,12 @@ namespace MeasureModule
 				ho_MeasureROI.Dispose();
 				HOperatorSet.GenCircle(out ho_MeasureROI, mROICoord[0], mROICoord[1], mROICoord[2]);
 
+				//****** Area Center ***********
+				HTuple area, areaRow, areaColumn;
+				double areaPixels = 0.0;
+				HOperatorSet.AreaCenter(ho_MeasureROI, out area, out areaRow, out areaColumn);
+				areaPixels = area.D;
+
 				//******* Extract ROI Image *****
 				ho_ImageReduced.Dispose();
 				HOperatorSet.ReduceDomain(mMeasAssist.getImage(), ho_MeasureROI, out ho_ImageReduced);
@@ -100,20 +109,48 @@ namespace MeasureModule
 					, out hv_Row, out hv_Column, out hv_Radius, out hv_StartPhi, out hv_EndPhi, out hv_PointOrder);
 
 
-				//Answer
-				mResult = new CircleResult(hv_Row, hv_Column, hv_Radius, hv_StartPhi, hv_EndPhi, hv_PointOrder) { };
 
-				if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+				//Answer
+				var radiusIndex = -1;
+				if (hv_Radius.TupleLength() > 0)
 				{
-					Rectify(mResult.Row, mResult.Col, out mResultWorld.Row, out mResultWorld.Col);
+					//radius = DistanceHelper.GetApproximateRadius(hv_Radius.DArr);
+					radiusIndex = DistanceHelper.GetApproximateRadiusIndex(hv_Radius.DArr, areaPixels);
+					if (radiusIndex > -1)
+					{
+						mResult = new CircleResult(
+													new HTuple(hv_Row.DArr[radiusIndex])
+													, new HTuple(hv_Column.DArr[radiusIndex])
+													, new HTuple(hv_Radius.DArr[radiusIndex] * 2.0)
+													, hv_StartPhi
+													, hv_EndPhi
+													, hv_PointOrder) { };
+
+						if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+						{
+							Rectify(mResult.Row, mResult.Col, out mResultWorld.Row, out mResultWorld.Col);
+						}
+						else
+						{
+							mResultWorld = new CircleResult(mResult);
+						}
+					}
 				}
-				else
-				{
-					mResultWorld = new CircleResult(mResult);
-				}
+
+
 			}
 			catch (HOperatorException ex)
 			{
+				//if (ho_ImageReduced != null)
+				//{
+				//	var fdir = ConfigurationHelper.GetTraceFolder();
+				//	var guid = Guid.NewGuid().ToString();
+				//	var reduceImageName = Path.Combine(fdir, "CircleReduceImage" + guid);
+				//	var originalImageName = Path.Combine(fdir, "OriginalImage" + guid);
+				//	//HOperatorSet.WriteImage(ho_ImageReduced, 
+				//	//HOperatorSet.WriteImage(ho_ImageReduced, "tiff", 0, reduceImageName);
+				//	//HOperatorSet.WriteImage(mMeasAssist.mImage, "tiff", 0, originalImageName);
+				//}
 				mMeasAssist.exceptionText = ex.Message;
 				mResultWorld = new CircleResult();
 				mResult = new CircleResult();
@@ -142,7 +179,9 @@ namespace MeasureModule
 				for (int i = 0; i < mResult.Row.Length; i++)
 				{
 					var circleXLD = new HXLDCont();
-					circleXLD.GenCircleContourXld(mResult.Row[i].D, mResult.Col[i].D, mResult.Radius[i].D, 0.0, 6.28318, "positive", 1.0);
+					var diameter = mResult.Radius[i].D;
+					var radius = diameter / 2.0; // 
+					circleXLD.GenCircleContourXld(mResult.Row[i].D, mResult.Col[i].D, radius, 0.0, 6.28318, "positive", 1.0);
 
 					//output
 					mEdgeXLD = mEdgeXLD.ConcatObj(circleXLD);

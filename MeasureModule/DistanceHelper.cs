@@ -640,5 +640,71 @@ namespace MeasureModule
 			}
 			return displayObject;
 		}
+
+		/// <summary>
+		/// 找到最接近 ROI 大小的 Radius
+		/// </summary>
+		/// <param name="radiusArr"></param>
+		/// <param name="areaPixels"></param>
+		/// <returns></returns>
+		public static int GetApproximateRadiusIndex(double[] radiusArr, double areaPixels)
+		{
+			var index = -1;
+			try
+			{
+				var orderedList = radiusArr.Select(p => new
+					{
+						Radius = p,
+						Area = getAreaPixel(p)
+					}).OrderByDescending(q => q.Area);
+
+				var minDiff = Double.MaxValue;
+				var prevDiff = minDiff;
+				var result = 0.0;
+				foreach (var item in orderedList)
+				{
+					var curDiff = (double)Math.Abs(item.Area - areaPixels);
+
+					if (curDiff < minDiff)
+						minDiff = curDiff;
+					if (prevDiff > minDiff)
+					{
+						prevDiff = minDiff;
+						result = item.Radius;
+					}
+					else
+					{
+						break;
+					}
+				}
+				for (int i = 0; i < radiusArr.Length; i++)
+				{
+					if (radiusArr[i] == result)
+					{
+						index = i;
+						break;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.Error(ex);
+			}
+			return index;
+		}
+
+		private static double getAreaPixel(double p)
+		{
+			HObject circle;
+			HOperatorSet.GenEmptyObj(out circle);
+			circle.Dispose();
+
+			HTuple area, row, column;
+
+			HOperatorSet.GenCircle(out circle, 0, 0, p);
+			HOperatorSet.AreaCenter(circle, out area, out row, out column);
+			return area.D;
+		}
+
 	}
 }
