@@ -103,40 +103,61 @@ namespace MeasureModule
 				ho_Border.Dispose();
 				HOperatorSet.ThresholdSubPix(ho_ImageReduced, out ho_Border, mMeasAssist.SubpixThreadhold);
 
+				//******* Choice Candidate Objects
+				HObject ho_SelectedContours;
+				HOperatorSet.GenEmptyObj(out ho_SelectedContours);
+				ho_SelectedContours.Dispose();
+				HOperatorSet.SelectContoursXld(ho_Border, out ho_SelectedContours, "contour_length",
+					10, Int16.MaxValue, -0.5, 0.5);
+
 				//******* Fit Circle ************
-				HOperatorSet.FitCircleContourXld(ho_Border
+				HTuple hv_Number, hv_Index;
+				HObject ho_ObjectSelected;
+				HOperatorSet.GenEmptyObj(out ho_ObjectSelected);
+				HOperatorSet.CountObj(ho_SelectedContours, out hv_Number);
+				var resultRadius = 0.0;
+				for (hv_Index = 1; hv_Index.Continue(hv_Number, 1); hv_Index = hv_Index.TupleAdd(1))
+				{
+					ho_ObjectSelected.Dispose();
+					HOperatorSet.SelectObj(ho_SelectedContours, out ho_ObjectSelected, hv_Index);
+					HOperatorSet.FitCircleContourXld(ho_SelectedContours
 					, _Algorithm, _MaxNumPoints, _MaxClosureDist, _ClippingEndPoints, _Iterations, _ClippingFactor
 					, out hv_Row, out hv_Column, out hv_Radius, out hv_StartPhi, out hv_EndPhi, out hv_PointOrder);
 
-
-
-				//Answer
-				var radiusIndex = -1;
-				if (hv_Radius.TupleLength() > 0)
-				{
-					//radius = DistanceHelper.GetApproximateRadius(hv_Radius.DArr);
-					radiusIndex = DistanceHelper.GetApproximateRadiusIndex(hv_Radius.DArr, areaPixels);
-					if (radiusIndex > -1)
+					//Answer
+					var radiusIndex = -1;
+					if (hv_Radius.TupleLength() > 0)
 					{
-						mResult = new CircleResult(
-													new HTuple(hv_Row.DArr[radiusIndex])
-													, new HTuple(hv_Column.DArr[radiusIndex])
-													, new HTuple(hv_Radius.DArr[radiusIndex] * 2.0)
-													, hv_StartPhi
-													, hv_EndPhi
-													, hv_PointOrder) { };
+						radiusIndex = DistanceHelper.GetApproximateRadiusIndex(hv_Radius.DArr, areaPixels);
+						if (radiusIndex > -1)
+						{
+							//取最大的 Circle
+							if (resultRadius < hv_Radius.DArr[radiusIndex])
+							{
+								mResult = new CircleResult(new HTuple(hv_Row.DArr[radiusIndex])
+															, new HTuple(hv_Column.DArr[radiusIndex])
+															, new HTuple(hv_Radius.DArr[radiusIndex] * 2.0)
+															, hv_StartPhi
+															, hv_EndPhi
+															, hv_PointOrder) { };
+								resultRadius = hv_Radius.DArr[radiusIndex];
+							}
 
-						if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
-						{
-							Rectify(mResult.Row, mResult.Col, out mResultWorld.Row, out mResultWorld.Col);
-						}
-						else
-						{
-							mResultWorld = new CircleResult(mResult);
+
 						}
 					}
 				}
-
+				if (mResult != null)
+				{
+					if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+					{
+						Rectify(mResult.Row, mResult.Col, out mResultWorld.Row, out mResultWorld.Col);
+					}
+					else
+					{
+						mResultWorld = new CircleResult(mResult);
+					}
+				}
 
 			}
 			catch (HOperatorException ex)
