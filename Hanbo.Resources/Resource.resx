@@ -178,4 +178,52 @@
   <data name="_3pointCircle_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\3pointCircle_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="CameraNotReadyMessage" xml:space="preserve">
+    <value>影像裝置尚未準備完成 ( Camera is not ready)</value>
+  </data>
+  <data name="DoLoginMessage" xml:space="preserve">
+    <value>帳號/密碼不正確 or 帳號停用
+Account / Password uncorrect or Accout disabled.</value>
+    <comment>帳號/密碼不正確 or 帳號停用</comment>
+  </data>
+  <data name="FailCode" xml:space="preserve">
+    <value>NG</value>
+    <comment>NG</comment>
+  </data>
+  <data name="FailMessage" xml:space="preserve">
+    <value>失敗 ( Fail )</value>
+    <comment>失敗</comment>
+  </data>
+  <data name="InitSystemDeviceForm_TroubleShootingMessage" xml:space="preserve">
+    <value>系統裝置檢查若發生失敗，請依以下步驟進行故障排除
+If device checking result fail, follow the troubleshooting instructions to fix problem
+
+1。關閉程式 ( Close the program )
+2。重啟光源控制器/CCD 電源 ( Reset power of the light contorller /  CCD )
+3。重新啟動程式 ( Reopen the program )</value>
+  </data>
+  <data name="SuccessCode" xml:space="preserve">
+    <value>OK</value>
+    <comment>OK</comment>
+  </data>
+  <data name="SuccessMessage" xml:space="preserve">
+    <value>成功 ( Success )</value>
+    <comment>成功</comment>
+  </data>
+  <data name="Model_CheckMessage" xml:space="preserve">
+    <value>系統訊息 ( Message )</value>
+    <comment>系統訊息</comment>
+  </data>
+  <data name="Model_CheckResult" xml:space="preserve">
+    <value>檢查結果 ( Result )</value>
+    <comment>檢查結果</comment>
+  </data>
+  <data name="Model_Description" xml:space="preserve">
+    <value>描述 ( Description )</value>
+    <comment>描述</comment>
+  </data>
+  <data name="Model_DeviceName" xml:space="preserve">
+    <value>裝置名稱 ( Device)</value>
+    <comment>裝置名稱</comment>
+  </data>
 </root>

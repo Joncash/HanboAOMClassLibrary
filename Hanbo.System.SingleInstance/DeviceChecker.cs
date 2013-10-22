@@ -19,7 +19,7 @@ namespace Hanbo.System.SingleInstance
 				imageHandle.Connect();
 				result.Success = imageHandle.Connected;
 				if (!imageHandle.Connected)
-					result.Message = "影像裝置尚未準備完成";
+					result.Message = Hanbo.Resources.Resource.CameraNotReadyMessage;
 				DeviceController.ReleaseGrabImageWorkingManInstance();
 			}
 			catch (Exception ex)

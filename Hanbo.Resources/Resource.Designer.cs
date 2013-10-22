@@ -101,6 +101,15 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 影像裝置尚未準備完成 ( Camera is not ready).
+        /// </summary>
+        public static string CameraNotReadyMessage {
+            get {
+                return ResourceManager.GetString("CameraNotReadyMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap crossPoint {
@@ -181,6 +190,16 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 帳號/密碼不正確 or 帳號停用
+        ///Account / Password uncorrect or Accout disabled..
+        /// </summary>
+        public static string DoLoginMessage {
+            get {
+                return ResourceManager.GetString("DoLoginMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap draw_circle {
@@ -237,6 +256,92 @@ namespace Hanbo.Resources {
             get {
                 object obj = ResourceManager.GetObject("draw_point_blue32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NG.
+        /// </summary>
+        public static string FailCode {
+            get {
+                return ResourceManager.GetString("FailCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 失敗 ( Fail ).
+        /// </summary>
+        public static string FailMessage {
+            get {
+                return ResourceManager.GetString("FailMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 系統裝置檢查若發生失敗，請依以下步驟進行故障排除
+        ///If device checking result fail, follow the troubleshooting instructions to fix problem
+        ///
+        ///1。關閉程式 ( Close the program )
+        ///2。重啟光源控制器/CCD 電源 ( Reset power of the light contorller /  CCD )
+        ///3。重新啟動程式 ( Reopen the program ).
+        /// </summary>
+        public static string InitSystemDeviceForm_TroubleShootingMessage {
+            get {
+                return ResourceManager.GetString("InitSystemDeviceForm_TroubleShootingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 系統訊息 ( Message ).
+        /// </summary>
+        public static string Model_CheckMessage {
+            get {
+                return ResourceManager.GetString("Model_CheckMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 檢查結果 ( Result ).
+        /// </summary>
+        public static string Model_CheckResult {
+            get {
+                return ResourceManager.GetString("Model_CheckResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 描述 ( Description ).
+        /// </summary>
+        public static string Model_Description {
+            get {
+                return ResourceManager.GetString("Model_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 裝置名稱 ( Device).
+        /// </summary>
+        public static string Model_DeviceName {
+            get {
+                return ResourceManager.GetString("Model_DeviceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string SuccessCode {
+            get {
+                return ResourceManager.GetString("SuccessCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 成功 ( Success ).
+        /// </summary>
+        public static string SuccessMessage {
+            get {
+                return ResourceManager.GetString("SuccessMessage", resourceCulture);
             }
         }
         
