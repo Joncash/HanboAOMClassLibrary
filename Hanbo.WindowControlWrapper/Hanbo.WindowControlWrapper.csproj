@@ -53,6 +53,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Resources\Hanbo.Resources.csproj">
+      <Project>{997bcb46-e343-45e3-ba64-b054381499cd}</Project>
+      <Name>Hanbo.Resources</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MeasureModule\MeasureModule.csproj">
       <Project>{a5b3b77c-7f30-4109-8ef6-8ce30dd1317e}</Project>
       <Name>MeasureModule</Name>

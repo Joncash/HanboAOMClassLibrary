@@ -226,4 +226,195 @@ If device checking result fail, follow the troubleshooting instructions to fix p
     <value>裝置名稱 ( Device)</value>
     <comment>裝置名稱</comment>
   </data>
+  <data name="Message_3PointCircleWarning" xml:space="preserve">
+    <value>此 3 點無法在目前選擇的區域中擬合最佳圓！( Can not fit the circle)</value>
+  </data>
+  <data name="Message_AngleError" xml:space="preserve">
+    <value>無法計算角度 (Angle calculate error)</value>
+  </data>
+  <data name="Message_AngleWarning" xml:space="preserve">
+    <value>兩線段才可以計算角度 (Only two line can calculate the angle)</value>
+  </data>
+  <data name="Message_CameraAutoConnectNotice" xml:space="preserve">
+    <value>尚未連接至影像裝置，是否連線？
+( Camera is not connection, do you want to connect ? )</value>
+  </data>
+  <data name="Message_CameraIsOccupied" xml:space="preserve">
+    <value>影像裝置資源被其他應用程式佔用，無法開啟
+( Camera is used by other program)</value>
+  </data>
+  <data name="Message_CameraUsed" xml:space="preserve">
+    <value>Camera 使用中，請關閉其他使用 Camera 的視窗，再重新開啟！
+(Camera is used , please close the other camera window and reopen it)</value>
+  </data>
+  <data name="Message_Confirm" xml:space="preserve">
+    <value>確認 (Confirm)</value>
+  </data>
+  <data name="Message_CrossPointWarning" xml:space="preserve">
+    <value>兩線平行，無法計算交點！(Parallel line can not calculate the cross point)</value>
+  </data>
+  <data name="Message_DeleteNotice" xml:space="preserve">
+    <value>將會刪除所有資料，是否刪除？
+(Are you sure to delete it ? )</value>
+  </data>
+  <data name="Message_DependencyNotExists" xml:space="preserve">
+    <value>點成圓幾何相依物件不存在 (Dependency objects does not exists)</value>
+  </data>
+  <data name="Message_DependencyWarning" xml:space="preserve">
+    <value>警告！
+有其他量測項目相依於此項目，確定刪除將會失去其他的量測結果
+Warning !
+Some other measurement are depend on this item, if remove it will lose the dependent measurement.</value>
+  </data>
+  <data name="Message_DistanceXWarning" xml:space="preserve">
+    <value>無法計算 X 方向距離！(Can not calculate the x distance)</value>
+  </data>
+  <data name="Message_DistanceYWarning" xml:space="preserve">
+    <value>無法計算 Y 方向距離！(Can not calculate the y distance)</value>
+  </data>
+  <data name="Message_ImageAcquitionStopNotice" xml:space="preserve">
+    <value>影像仍在擷取中. 確定停止?
+( Stop the image acquition ? )</value>
+  </data>
+  <data name="Message_ImageFormatErrorNotice" xml:space="preserve">
+    <value>影像格式錯誤，請選擇正確的影像檔案
+( Image format erro, please choice the right file)</value>
+  </data>
+  <data name="Message_NoData" xml:space="preserve">
+    <value>無資料
+(No data)</value>
+  </data>
+  <data name="Message_NoImage" xml:space="preserve">
+    <value>無影像 ( No image)</value>
+  </data>
+  <data name="Message_Notice" xml:space="preserve">
+    <value>提示 (Notice)</value>
+  </data>
+  <data name="Message_SymmetryLineError" xml:space="preserve">
+    <value>無法計算兩線之對稱線 (Symmetry line calculate error)</value>
+  </data>
+  <data name="Message_SymmetryLineWarning" xml:space="preserve">
+    <value>兩線段才可以計算對稱中線 (Only two line can calculate the symmetry line)</value>
+  </data>
+  <data name="Message_Warning" xml:space="preserve">
+    <value>警告 (Warnning)</value>
+  </data>
+  <data name="Model_3PointCircle" xml:space="preserve">
+    <value>3點成圓</value>
+  </data>
+  <data name="Model_Angle" xml:space="preserve">
+    <value>角度</value>
+  </data>
+  <data name="Model_CrossPoint" xml:space="preserve">
+    <value>交點</value>
+  </data>
+  <data name="Model_Distance" xml:space="preserve">
+    <value>距離</value>
+  </data>
+  <data name="Model_LowerLimit" xml:space="preserve">
+    <value>公差下限 (Lower limit)</value>
+  </data>
+  <data name="Model_Normal" xml:space="preserve">
+    <value>標準值 (Normal value)</value>
+  </data>
+  <data name="Model_SymmetryLine" xml:space="preserve">
+    <value>對稱中線</value>
+  </data>
+  <data name="Model_UppderLimit" xml:space="preserve">
+    <value>公差上限 (Upper limit)</value>
+  </data>
+  <data name="Model_WorldDistance" xml:space="preserve">
+    <value>長度  (Length)</value>
+  </data>
+  <data name="Model_XwayDistance" xml:space="preserve">
+    <value>X 方向距離</value>
+  </data>
+  <data name="Model_YwayDistance" xml:space="preserve">
+    <value>Y 方向距離</value>
+  </data>
+  <data name="Message_CreateModelFirstNotice" xml:space="preserve">
+    <value>請先建立模型 (Create Model First, Please )</value>
+  </data>
+  <data name="Message_EmptyExportItemNotice" xml:space="preserve">
+    <value>沒有任何量測輸出項目，確定要儲存此程式？
+( No exporting measurements. Are you sure to save this planning ? )</value>
+  </data>
+  <data name="Message_EmptyPlanningDescNotice" xml:space="preserve">
+    <value>請輸入程式描述 ( Input the planning description )</value>
+  </data>
+  <data name="Message_EmptyPlanningNameNotice" xml:space="preserve">
+    <value>請輸入程式名稱 ( Input the planning name )</value>
+  </data>
+  <data name="Message_ModelCreated" xml:space="preserve">
+    <value>模型建立完成,
+請按下一步繼續
+( Model created, press next step button to continue)</value>
+  </data>
+  <data name="Message_PlanSaveAsSuccessedReloadItNotice" xml:space="preserve">
+    <value>已另存程式，是否開啟該程式？
+(  Planning saved. Re-open it ? )</value>
+  </data>
+  <data name="Message_PlanSaved" xml:space="preserve">
+    <value>程式儲存成功 ( Planning Saved)</value>
+  </data>
+  <data name="Message_TrainingImageEmptyReloadNotice" xml:space="preserve">
+    <value>訓練影像為空，請重新載入訓練影像
+( Training image is empty, reload it )</value>
+  </data>
+  <data name="Message_UnCreateModelNotice" xml:space="preserve">
+    <value>尚未建立模型，請回到 Step1 建立模型
+( Model uncreated, return to step 1 to carate model )</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>匯出 ( Export )</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>載入 ( Load )</value>
+  </data>
+  <data name="Message_EmptyMatchingObjects" xml:space="preserve">
+    <value>找不到匹配的物件 ( No matching objects )</value>
+  </data>
+  <data name="Message_ExportError" xml:space="preserve">
+    <value>必要檔案遺失，無法匯出 ( Some data lost, export error )</value>
+  </data>
+  <data name="Message_ExportSuccess" xml:space="preserve">
+    <value>匯出檔案成功 ( Export success )</value>
+  </data>
+  <data name="Message_ImportFail" xml:space="preserve">
+    <value>匯入失敗 ( Import Fail )</value>
+  </data>
+  <data name="Message_ImportFormatError" xml:space="preserve">
+    <value>檔案格式錯誤，無法匯入 ( File format error )</value>
+  </data>
+  <data name="Message_ImportSuccess" xml:space="preserve">
+    <value>匯入成功 ( Import Success )</value>
+  </data>
+  <data name="Message_InputPlanNameAndDescriptionNotice" xml:space="preserve">
+    <value>請輸入程式名稱及描述 ( Please input plan name and description )</value>
+  </data>
+  <data name="Message_LoadingFail" xml:space="preserve">
+    <value>載入程序發生錯誤！請查看事件記錄器
+( Module loading fail, check the event log to fix problem)</value>
+  </data>
+  <data name="Message_MatchingModelNotFound" xml:space="preserve">
+    <value>找不到匹配模型 ( Can't find the matching model )</value>
+  </data>
+  <data name="Message_MeasurementError" xml:space="preserve">
+    <value>測量時發生錯誤 ( Measurement Error ! )</value>
+  </data>
+  <data name="Message_PlanDoesNotExistsNotice" xml:space="preserve">
+    <value>程式不存在，是否匯入？
+( Plan does not exist, import ? )</value>
+  </data>
+  <data name="Message_PlanExistsNotice" xml:space="preserve">
+    <value>程式已存在，是否覆蓋？
+( Plan exists , overwrite ? )</value>
+  </data>
+  <data name="Message_PlanOpendAndReloadNotice" xml:space="preserve">
+    <value>已開啟程式編輯，是否要關閉目前程式並載入？
+( Plan is opend, do you want to close the current plan, and reload the new one ? )</value>
+  </data>
+  <data name="TimeConsumed" xml:space="preserve">
+    <value>耗時 ( Time consumed )</value>
+  </data>
 </root>

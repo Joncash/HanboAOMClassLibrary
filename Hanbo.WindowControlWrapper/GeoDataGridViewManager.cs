@@ -172,21 +172,21 @@ namespace Hanbo.WindowControlWrapper
 
 		public void SetUnit(string unit)
 		{
-			var colimnDict = new Dictionary<string, string>() { 
-				{"WorldDistance", "長度"},
-				{"Normal", "標準值"},
-				{"LowerBound", "公差下限"},
-				{"UpperBound", "公差上限"},
-			};
+			//var colimnDict = new Dictionary<string, string>() { 
+			//	{"WorldDistance", Hanbo.Resources.Resource.Model_WorldDistance},
+			//	{"Normal", Hanbo.Resources.Resource.Model_Normal},
+			//	{"LowerBound", Hanbo.Resources.Resource.Model_LowerLimit},
+			//	{"UpperBound", Hanbo.Resources.Resource.Model_UppderLimit},
+			//};
 
 			_ExportUnit = unit;
-			foreach (var item in colimnDict)
-			{
-				var name = item.Key;
-				var disp = item.Value;
-				var column = _GridViewContainer.Columns[name];
-				if (column != null) column.HeaderText = disp + " ( " + _ExportUnit + " )";
-			}
+			//foreach (var item in colimnDict)
+			//{
+			//	var name = item.Key;
+			//	var disp = item.Value;
+			//	var column = _GridViewContainer.Columns[name];
+			//	if (column != null) column.HeaderText = disp + " ( " + _ExportUnit + " )";
+			//}
 
 
 			//更新Data
@@ -201,6 +201,7 @@ namespace Hanbo.WindowControlWrapper
 					item.WorldDistance = pixelToRealWorldValue(pixelValue);
 				}
 			}
+			Refresh();
 		}
 		public string GetUnit()
 		{
@@ -278,7 +279,7 @@ namespace Hanbo.WindowControlWrapper
 		private TreeNode getGeoTreeNode(GeoDataGridViewModel geoModel)
 		{
 			var number = _DataList.Count;
-			var geoNodeDisplayName = number.ToString("d2") + " " + geoModel.GeoType + " 幾何元素";
+			var geoNodeDisplayName = number.ToString("d2") + " " + geoModel.GeoType;
 			var geoImageKey = geoModel.GeoType.ToString();
 			TreeNode geoNode = new TreeNode() { Name = geoModel.RecordID, Text = geoNodeDisplayName, ImageKey = geoImageKey, SelectedImageKey = geoImageKey };
 			return geoNode;
@@ -292,7 +293,7 @@ namespace Hanbo.WindowControlWrapper
 				//var geoNode = getGeoTreeNode(geoModel);
 
 
-				var roiNodeName = number.ToString("d2") + " " + activeROI.ROIMeasureType + " 互動/幾何元素";
+				var roiNodeName = number.ToString("d2") + " " + activeROI.ROIMeasureType;
 				var roiImageKey = activeROI.ROIMeasureType.ToString();
 				var index = _TreeViewContainer.Nodes.Count;
 				TreeNode roiNode = new TreeNode() { Name = geoModel.RecordID, Text = roiNodeName, ImageKey = roiImageKey, SelectedImageKey = roiImageKey, Checked = activeROI.Visiable };
@@ -337,7 +338,7 @@ namespace Hanbo.WindowControlWrapper
 			if (roi == null) return null;
 
 			var number = _DataList.Count + 1;
-			var measureName = number.ToString("d2") + " " + roi.ROIMeasureType + "幾何元素";
+			var measureName = number.ToString("d2") + " " + roi.ROIMeasureType;
 			var exportUnit = roi.ROIMeasureType == MeasureType.Angle ? "Angle" :
 							roi.ROIMeasureType == MeasureType.Point ? "" : _ExportUnit;
 			GeoDataGridViewModel geoModel = new GeoDataGridViewModel()
@@ -615,9 +616,9 @@ namespace Hanbo.WindowControlWrapper
 		{
 			var hasROIDependencyModels = _DataList.Where(p => p.RecordID != model.RecordID && p.DependGeoRowNames != null);
 			var relatedModelIDs = hasROIDependencyModels.Where(q => q.DependGeoRowNames.Contains(model.RecordID)).Select(p => p.RecordID);
-			string message = (relatedModelIDs.Count() > 0) ? "警告！\r\n有其他量測項目相依於此項目，確定刪除將會失去其他的量測結果"
-															: "確定刪除此項目嗎？";
-			var confirmDelete = MessageBox.Show(message, "確認視窗", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes;
+			string message = (relatedModelIDs.Count() > 0) ? Hanbo.Resources.Resource.Message_DependencyWarning
+															: Hanbo.Resources.Resource.Message_DeleteNotice;
+			var confirmDelete = MessageBox.Show(message, Hanbo.Resources.Resource.Message_Confirm, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes;
 			if (confirmDelete)
 			{
 				//刪除相依的 Model
@@ -732,7 +733,7 @@ namespace Hanbo.WindowControlWrapper
 			{
 				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
-				var measureName = number.ToString("d2") + " Y 方向距離" + "幾何元素";
+				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_YwayDistance;
 				result = new GeoDataGridViewModel()
 				{
 					Name = measureName,
@@ -754,7 +755,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show("無法計算 X 方向距離！");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_DistanceYWarning);
 			}
 			return result;
 		}
@@ -776,7 +777,7 @@ namespace Hanbo.WindowControlWrapper
 			{
 				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
-				var measureName = number.ToString("d2") + " X 方向距離" + "幾何元素";
+				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_XwayDistance; ;
 				result = new GeoDataGridViewModel()
 				{
 					Name = measureName,
@@ -798,7 +799,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show("無法計算 X 方向距離！");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_DistanceXWarning);
 			}
 			return result;
 
@@ -821,7 +822,7 @@ namespace Hanbo.WindowControlWrapper
 			var isParallel = (resultData as PointResult).IsParallel;
 			if (isParallel)
 			{
-				MessageBox.Show("兩線平行，無法計算交點！");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_CrossPointWarning);
 			}
 			else
 			{
@@ -830,7 +831,7 @@ namespace Hanbo.WindowControlWrapper
 				{
 					//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 					var number = _DataList.Count + 1;
-					var measureName = number.ToString("d2") + " 交點" + "幾何元素";
+					var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_CrossPoint;
 					result = new GeoDataGridViewModel()
 					{
 						Name = measureName,
@@ -870,7 +871,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show("兩線段才可以計算角度");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_AngleWarning);
 			}
 		}
 
@@ -883,7 +884,7 @@ namespace Hanbo.WindowControlWrapper
 			{
 				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
-				var measureName = number.ToString("d2") + " 角度" + "幾何元素";
+				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_Angle;
 				result = new GeoDataGridViewModel()
 				{
 					Name = measureName,
@@ -903,7 +904,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show("無法計算角度！");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_AngleError);
 			}
 			return result;
 		}
@@ -919,7 +920,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show("兩線段才可以計算對稱中線");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_SymmetryLineWarning);
 			}
 		}
 
@@ -932,7 +933,7 @@ namespace Hanbo.WindowControlWrapper
 			{
 				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
-				var measureName = number.ToString("d2") + " 對稱中線" + "幾何元素";
+				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_SymmetryLine;
 				result = new GeoDataGridViewModel()
 				{
 					Name = measureName,
@@ -954,7 +955,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show("無法計算兩線之對稱線！");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_SymmetryLineError);
 			}
 			return result;
 		}
@@ -1004,7 +1005,7 @@ namespace Hanbo.WindowControlWrapper
 				var newModel = DistanceHelper.CaculateDistance(MeasureViewModelResolver.Resolve(firstModel), MeasureViewModelResolver.Resolve(secondModel));
 				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
-				var measureName = number.ToString("d2") + " 距離" + "幾何元素";
+				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_Distance;
 				result = new GeoDataGridViewModel()
 				{
 					Name = measureName,
@@ -1026,7 +1027,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show("距離幾何物件相依物件不存在！");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_DependencyNotExists);
 			}
 			return result;
 		}
@@ -1057,7 +1058,7 @@ namespace Hanbo.WindowControlWrapper
 						HOperatorSet.DistancePp(b1, a1, y, x, out roiRadius);
 						//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 						var number = _DataList.Count + 1;
-						var measureName = number.ToString("d2") + " 3點成圓" + "幾何元素";
+						var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_3PointCircle;
 						result = new GeoDataGridViewModel()
 						{
 							Name = measureName,
@@ -1077,7 +1078,7 @@ namespace Hanbo.WindowControlWrapper
 					}
 					else
 					{
-						MessageBox.Show("此 3 點無法在目前選擇的區域中擬合最佳圓！");
+						MessageBox.Show(Hanbo.Resources.Resource.Message_3PointCircleWarning);
 					}
 
 
@@ -1114,7 +1115,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show("3點成圓幾何相依物件不存在！");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_DependencyNotExists);
 			}
 			return result;
 		}

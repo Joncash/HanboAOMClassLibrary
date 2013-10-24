@@ -1,4 +1,5 @@
 ﻿
+using Hanbo.Custom.Attribute;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -82,7 +83,7 @@ namespace MeasureModule.ViewModel
 		/// 是否選擇
 		/// </summary>		
 		private bool _Selected;
-		[DisplayName("選擇")]
+		[LocalizedDisplayNameAttribute("", "選擇 (Choice)")]
 		public bool Selected
 		{
 			get { return _Selected; }
@@ -98,7 +99,7 @@ namespace MeasureModule.ViewModel
 
 
 		private bool _IsExportItem = true;
-		[DisplayName("輸出項目")]
+		[LocalizedDisplayNameAttribute("", "輸出項目 (Export item)")]
 		public bool IsExportItem
 		{
 			get { return _IsExportItem; }
@@ -161,7 +162,7 @@ namespace MeasureModule.ViewModel
 		/// 量測的名稱
 		/// </summary>
 		private string _Name;
-		[DisplayName("量測名稱")]
+		[LocalizedDisplayNameAttribute("", "量測名稱 (Measurement Name)")]
 		public string Name
 		{
 			get { return _Name; }
@@ -249,7 +250,7 @@ namespace MeasureModule.ViewModel
 		/// 幾何元素類型 ICON
 		/// </summary>
 		private Image _Icon;
-		[DisplayName("元素")]
+		[LocalizedDisplayNameAttribute("", "元素 (Gemmetry Element)")]
 		public Image Icon
 		{
 			get { return _Icon; }
@@ -264,7 +265,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private double _Col1;
-		[DisplayName("Start.X")]
+		[LocalizedDisplayNameAttribute("", "Start.X")]
 		public double Col1
 		{
 			get { return _Col1; }
@@ -279,7 +280,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private double _Row1;
-		[DisplayName("Start.Y")]
+		[LocalizedDisplayNameAttribute("", "Start.Y")]
 		public double Row1
 		{
 			get { return _Row1; }
@@ -294,7 +295,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private double _Col2;
-		[DisplayName("End.X")]
+		[LocalizedDisplayNameAttribute("", "End.X")]
 		public double Col2
 		{
 			get { return _Col2; }
@@ -309,7 +310,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private double _Row2;
-		[DisplayName("End.Y")]
+		[LocalizedDisplayNameAttribute("", "End.Y")]
 		public double Row2
 		{
 			get { return _Row2; }
@@ -324,7 +325,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private double _Distance;
-		[DisplayName("長度")]
+		[LocalizedDisplayNameAttribute("", "長度 (Pixels)")]
 		public double Distance
 		{
 			get { return _Distance; }
@@ -339,7 +340,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private double _WorldDistance;
-		[DisplayName("長度 (mm)")]
+		[LocalizedDisplayNameAttribute("", "長度 (Length)")]
 		public double WorldDistance
 		{
 			get { return _WorldDistance; }
@@ -354,7 +355,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private string _Normal;
-		[DisplayName("標準值 (mm)")]
+		[LocalizedDisplayNameAttribute("", "標準值 (Normal value)")]
 		public string Normal
 		{
 			get { return _Normal; }
@@ -369,7 +370,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private string _UpperBound;
-		[DisplayName("公差上限 (mm)")]
+		[LocalizedDisplayNameAttribute("", "公差上限 (Upper limit)")]
 		public string UpperBound
 		{
 			get { return _UpperBound; }
@@ -384,7 +385,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		private string _LowerBound;
-		[DisplayName("公差下限 (mm)")]
+		[LocalizedDisplayNameAttribute("", "公差下限 (Lower limit)")]
 		public string LowerBound
 		{
 			get { return _LowerBound; }
@@ -398,12 +399,12 @@ namespace MeasureModule.ViewModel
 			}
 		}
 
-		
+
 		private string _Unit;
 		/// <summary>
 		/// 單位
 		/// </summary>
-		[DisplayName("量測單位")]
+		[LocalizedDisplayNameAttribute("", "量測單位 (Unit)")]
 		public string Unit
 		{
 			get { return _Unit; }
