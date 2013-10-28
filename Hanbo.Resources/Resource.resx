@@ -417,4 +417,8 @@ Some other measurement are depend on this item, if remove it will lose the depen
   <data name="TimeConsumed" xml:space="preserve">
     <value>耗時 ( Time consumed )</value>
   </data>
+  <data name="Message_LightControllerDisconnectedNotice" xml:space="preserve">
+    <value>光源控制器尚未連線，請確認電源及連接網路介面是否正確！
+( Light Controller disconnected, check the power and network interface to fix the problem )</value>
+  </data>
 </root>

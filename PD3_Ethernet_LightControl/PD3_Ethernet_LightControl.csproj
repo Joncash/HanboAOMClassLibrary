@@ -121,6 +121,10 @@
       <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
       <Name>Hanbo.Helper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Resources\Hanbo.Resources.csproj">
+      <Project>{997bcb46-e343-45e3-ba64-b054381499cd}</Project>
+      <Name>Hanbo.Resources</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hanbo.System.SingleInstance\Hanbo.System.SingleInstance.csproj">
       <Project>{af11882b-41bd-423f-be54-262554ecc943}</Project>
       <Name>Hanbo.System.SingleInstance</Name>

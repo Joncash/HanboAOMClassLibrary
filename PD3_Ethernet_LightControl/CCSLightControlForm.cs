@@ -76,7 +76,7 @@ namespace PD3_Ethernet_LightControl
 
 			if (isOverRetryCont && !_isConnected)
 			{
-				MessageBox.Show("光源控制器尚未連線，\r\n請確認電源及連接網路介面是否正確！");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_LightControllerDisconnectedNotice);
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace PD3_Ethernet_LightControl
 				numericUpDown3.ValueChanged += new EventHandler(intensityChanged);
 
 				//init panel value
-				_lightControlManager.GetChannelStatusAsync(new string[] { "00", "01", "02" });				
+				_lightControlManager.GetChannelStatusAsync(new string[] { "00", "01", "02" });
 				_lightControlManager.On_ProbeConnectionWorked += _lightControlManager_On_ProbeConnectionWorked;
 				//_lightControlManager.StartProbeConnetion(null);
 			}

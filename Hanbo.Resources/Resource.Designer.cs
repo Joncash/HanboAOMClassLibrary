@@ -554,6 +554,16 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 光源控制器尚未連線，請確認電源及連接網路介面是否正確！
+        ///( Light Controller disconnected, check the power and network interface to fix the problem ).
+        /// </summary>
+        public static string Message_LightControllerDisconnectedNotice {
+            get {
+                return ResourceManager.GetString("Message_LightControllerDisconnectedNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 載入程序發生錯誤！請查看事件記錄器
         ///( Module loading fail, check the event log to fix problem).
         /// </summary>

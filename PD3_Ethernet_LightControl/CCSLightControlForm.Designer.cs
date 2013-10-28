@@ -56,92 +56,66 @@
 			// 
 			// label17
 			// 
-			this.label17.AutoSize = true;
-			this.label17.Location = new System.Drawing.Point(3, 11);
+			resources.ApplyResources(this.label17, "label17");
 			this.label17.Name = "label17";
-			this.label17.Size = new System.Drawing.Size(31, 13);
-			this.label17.TabIndex = 54;
-			this.label17.Text = "頻道";
 			// 
 			// label19
 			// 
-			this.label19.AutoSize = true;
-			this.label19.Location = new System.Drawing.Point(3, 36);
+			resources.ApplyResources(this.label19, "label19");
 			this.label19.Name = "label19";
-			this.label19.Size = new System.Drawing.Size(31, 13);
-			this.label19.TabIndex = 55;
-			this.label19.Text = "亮度";
 			// 
 			// L1CheckBox
 			// 
-			this.L1CheckBox.AutoSize = true;
-			this.L1CheckBox.Location = new System.Drawing.Point(42, 11);
+			resources.ApplyResources(this.L1CheckBox, "L1CheckBox");
 			this.L1CheckBox.Name = "L1CheckBox";
-			this.L1CheckBox.Size = new System.Drawing.Size(38, 17);
-			this.L1CheckBox.TabIndex = 56;
 			this.L1CheckBox.Tag = "00";
-			this.L1CheckBox.Text = "L1";
 			this.L1CheckBox.UseVisualStyleBackColor = true;
 			// 
 			// numericUpDown1
 			// 
-			this.numericUpDown1.Location = new System.Drawing.Point(42, 34);
+			resources.ApplyResources(this.numericUpDown1, "numericUpDown1");
 			this.numericUpDown1.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
 			this.numericUpDown1.Name = "numericUpDown1";
-			this.numericUpDown1.Size = new System.Drawing.Size(44, 20);
-			this.numericUpDown1.TabIndex = 57;
 			this.numericUpDown1.Tag = "00";
 			// 
 			// numericUpDown3
 			// 
-			this.numericUpDown3.Location = new System.Drawing.Point(163, 34);
+			resources.ApplyResources(this.numericUpDown3, "numericUpDown3");
 			this.numericUpDown3.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
 			this.numericUpDown3.Name = "numericUpDown3";
-			this.numericUpDown3.Size = new System.Drawing.Size(44, 20);
-			this.numericUpDown3.TabIndex = 61;
 			this.numericUpDown3.Tag = "02";
 			// 
 			// L2CheckBox
 			// 
-			this.L2CheckBox.AutoSize = true;
-			this.L2CheckBox.Location = new System.Drawing.Point(104, 11);
+			resources.ApplyResources(this.L2CheckBox, "L2CheckBox");
 			this.L2CheckBox.Name = "L2CheckBox";
-			this.L2CheckBox.Size = new System.Drawing.Size(38, 17);
-			this.L2CheckBox.TabIndex = 58;
 			this.L2CheckBox.Tag = "01";
-			this.L2CheckBox.Text = "L2";
 			this.L2CheckBox.UseVisualStyleBackColor = true;
 			// 
 			// numericUpDown2
 			// 
-			this.numericUpDown2.Location = new System.Drawing.Point(104, 34);
+			resources.ApplyResources(this.numericUpDown2, "numericUpDown2");
 			this.numericUpDown2.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
 			this.numericUpDown2.Name = "numericUpDown2";
-			this.numericUpDown2.Size = new System.Drawing.Size(44, 20);
-			this.numericUpDown2.TabIndex = 60;
 			this.numericUpDown2.Tag = "01";
 			// 
 			// L3CheckBox
 			// 
-			this.L3CheckBox.AutoSize = true;
-			this.L3CheckBox.Location = new System.Drawing.Point(163, 11);
+			resources.ApplyResources(this.L3CheckBox, "L3CheckBox");
 			this.L3CheckBox.Name = "L3CheckBox";
-			this.L3CheckBox.Size = new System.Drawing.Size(38, 17);
-			this.L3CheckBox.TabIndex = 59;
 			this.L3CheckBox.Tag = "02";
-			this.L3CheckBox.Text = "L3";
 			this.L3CheckBox.UseVisualStyleBackColor = true;
 			// 
 			// statusStrip1
@@ -150,29 +124,23 @@
             this.StatusLabel,
             this.IPLabel,
             this.PortLabel});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 75);
+			resources.ApplyResources(this.statusStrip1, "statusStrip1");
 			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(296, 22);
-			this.statusStrip1.TabIndex = 66;
-			this.statusStrip1.Text = "statusStrip1";
 			// 
 			// StatusLabel
 			// 
 			this.StatusLabel.Name = "StatusLabel";
-			this.StatusLabel.Size = new System.Drawing.Size(50, 17);
-			this.StatusLabel.Text = "Loading";
+			resources.ApplyResources(this.StatusLabel, "StatusLabel");
 			// 
 			// IPLabel
 			// 
 			this.IPLabel.Name = "IPLabel";
-			this.IPLabel.Size = new System.Drawing.Size(90, 17);
-			this.IPLabel.Text = "IP Address: N/A";
+			resources.ApplyResources(this.IPLabel, "IPLabel");
 			// 
 			// PortLabel
 			// 
 			this.PortLabel.Name = "PortLabel";
-			this.PortLabel.Size = new System.Drawing.Size(57, 17);
-			this.PortLabel.Text = "Port: N/A";
+			resources.ApplyResources(this.PortLabel, "PortLabel");
 			// 
 			// ControlPanel
 			// 
@@ -184,19 +152,15 @@
 			this.ControlPanel.Controls.Add(this.L2CheckBox);
 			this.ControlPanel.Controls.Add(this.numericUpDown2);
 			this.ControlPanel.Controls.Add(this.L3CheckBox);
-			this.ControlPanel.Location = new System.Drawing.Point(-3, 0);
+			resources.ApplyResources(this.ControlPanel, "ControlPanel");
 			this.ControlPanel.Name = "ControlPanel";
-			this.ControlPanel.Size = new System.Drawing.Size(210, 70);
-			this.ControlPanel.TabIndex = 68;
 			// 
 			// ResetButton
 			// 
 			this.ResetButton.Image = global::PD3_Ethernet_LightControl.Properties.Resources.power_Off;
-			this.ResetButton.Location = new System.Drawing.Point(213, 1);
+			resources.ApplyResources(this.ResetButton, "ResetButton");
 			this.ResetButton.Name = "ResetButton";
-			this.ResetButton.Size = new System.Drawing.Size(75, 68);
-			this.ResetButton.TabIndex = 67;
-			this.LightControlToolTip.SetToolTip(this.ResetButton, "開啟連線");
+			this.LightControlToolTip.SetToolTip(this.ResetButton, resources.GetString("ResetButton.ToolTip"));
 			this.ResetButton.UseVisualStyleBackColor = true;
 			this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
 			// 
@@ -211,15 +175,12 @@
 			// 
 			// CCSLightControlForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(296, 97);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.ControlPanel);
 			this.Controls.Add(this.ResetButton);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "CCSLightControlForm";
-			this.Text = "光源控制器";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CCSLightControlForm_FormClosing);
 			this.Load += new System.EventHandler(this.CCSLightControlForm_Load);
 			this.Shown += new System.EventHandler(this.CCSLightControlForm_Shown);
