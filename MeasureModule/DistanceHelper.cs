@@ -317,10 +317,10 @@ namespace MeasureModule
 				modelList.Add(line1EndProjModel);
 
 
-				//線段 1 的中點
+				//線段 2 的中點
 				var line2CP = getMidPoint(line2);
 
-				//線段 1 的中點在線段 2 上的投影
+				//線段 2 的中點在線段 1 上的投影
 				var line2CPProjModel = getProjectionPlModel(line2CP, line1);
 				modelList.Add(line2CPProjModel);
 
@@ -333,6 +333,8 @@ namespace MeasureModule
 				var line2EndPoint = new MeasureViewModel() { Row1 = line2.Row2, Col1 = line2.Col2 };
 				var line2EndProjModel = getProjectionPlModel(line2EndPoint, line1);
 				modelList.Add(line2EndProjModel);
+
+				//線段
 				shortestModel = modelList.OrderBy(p => p.Distance.D).Take(1).SingleOrDefault() as MeasureViewModel;
 
 			}
