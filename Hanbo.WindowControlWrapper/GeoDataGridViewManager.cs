@@ -738,7 +738,7 @@ namespace Hanbo.WindowControlWrapper
 				{
 					Name = measureName,
 					Distance = mModel.Distance,
-					WorldDistance = mModel.Distance,
+					WorldDistance = pixelToRealWorldValue(mModel.Distance),
 					//RowNumber = nextRowNumber,
 					Icon = _ImageList[MeasureType.DistanceY.ToString()],
 					GeoType = MeasureType.DistanceY,
@@ -782,7 +782,7 @@ namespace Hanbo.WindowControlWrapper
 				{
 					Name = measureName,
 					Distance = mModel.Distance,
-					WorldDistance = mModel.Distance,
+					WorldDistance = pixelToRealWorldValue(mModel.Distance),
 					//RowNumber = nextRowNumber,
 					Icon = _ImageList[MeasureType.DistanceX.ToString()],
 					GeoType = MeasureType.DistanceX,
