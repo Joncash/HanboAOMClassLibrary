@@ -460,4 +460,8 @@ Some other measurement are depend on this item, if remove it will lose the depen
   <data name="ZoomRatio" xml:space="preserve">
     <value>Zoom</value>
   </data>
+  <data name="Message_DistanceCalculationError" xml:space="preserve">
+    <value>計算距離發生錯誤
+( Distance Calculation Error )</value>
+  </data>
 </root>

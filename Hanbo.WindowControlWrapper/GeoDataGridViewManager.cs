@@ -1,4 +1,5 @@
 ﻿using HalconDotNet;
+using Hanbo.Helper;
 using MeasureModule;
 using MeasureModule.Resolver;
 using MeasureModule.ViewModel;
@@ -993,7 +994,7 @@ namespace Hanbo.WindowControlWrapper
 			catch (Exception ex)
 			{
 				logger.Error("計算距離 Error:" + ex.Message);
-				MessageBox.Show("計算距離發生錯誤");
+				MessageBox.Show(Hanbo.Resources.Resource.Message_DistanceCalculationError);
 			}
 		}
 
@@ -1182,19 +1183,14 @@ namespace Hanbo.WindowControlWrapper
 			}
 		}
 
+		/// <summary>
+		/// Pixel 轉換為實際尺寸
+		/// </summary>
+		/// <param name="value">Pixel value</param>
+		/// <returns>real world value</returns>
 		private double pixelToRealWorldValue(double value)
 		{
-			double realValue = 0.0;
-			switch (_ExportUnit)
-			{
-				case "um":
-					realValue = Math.Round((value * _Resolution), _RoundDigit);
-					break;
-				case "mm":
-					realValue = Math.Round((value * _Resolution) / 1000.0, _RoundDigit);
-					break;
-			}
-			return realValue;
+			return UnitConverter.PixelToRealWorldValue(value, _ExportUnit, _Resolution, _RoundDigit);
 		}
 
 		#region TreeView 初始化

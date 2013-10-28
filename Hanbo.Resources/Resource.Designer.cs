@@ -506,6 +506,16 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 計算距離發生錯誤
+        ///( Distance Calculation Error ).
+        /// </summary>
+        public static string Message_DistanceCalculationError {
+            get {
+                return ResourceManager.GetString("Message_DistanceCalculationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 無法計算 X 方向距離！(Can not calculate the x distance).
         /// </summary>
         public static string Message_DistanceXWarning {

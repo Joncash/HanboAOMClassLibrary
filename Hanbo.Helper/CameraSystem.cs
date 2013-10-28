@@ -57,17 +57,7 @@ namespace Hanbo.Helper
 		/// <returns></returns>
 		public static double PixelToRealWorld(double value, string exportUnit)
 		{
-			double realValue = 0.0;
-			switch (exportUnit)
-			{
-				case "um":
-					realValue = Math.Round((value * _Resolution), _RoundDigit);
-					break;
-				case "mm":
-					realValue = Math.Round((value * _Resolution) / 1000.0, _RoundDigit);
-					break;
-			}
-			return realValue;
+			return UnitConverter.PixelToRealWorldValue(value, exportUnit, _Resolution, _RoundDigit);
 		}
 
 	}

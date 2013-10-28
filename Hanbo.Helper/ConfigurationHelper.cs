@@ -251,5 +251,34 @@ namespace Hanbo.Helper
 			}
 			return hasPlugin;
 		}
+
+		/// <summary>
+		/// 幾何量測模型 - 模組類型
+		/// Measure -> 手動測量
+		/// Macro -> 程式編輯
+		/// AutoMeasure -> 自動化量測
+		/// </summary>
+		public enum GeoDataGridViewModuleType { Measure, Macro, AutoMeasure };
+
+		/// <summary>
+		/// 取得隱藏的欄位s
+		/// </summary>
+		/// <param name="moduleType"></param>
+		/// <returns></returns>
+		public static string[] GetGeoDataGridViewInVisiableFields(GeoDataGridViewModuleType moduleType)
+		{
+			string[] inVisibleFields = new string[] { };
+			switch (moduleType)
+			{
+				case GeoDataGridViewModuleType.AutoMeasure:
+					inVisibleFields = new string[] { "Selected", "IsExportItem", "Name", "RecordID", "ROIID", "ROIModel", "GeoType", "Normal", "LowerBound", "UpperBound" };
+					break;
+				case GeoDataGridViewModuleType.Macro:
+				case GeoDataGridViewModuleType.Measure:
+					inVisibleFields = new string[] { "Selected", "StartPhi", "EndPhi", "PointOrder", "IsExportItem", "RecordID", "ROIID", "ROIModel", "GeoType", "Normal", "LowerBound", "UpperBound" };
+					break;
+			}
+			return inVisibleFields;
+		}
 	}
 }
