@@ -101,11 +101,56 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 自動 (Auto).
+        /// </summary>
+        public static string Button_Auto {
+            get {
+                return ResourceManager.GetString("Button_Auto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 取消自動 (Cancel).
+        /// </summary>
+        public static string Button_Cancel {
+            get {
+                return ResourceManager.GetString("Button_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 影像裝置尚未準備完成 ( Camera is not ready).
         /// </summary>
         public static string CameraNotReadyMessage {
             get {
                 return ResourceManager.GetString("CameraNotReadyMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connected.
+        /// </summary>
+        public static string Connected {
+            get {
+                return ResourceManager.GetString("Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection.
+        /// </summary>
+        public static string Connection {
+            get {
+                return ResourceManager.GetString("Connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string ConnectionStatus {
+            get {
+                return ResourceManager.GetString("ConnectionStatus", resourceCulture);
             }
         }
         
@@ -126,6 +171,15 @@ namespace Hanbo.Resources {
             get {
                 object obj = ResourceManager.GetObject("crossPoint_blue32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disconnected.
+        /// </summary>
+        public static string Disconnected {
+            get {
+                return ResourceManager.GetString("Disconnected", resourceCulture);
             }
         }
         
@@ -283,6 +337,33 @@ namespace Hanbo.Resources {
         public static string FailMessage {
             get {
                 return ResourceManager.GetString("FailMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manigify.
+        /// </summary>
+        public static string ImageManigify {
+            get {
+                return ResourceManager.GetString("ImageManigify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move.
+        /// </summary>
+        public static string ImageMove {
+            get {
+                return ResourceManager.GetString("ImageMove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom.
+        /// </summary>
+        public static string ImageZoom {
+            get {
+                return ResourceManager.GetString("ImageZoom", resourceCulture);
             }
         }
         
@@ -862,6 +943,15 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mode.
+        /// </summary>
+        public static string OperationMode {
+            get {
+                return ResourceManager.GetString("OperationMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string SuccessCode {
@@ -905,6 +995,33 @@ namespace Hanbo.Resources {
         public static string TimeConsumed {
             get {
                 return ResourceManager.GetString("TimeConsumed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X.
+        /// </summary>
+        public static string XAxis {
+            get {
+                return ResourceManager.GetString("XAxis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y.
+        /// </summary>
+        public static string YAxis {
+            get {
+                return ResourceManager.GetString("YAxis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom.
+        /// </summary>
+        public static string ZoomRatio {
+            get {
+                return ResourceManager.GetString("ZoomRatio", resourceCulture);
             }
         }
     }

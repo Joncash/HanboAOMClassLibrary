@@ -421,4 +421,43 @@ Some other measurement are depend on this item, if remove it will lose the depen
     <value>光源控制器尚未連線，請確認電源及連接網路介面是否正確！
 ( Light Controller disconnected, check the power and network interface to fix the problem )</value>
   </data>
+  <data name="Button_Auto" xml:space="preserve">
+    <value>自動 (Auto)</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>取消自動 (Cancel)</value>
+  </data>
+  <data name="Connected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="Connection" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="ConnectionStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Disconnected" xml:space="preserve">
+    <value>Disconnected</value>
+  </data>
+  <data name="ImageManigify" xml:space="preserve">
+    <value>Manigify</value>
+  </data>
+  <data name="ImageMove" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="ImageZoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="OperationMode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="XAxis" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="YAxis" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="ZoomRatio" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
 </root>
