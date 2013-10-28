@@ -61,6 +61,7 @@
     <Compile Include="ResourceHelper.cs" />
     <Compile Include="ShapeFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">
