@@ -5,14 +5,18 @@ using System.Text;
 
 namespace Hanbo.Helper
 {
+	/*=========================================
+	 
+	 * 如果要新增單位，記得修改底下的 (1) UnitType (2) PixelToRealWorldValue (3) GetUnits
+	 
+	 ==========================================*/
+
 	/// <summary>
 	/// 單位種類
 	/// 公制 (um, mm)
 	/// 英制 (mil, inch)
 	/// </summary>
 	public enum UnitType { um, mm, mil, inch };
-
-
 
 	public static class UnitConverter
 	{
