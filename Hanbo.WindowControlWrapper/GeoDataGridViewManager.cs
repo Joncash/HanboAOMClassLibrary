@@ -280,7 +280,7 @@ namespace Hanbo.WindowControlWrapper
 		private TreeNode getGeoTreeNode(GeoDataGridViewModel geoModel)
 		{
 			var number = _DataList.Count;
-			var geoNodeDisplayName = number.ToString("d2") + " " + geoModel.GeoType;
+			var geoNodeDisplayName = (String.IsNullOrEmpty(geoModel.Name)) ? String.Format("{0} {1}", number.ToString("d2"), geoModel.GeoType) : geoModel.Name;
 			var geoImageKey = geoModel.GeoType.ToString();
 			TreeNode geoNode = new TreeNode() { Name = geoModel.RecordID, Text = geoNodeDisplayName, ImageKey = geoImageKey, SelectedImageKey = geoImageKey };
 			return geoNode;
@@ -294,7 +294,7 @@ namespace Hanbo.WindowControlWrapper
 				//var geoNode = getGeoTreeNode(geoModel);
 
 
-				var roiNodeName = number.ToString("d2") + " " + activeROI.ROIMeasureType;
+				var roiNodeName = String.IsNullOrEmpty(geoModel.Name) ? String.Format("{0} {1}", number.ToString("d2"), activeROI.ROIMeasureType) : geoModel.Name;
 				var roiImageKey = activeROI.ROIMeasureType.ToString();
 				var index = _TreeViewContainer.Nodes.Count;
 				TreeNode roiNode = new TreeNode() { Name = geoModel.RecordID, Text = roiNodeName, ImageKey = roiImageKey, SelectedImageKey = roiImageKey, Checked = activeROI.Visiable };
@@ -1233,6 +1233,38 @@ namespace Hanbo.WindowControlWrapper
 			ROI roi = e.Node.Tag as ROI;
 			notifyRecordChanged(GeoDataGridViewNotifyType.TreeView_AfterSelect, roi);
 		}
+		public void SetTreeViewNodeActivate(ROI activeROI)
+		{
+			if (_TreeViewContainer != null)
+			{
+				findTheNode(activeROI, _TreeViewContainer.Nodes);
+			}
+		}
+
+		private void findTheNode(ROI activeROI, TreeNodeCollection treeNodeCollection)
+		{
+			try
+			{
+				foreach (TreeNode node in treeNodeCollection)
+				{
+					var nodeROI = node.Tag as ROI;
+					var findIt = (nodeROI != null && nodeROI.ID == activeROI.ID);
+					if (findIt)
+					{
+						node.TreeView.SelectedNode = node;
+						node.Expand();
+						node.TreeView.Focus();
+						break;
+					}
+					if (!findIt)
+						findTheNode(activeROI, node.Nodes);
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.Error(ex);
+			}
+		}
 		#region TreeView  原生方法
 		private const int TVIF_STATE = 0x8;
 		private const int TVIS_STATEIMAGEMASK = 0xF000;
@@ -1273,6 +1305,8 @@ namespace Hanbo.WindowControlWrapper
 		}
 		#endregion
 		#endregion
+
+
 
 
 	}
