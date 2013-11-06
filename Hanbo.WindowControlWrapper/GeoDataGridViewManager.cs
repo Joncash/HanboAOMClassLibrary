@@ -470,6 +470,32 @@ namespace Hanbo.WindowControlWrapper
 						item.Col1 = crossPointViewModel.Col1;
 					}
 				}
+				else if (item.GeoType == MeasureType.DistanceX)
+				{
+					var distanceXViewModel = MakeDistanceXGeoDataViewModel(firstModel, secondModel);
+					if (distanceXViewModel != null)
+					{
+						item.Row1 = distanceXViewModel.Row1;
+						item.Row2 = distanceXViewModel.Row2;
+						item.Col1 = distanceXViewModel.Col1;
+						item.Col2 = distanceXViewModel.Col2;
+						item.Distance = distanceXViewModel.Distance;
+						item.WorldDistance = distanceXViewModel.WorldDistance;
+					}
+				}
+				else if (item.GeoType == MeasureType.DistanceY)
+				{
+					var distanceYViewModel = makeDistanceYGeoDataViewModel(firstModel, secondModel);
+					if (distanceYViewModel != null)
+					{
+						item.Row1 = distanceYViewModel.Row1;
+						item.Row2 = distanceYViewModel.Row2;
+						item.Col1 = distanceYViewModel.Col1;
+						item.Col2 = distanceYViewModel.Col2;
+						item.Distance = distanceYViewModel.Distance;
+						item.WorldDistance = distanceYViewModel.WorldDistance;
+					}
+				}
 			}
 		}
 

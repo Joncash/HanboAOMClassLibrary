@@ -182,23 +182,25 @@ namespace MeasureModule
 		/// <returns></returns>
 		public static MeasureViewModel CaculateDistance(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
 		{
-			var sum = (int)firstModel.GeoType + (int)secondModel.GeoType;
+			MeasureType[] pointTypes = new MeasureType[] { MeasureType.Point, MeasureType.Circle, MeasureType.PointCircle, MeasureType.CrossPoint };
+			MeasureType[] lineTypes = new MeasureType[] { MeasureType.Line
+														, MeasureType.Distance
+														, MeasureType.DistanceX
+														, MeasureType.DistanceY
+														, MeasureType.FitLine
+														, MeasureType.SymmetryLine};
+			int sum = 0;
+			if (pointTypes.Contains(firstModel.GeoType)) sum += 1;
+			if (pointTypes.Contains(secondModel.GeoType)) sum += 1;
+			if (lineTypes.Contains(firstModel.GeoType)) sum += 2;
+			if (lineTypes.Contains(secondModel.GeoType)) sum += 2;
+
 			MeasureViewModel newModel = null;
 			double distance = 0.0;
 			switch (sum)
 			{
 				case 2:
-				case 5:
-				case 8:
-				case 17:
-				case 20:
-				case 129:
-					//point, point
-					//point, circle
-					//circle, circle
-					//point, pointCircle
-					//circle, pointCircle
-					//crosspoint, point
+					// Point to Point
 					distance = PointToPoint(firstModel, secondModel);
 					newModel = new MeasureViewModel()
 					{
@@ -210,23 +212,7 @@ namespace MeasureModule
 					};
 					break;
 				case 3:
-				case 6:
-				case 9:
-				case 12:
-				case 18:
-				case 24:
-				case 65:
-				case 68:
-				case 80:
-					//point, line
-					//line, circle
-					//distance, point
-					//circle, distance
-					//pointCircle, Line
-					//pointCircle, distance
-					//point, symmetryLine
-					//circle, symmetryline
-					//pointcircle, symmetryline
+					// Point to Line or line to point
 					var isLineModel = (firstModel.Row2 != null && firstModel.Row2.D >= 0.0);
 					var point = (isLineModel) ? secondModel : firstModel;
 					var line = (isLineModel) ? firstModel : secondModel;
@@ -243,17 +229,7 @@ namespace MeasureModule
 					};
 					break;
 				case 4:
-				case 10:
-				case 16:
-				case 66:
-				case 72:
-				case 128:
-					//line, line
-					//distance, line
-					//distance, distance
-					//Symmetric line and line
-					//Symmetric line, distance
-					//Symetric line and Symetric line
+					// line to line
 					var model = GetTwoLineShortestPointModel(firstModel, secondModel);
 					//distance = LineToLine(firstModel, secondModel);
 					newModel = new MeasureViewModel()
