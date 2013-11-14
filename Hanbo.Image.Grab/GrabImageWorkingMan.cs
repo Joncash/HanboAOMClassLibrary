@@ -286,6 +286,108 @@ namespace Hanbo.Image.Grab
 			}
 		}
 
+
+
+
+		/// <summary>
+		/// NotImplementedException
+		/// </summary>
+		public void Pause()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// 停止擷取
+		/// </summary>
+		public void Cancel()
+		{
+			if (_bgworker.IsBusy)
+				_bgworker.CancelAsync();
+		}
+
+		/// <summary>
+		/// 中斷連線
+		/// </summary>
+		public void DisConnection()
+		{
+			_bgworker.CancelAsync();
+			if (_hFrameGrabber != null)
+			{
+				_hFrameGrabber.Dispose();
+				Status.IsConnection = false;
+				statusChangedNotify(null, new GrabImageStatusChangedEventArgs() { Status = new WorkingManStatus() { Instruction = GrabInstruction.DisConnect, Stage = GrabStage.Closed, State = GrabState.Idle } });
+			}
+		}
+		public void Dispose()
+		{
+			try
+			{
+				_bgworker.CancelAsync();
+				_hFrameGrabber.Dispose();
+				_bgworker.Dispose();
+			}
+			catch (Exception ex)
+			{
+				_logger.Debug("[Dispose] Exception: " + ex.Message);
+			}
+		}
+		public HObject GetCurrentImage()
+		{
+			return _currentImage;
+		}
+
+		/// <summary>
+		/// Celar all Register evetns
+		/// </summary>
+		public void RemoveAllRegisterEvent()
+		{
+			On_GrabImageStatusChanged = null;
+			On_GrabImageConnecting = null;
+			On_GrabImageConnected = null;
+			GrabImageException = null;
+			GrabImageStart = null;
+			GrabImageChanged = null;
+			GrabImageStopped = null;
+		}
+		#endregion
+
+		#region private methods
+		//
+
+		/// <summary>
+		/// 設定 HFramegrabber 參數
+		/// </summary>
+		private void setHFramegrabber()
+		{
+			if (_hFrameGrabber == null || !_hFrameGrabber.IsInitialized())
+			{
+				_hFrameGrabber = new HFramegrabber(_FGArgs.Name,
+													_FGArgs.HorizontalResolution,
+													_FGArgs.VerticalResolution,
+													_FGArgs.ImageWidth,
+													_FGArgs.ImageHeight,
+													_FGArgs.StartRow,
+													_FGArgs.StartColumn,
+													_FGArgs.Field,
+													new HTuple(_FGArgs.BitsPerChannel),
+													new HTuple(_FGArgs.ColorSpace),
+													new HTuple(_FGArgs.Generic),
+													_FGArgs.ExternalTrigger,
+													new HTuple(_FGArgs.CameraType),
+													new HTuple(_FGArgs.Device),
+													new HTuple(_FGArgs.Port),
+													new HTuple(_FGArgs.LineIn));
+			}
+		}
+		#endregion
+		private void setStatus(GrabInstruction instruction, GrabStage stage, GrabState state)
+		{
+			Status.Instruction = instruction;
+			Status.Stage = stage;
+			Status.State = state;
+		}
+
 		/// <summary>
 		/// 狀態改變通知
 		/// </summary>
@@ -335,106 +437,6 @@ namespace Hanbo.Image.Grab
 				setStatus(GrabInstruction.Connect, Status.Stage, GrabState.Idle);
 				statusChangedNotify(null, new GrabImageStatusChangedEventArgs() { Status = this.Status });
 			}
-		}
-
-		private void setStatus(GrabInstruction instruction, GrabStage stage, GrabState state)
-		{
-			Status.Instruction = instruction;
-			Status.Stage = stage;
-			Status.State = state;
-		}
-
-		/// <summary>
-		/// NotImplementedException
-		/// </summary>
-		public void Pause()
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// 停止擷取
-		/// </summary>
-		public void Cancel()
-		{
-			if (_bgworker.IsBusy)
-				_bgworker.CancelAsync();
-		}
-
-		/// <summary>
-		/// 中斷連線
-		/// </summary>
-		public void DisConnection()
-		{
-			_bgworker.CancelAsync();
-			if (_hFrameGrabber != null)
-			{
-				_hFrameGrabber.Dispose();
-				Status.IsConnection = false;
-				statusChangedNotify(null, new GrabImageStatusChangedEventArgs() { Status = new WorkingManStatus() { Instruction = GrabInstruction.DisConnect, Stage = GrabStage.Closed, State = GrabState.Idle } });
-			}
-		}
-		public void Dispose()
-		{
-			try
-			{
-				_bgworker.CancelAsync();
-				_hFrameGrabber.Dispose();
-				_bgworker.Dispose();
-			}
-			catch (Exception ex)
-			{
-				_logger.Debug("[Dispose] Exception: " + ex.Message);
-			}
-		}
-		public HObject GetCurrentImage()
-		{
-			return _currentImage;
-		}
-		#endregion
-
-		#region private methods
-		//
-
-		/// <summary>
-		/// 設定 HFramegrabber 參數
-		/// </summary>
-		private void setHFramegrabber()
-		{
-			if (_hFrameGrabber == null || !_hFrameGrabber.IsInitialized())
-			{
-				_hFrameGrabber = new HFramegrabber(_FGArgs.Name,
-													_FGArgs.HorizontalResolution,
-													_FGArgs.VerticalResolution,
-													_FGArgs.ImageWidth,
-													_FGArgs.ImageHeight,
-													_FGArgs.StartRow,
-													_FGArgs.StartColumn,
-													_FGArgs.Field,
-													new HTuple(_FGArgs.BitsPerChannel),
-													new HTuple(_FGArgs.ColorSpace),
-													new HTuple(_FGArgs.Generic),
-													_FGArgs.ExternalTrigger,
-													new HTuple(_FGArgs.CameraType),
-													new HTuple(_FGArgs.Device),
-													new HTuple(_FGArgs.Port),
-													new HTuple(_FGArgs.LineIn));
-			}
-		}
-		#endregion
-
-		/// <summary>
-		/// Celar all Register evetns
-		/// </summary>
-		public void RemoveAllRegisterEvent()
-		{
-			On_GrabImageStatusChanged = null;
-			On_GrabImageConnecting = null;
-			On_GrabImageConnected = null;
-			GrabImageException = null;
-			GrabImageStart = null;
-			GrabImageChanged = null;
-			GrabImageStopped = null;
 		}
 	}
 

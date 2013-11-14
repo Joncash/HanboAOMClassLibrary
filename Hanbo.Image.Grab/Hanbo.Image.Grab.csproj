@@ -58,6 +58,7 @@
     <Compile Include="GrabImageWorkingMan.cs" />
     <Compile Include="IGrabImage.cs" />
     <Compile Include="IGrab.cs" />
+    <Compile Include="LineScanGrabImageWorkingMan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HalconGrabber.cs" />
     <Compile Include="PylonFeature.cs" />
