@@ -11,8 +11,8 @@ namespace Hanbo.PEG.Helper
 		/// <summary>
 		/// 取得 PEGMoveModel
 		/// </summary>
-		/// <param name="objectWidth">受測物長度 (um)</param>
-		/// <param name="objectHeight">受測物寬度 (um)</param>
+		/// <param name="objectWidth">受測物長度, X 方向 (um)</param>
+		/// <param name="objectHeight">受測物寬度, Y 方向 (um)</param>
 		/// <param name="spec">Line Scan Camera 的規格 ( Resolution, Pixel Szie, Scan Rate, exposeTime)</param>
 		/// <returns></returns>
 		public static PEGMoveViewModel GetPEGMoveModel(int objectWidth, int objectHeight, CameraSpecViewModel spec)
