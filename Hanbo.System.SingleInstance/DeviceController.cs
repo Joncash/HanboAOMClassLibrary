@@ -1,4 +1,5 @@
-﻿using Hanbo.Configuration.Settings;
+﻿using Hanbo.ACS;
+using Hanbo.Configuration.Settings;
 using Hanbo.Image.Grab;
 using LightControl;
 using System;
@@ -14,8 +15,9 @@ namespace Hanbo.System.SingleInstance
 		private static CameraSettingSection _section = ConfigurationManager.GetSection("CameraSettingSection") as CameraSettingSection;
 		private static FrameGrabberArgs _fgArgs;
 		private static GrabImageWorkingMan _grabImageWorkingMan;
+		private static LineScanGrabImageWorkingMan _linescan;
+		private static MotionController _motionController;
 		private static bool _grabImageManInstanceUsed = false;
-
 
 		private static CCSLightControlManager _lightControlManager;
 		private static bool _lightControlInstanceUsed = false;
@@ -25,13 +27,56 @@ namespace Hanbo.System.SingleInstance
 
 		public static bool LightControlManagerUsed { get { return _lightControlInstanceUsed; } }
 
+		public static MotionController GetMotionControllerInstance()
+		{
+			if (_motionController == null)
+			{
+				try
+				{
+					_motionController = new MotionController();
+					_motionController.Initialize();
+					_motionController.EnableAxis(Axis.X);
+					_motionController.EnableAxis(Axis.Y);
+					_motionController.EnableAxis(Axis.Z);
+				}
+				catch (Exception ex)
+				{
+				}
+				finally
+				{
+
+				}
+			}
+			else
+			{
+				_motionController.RemoveAllRegisterEvent();
+			}
+			return _motionController;
+			//
+		}
+
 		/// <summary>
 		/// 釋放 CCD 資源
 		/// </summary>
 		public static void ReleaseGrabImageWorkingManInstance()
 		{
-			_grabImageWorkingMan.Cancel();
+			//_grabImageWorkingMan.Cancel();
 			_grabImageManInstanceUsed = false;
+
+			_linescan.Cancel();
+		}
+		public static LineScanGrabImageWorkingMan GetLineScanInstance()
+		{
+			if (_linescan == null)
+			{
+				_linescan = new LineScanGrabImageWorkingMan();
+			}
+			else
+			{
+				_linescan.RemoveAllRegisterEvent();
+			}
+			_grabImageManInstanceUsed = (_linescan != null);
+			return _linescan;
 		}
 		public static GrabImageWorkingMan GetGrabImageWorkingManInstance()
 		{
