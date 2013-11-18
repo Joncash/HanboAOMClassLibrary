@@ -1,5 +1,4 @@
 ﻿using HalconDotNet;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,9 +24,6 @@ namespace Hanbo.Helper
 	/// </summary>
 	public class ShapeFinder
 	{
-		//NLog
-		private static Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
 		private HTuple _minScore = 0.5;
 		private HTuple _numMatches = 99;
 		private HTuple _maxOverlap = 0.5;
@@ -71,13 +67,13 @@ namespace Hanbo.Helper
 			{
 				try
 				{
-					logger.Trace("ShapeFinder @Find() => readShapeModel()");
+                    Hanbo.Log.LogManager.Trace("ShapeFinder @Find() => readShapeModel()");
 					HTuple hv_A1LModelId = ReadShapeModel(trainingModelfilepath);
 					shapeModel = findShapeModel(hImage, hv_A1LModelId);
 				}
 				catch (Exception ex)
 				{
-					logger.Error("ShapeFinder exception:" + ex.Message);
+                    Hanbo.Log.LogManager.Error("ShapeFinder exception:" + ex.Message);
 				}
 			}
 			return shapeModel;
@@ -98,7 +94,7 @@ namespace Hanbo.Helper
 			}
 			catch (Exception ex)
 			{
-				logger.Error("ShapeFinder exception:" + ex.Message);
+                Hanbo.Log.LogManager.Error("ShapeFinder exception:" + ex.Message);
 			}
 			return shapeModel;
 		}
@@ -110,7 +106,7 @@ namespace Hanbo.Helper
 			HTuple hv_ModelRow, hv_ModelColumn, hv_ModelAngle, hv_ModelScore;
 
 			//find
-			logger.Trace("ShapeFinder @Find() => FindShapeModel()");
+            Hanbo.Log.LogManager.Trace("ShapeFinder @Find() => FindShapeModel()");
 			HOperatorSet.FindShapeModel(hImage, hv_A1LModelId, (new HTuple(0)).TupleRad()
 				, (new HTuple(360)).TupleRad(),
 				_minScore,
@@ -151,7 +147,7 @@ namespace Hanbo.Helper
 			catch (Exception ex)
 			{
 
-				logger.Error("ReadShapeModel Exception: " + ex.Message);
+                Hanbo.Log.LogManager.Error("ReadShapeModel Exception: " + ex.Message);
 			}
 			return hv_A1LModelId;
 		}

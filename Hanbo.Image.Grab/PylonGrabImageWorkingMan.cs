@@ -1,5 +1,4 @@
 ﻿using HalconDotNet;
-using NLog;
 using PylonC.NET;
 using System;
 using System.Collections.Generic;
@@ -55,7 +54,6 @@ namespace Hanbo.Image.Grab
 
 		#region Private property member (私有屬性成員)
 		/**********************************************************************************/
-		private static Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 		private BackgroundWorker _bgworker;
 		private PYLON_DEVICE_HANDLE _pylonDevHandle;
 		private List<PylonFeature> _simpleGrabFeatures; //Simple Grab Features
@@ -136,7 +134,7 @@ namespace Hanbo.Image.Grab
 			}
 			catch (HalconDotNet.HOperatorException ex)
 			{
-				_logger.Error(ex);
+				Hanbo.Log.LogManager.Error(ex);
 				if (GrabImageException != null)
 				{
 					GrabImageException(ex);

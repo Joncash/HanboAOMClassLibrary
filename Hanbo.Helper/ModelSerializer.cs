@@ -1,5 +1,4 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,8 +10,6 @@ namespace Hanbo.Helper
 {
 	public class ModelSerializer
 	{
-		private static Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
 		/// <summary>
 		/// 序列化 to File
 		/// </summary>
@@ -70,7 +67,7 @@ namespace Hanbo.Helper
 			}
 			catch (SerializationException ex)
 			{
-				logger.Error("DeSerialize Fail: " + ex.Message);
+				Hanbo.Log.LogManager.Error("DeSerialize Fail: " + ex.Message);
 			}
 			return deObject;
 		}
@@ -95,7 +92,7 @@ namespace Hanbo.Helper
 			}
 			catch (SerializationException ex)
 			{
-				logger.Error("DeSerialize Fail: " + ex.Message);
+                Hanbo.Log.LogManager.Error("DeSerialize Fail: " + ex.Message);
 			}
 			return deObject;
 		}

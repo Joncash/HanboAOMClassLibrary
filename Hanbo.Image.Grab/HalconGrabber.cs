@@ -5,7 +5,6 @@ using System.Text;
 using System.ComponentModel;
 //
 using HalconDotNet;
-using NLog;
 
 namespace Hanbo.Image.Grab
 {
@@ -16,7 +15,6 @@ namespace Hanbo.Image.Grab
 
 		#region 私有成員
 		//
-		private static Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 		private HFramegrabber _hFrameGrabber;
 		private FrameGrabberArgs _FGArgs;
 		private int _delay = 58; // FPS = 17
@@ -62,8 +60,8 @@ namespace Hanbo.Image.Grab
 			catch (Exception ex)
 			{
 				viewModel.Result.Error = ex;
-				_logger.Debug("Connect Exception:" + ex.Message);
-				_logger.Debug("Connect StackTrace:" + ex.StackTrace);
+				Hanbo.Log.LogManager.Debug("Connect Exception:" + ex.Message);
+                Hanbo.Log.LogManager.Debug("Connect StackTrace:" + ex.StackTrace);
 			}
 			finally
 			{
@@ -94,8 +92,8 @@ namespace Hanbo.Image.Grab
 			catch (Exception ex)
 			{
 				viewModel.Result.Error = ex;
-				_logger.Debug("Connect 2 Exception:" + ex.Message);
-				_logger.Debug("Connect 2 StackTrace:" + ex.StackTrace);
+                Hanbo.Log.LogManager.Debug("Connect 2 Exception:" + ex.Message);
+                Hanbo.Log.LogManager.Debug("Connect 2 StackTrace:" + ex.StackTrace);
 			}
 			finally
 			{
@@ -154,8 +152,8 @@ namespace Hanbo.Image.Grab
 			catch (Exception ex)
 			{
 				viewModel.Result.Error = ex;
-				_logger.Debug("SnapShot Exception:" + ex.Message);
-				_logger.Debug("SnapShot StackTrace:" + ex.StackTrace);
+                Hanbo.Log.LogManager.Debug("SnapShot Exception:" + ex.Message);
+                Hanbo.Log.LogManager.Debug("SnapShot StackTrace:" + ex.StackTrace);
 			}
 			finally
 			{
@@ -188,11 +186,11 @@ namespace Hanbo.Image.Grab
 			{
 				System.Console.WriteLine("Before HOperatorSet.GrabImageStart........");
 				System.Console.WriteLine("Press anykey to Continue...." + DateTime.Now.ToString());
-				_logger.Debug("Before GrabImage");
+                Hanbo.Log.LogManager.Debug("Before GrabImage");
 				System.Console.ReadKey();
 				
 				HOperatorSet.GrabImage(out himage, acqHandle);
-				_logger.Debug("After GrabImage");
+                Hanbo.Log.LogManager.Debug("After GrabImage");
 				System.Console.WriteLine("HOperatorSet.GrabImageAsync Done........");
 				System.Console.WriteLine("Press anykey to Continue....");
 				System.Console.ReadKey();
@@ -201,15 +199,15 @@ namespace Hanbo.Image.Grab
 			catch (Exception ex)
 			{
 				viewModel.Result.Error = ex;
-				_logger.Debug("SnapShot 2 Exception:" + ex.Message);
-				_logger.Debug("SnapShot 2 StackTrace:" + ex.StackTrace);
+                Hanbo.Log.LogManager.Debug("SnapShot 2 Exception:" + ex.Message);
+                Hanbo.Log.LogManager.Debug("SnapShot 2 StackTrace:" + ex.StackTrace);
 			}
 			finally
 			{
-				_logger.Debug("Finally Start ");
+                Hanbo.Log.LogManager.Debug("Finally Start ");
 				if (acqHandle != null)
 					HOperatorSet.CloseFramegrabber(acqHandle);
-				_logger.Debug("Finally End");
+                Hanbo.Log.LogManager.Debug("Finally End");
 			}
 			return viewModel;
 		}

@@ -5,7 +5,6 @@ using System.Text;
 using ViewROI;
 using System.Data.Linq;
 using System.Linq;
-using NLog;
 
 namespace MeasureModule
 {
@@ -16,7 +15,6 @@ namespace MeasureModule
 
 	public static class DistanceHelper
 	{
-		private static Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public static DistanceResult LineToLine(Measurement first, Measurement second, HTuple angle, LineDirection direction)
 		{
 			//get value
@@ -316,7 +314,7 @@ namespace MeasureModule
 			}
 			catch (Exception ex)
 			{
-				logger.Error("GetTwoLineShortestPointModel Exception: " + ex.Message);
+                Hanbo.Log.LogManager.Error("GetTwoLineShortestPointModel Exception: " + ex.Message);
 
 			}
 			return shortestModel;
@@ -666,7 +664,7 @@ namespace MeasureModule
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex);
+                Hanbo.Log.LogManager.Error(ex);
 			}
 			return index;
 		}

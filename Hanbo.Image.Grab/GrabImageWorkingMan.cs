@@ -1,5 +1,4 @@
 ﻿using HalconDotNet;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -53,7 +52,7 @@ namespace Hanbo.Image.Grab
 		private int _delay = 58; // FPS = 17
 		private FrameGrabberArgs _FGArgs;
 		private HFramegrabber _hFrameGrabber;
-		private static Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+		
 		//
 		#endregion
 
@@ -189,7 +188,7 @@ namespace Hanbo.Image.Grab
 						}
 						catch (HalconDotNet.HOperatorException ex)
 						{
-							_logger.Error(ex);
+                            Hanbo.Log.LogManager.Error(ex);
 							if (GrabImageException != null)
 							{
 								GrabImageException(ex);
@@ -200,7 +199,7 @@ namespace Hanbo.Image.Grab
 			}
 			catch (Exception ex)
 			{
-				_logger.Error(ex);
+                Hanbo.Log.LogManager.Error(ex);
 				if (GrabImageException != null)
 				{
 					GrabImageException(ex);
@@ -276,7 +275,7 @@ namespace Hanbo.Image.Grab
 				}
 				Status.Message = ex.Message;
 				Status.Stage = GrabStage.Closed;
-				_logger.Debug("[GrabImageWorkingMan.SnapShot()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+                Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.SnapShot()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
 			}
 			finally
 			{
@@ -324,7 +323,7 @@ namespace Hanbo.Image.Grab
 				}
 				Status.Message = ex.Message;
 				Status.Stage = GrabStage.Closed;
-				_logger.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+                Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
 			}
 			finally
 			{
@@ -384,7 +383,7 @@ namespace Hanbo.Image.Grab
 			}
 			catch (Exception ex)
 			{
-				_logger.Debug("[Dispose] Exception: " + ex.Message);
+                Hanbo.Log.LogManager.Debug("[Dispose] Exception: " + ex.Message);
 			}
 		}
 		public HObject GetCurrentImage()

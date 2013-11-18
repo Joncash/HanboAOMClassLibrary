@@ -1,6 +1,5 @@
 ﻿using Hanbo.Helper;
 using Hanbo.Models;
-using NLog;
 using PD3_Ethernet_LightControl;
 using System;
 using System.Collections.Generic;
@@ -13,12 +12,7 @@ namespace Hanbo.SDMS.Model
 {
 	public class SDMSRepo
 	{
-		//
-		private static Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
-		//
 		private static SDMSDataContext _dc = new SDMSDataContext();
-
 		/// <summary>
 		/// 巨集編程儲存新檔
 		/// </summary>
@@ -97,7 +91,7 @@ namespace Hanbo.SDMS.Model
 			catch (Exception ex)
 			{
 				success = false;
-				logger.Error(ex.Message);
+				Hanbo.Log.LogManager.Error(ex.Message);
 			}
 			return success;
 		}
@@ -166,7 +160,7 @@ namespace Hanbo.SDMS.Model
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex.Message);
+                Hanbo.Log.LogManager.Error(ex.Message);
 			}
 			finally
 			{
@@ -284,7 +278,7 @@ namespace Hanbo.SDMS.Model
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex.Message);
+                Hanbo.Log.LogManager.Error(ex.Message);
 				errMsg = ex.Message;
 			}
 			finally
@@ -374,7 +368,7 @@ namespace Hanbo.SDMS.Model
 				}
 				catch (Exception ex)
 				{
-					logger.Error(ex);
+                    Hanbo.Log.LogManager.Error(ex);
 				}
 			}
 			return model;
@@ -439,7 +433,7 @@ namespace Hanbo.SDMS.Model
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex);
+                Hanbo.Log.LogManager.Error(ex);
 			}
 			return success;
 		}
@@ -485,7 +479,7 @@ namespace Hanbo.SDMS.Model
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex);
+                Hanbo.Log.LogManager.Error(ex);
 			}
 			return success;
 		}

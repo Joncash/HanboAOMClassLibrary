@@ -57,9 +57,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(HALCONROOT)\bin\dotnet20\halcondotnet.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
@@ -116,6 +113,10 @@
     <ProjectReference Include="..\Hanbo.Helper\Hanbo.Helper.csproj">
       <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
       <Name>Hanbo.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Log\Hanbo.Log.csproj">
+      <Project>{37fd6f2e-0078-4a9e-a447-2ae526cadc7d}</Project>
+      <Name>Hanbo.Log</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViewROI\ViewROI.csproj">
       <Project>{c4f5c5de-7ea8-47fe-8218-48138f48965f}</Project>

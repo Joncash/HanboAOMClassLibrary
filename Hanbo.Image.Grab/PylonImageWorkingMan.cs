@@ -1,5 +1,4 @@
 ﻿using HalconDotNet;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,8 +8,7 @@ using System.Text;
 namespace Hanbo.Image.Grab
 {
 	public class PylonImageWorkingMan : IDisposable
-	{
-		private static Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+	{		
 		private BackgroundWorker _bgworker;
 		private PylonImageProvider _imageProvider;
 
@@ -109,7 +107,7 @@ namespace Hanbo.Image.Grab
 				}
 				Status.Message = ex.Message;
 				Status.Stage = GrabStage.Closed;
-				_logger.Debug("[GrabImageWorkingMan.SnapShot()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+				Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.SnapShot()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
 			}
 			finally
 			{
@@ -162,7 +160,7 @@ namespace Hanbo.Image.Grab
 			}
 			catch (Exception ex)
 			{
-				_logger.Debug("[Dispose] Exception: " + ex.Message);
+                Hanbo.Log.LogManager.Debug("[Dispose] Exception: " + ex.Message);
 			}
 		}
 		public HObject GetCurrentImage()
@@ -174,7 +172,7 @@ namespace Hanbo.Image.Grab
 		#region 私有方法
 		private void init()
 		{
-			_logger.Debug("Init PylonImageProvider");
+            Hanbo.Log.LogManager.Debug("Init PylonImageProvider");
 			_imageProvider = new PylonImageProvider();
 			_imageProvider.GevSCPSPacketSize = _gevSCPSPacketSize;
 			Status = new WorkingManStatus()
@@ -185,9 +183,9 @@ namespace Hanbo.Image.Grab
 				Stage = GrabStage.Initial,
 				State = GrabState.Idle
 			};
-			_logger.Debug("Init Worker");
+            Hanbo.Log.LogManager.Debug("Init Worker");
 			initializeBackgroundWorker();
-			_logger.Debug("Init Done");
+            Hanbo.Log.LogManager.Debug("Init Done");
 		}
 
 		private void initializeBackgroundWorker()
@@ -238,7 +236,7 @@ namespace Hanbo.Image.Grab
 			}
 			catch (Exception ex)
 			{
-				_logger.Error(ex);
+                Hanbo.Log.LogManager.Error(ex);
 				if (GrabImageException != null)
 				{
 					GrabImageException(ex);
@@ -262,7 +260,7 @@ namespace Hanbo.Image.Grab
 		private void connection()
 		{
 			//設定狀態
-			_logger.Debug("CCD Connection");
+            Hanbo.Log.LogManager.Debug("CCD Connection");
 			setStatus(GrabInstruction.Connect, GrabStage.Connecting, GrabState.Busy);
 			try
 			{
@@ -291,7 +289,7 @@ namespace Hanbo.Image.Grab
 				}
 				Status.Message = ex.Message;
 				Status.Stage = GrabStage.Closed;
-				_logger.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+                Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
 			}
 			finally
 			{

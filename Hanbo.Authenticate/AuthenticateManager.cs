@@ -1,5 +1,4 @@
 ﻿using Hanbo.SDMS.Model;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +12,12 @@ namespace Hanbo.Authenticate
 		private static string _userID = "";
 		private static DateTime _loginTime;
 		private static DateTime _lastLoginTime;
-		private static Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public static bool Authenticate(string userID, string password)
 		{
 			var actionType = "Login";
 			var actionData = "userID:" + userID;
 			var success = false;
-			logger.Debug("Authenticate Start");
+			Hanbo.Log.LogManager.Debug("Authenticate Start");
 			try
 			{
 				//取得User 資訊
@@ -57,9 +55,9 @@ namespace Hanbo.Authenticate
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex.Message);
+                Hanbo.Log.LogManager.Debug(ex.Message);
 			}
-			logger.Debug("Authenticate Done");
+            Hanbo.Log.LogManager.Debug("Authenticate Done");
 			return success;
 		}
 		public static string GetUserID()

@@ -1,5 +1,4 @@
 ﻿using HalconDotNet;
-using NLog;
 using PylonC.NET;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,6 @@ namespace Hanbo.Image.Grab
 	internal delegate void PylonGrabImageStopHandler();
 	public class PylonImageProvider : IDisposable
 	{
-		private static Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 		public PylonImageProvider()
 		{
 			init();
@@ -34,23 +32,23 @@ namespace Hanbo.Image.Grab
 		}
 
 		public void Connect()
-		{
-			_logger.Debug("Pylon Connect");
+        {
+            Hanbo.Log.LogManager.Debug("Pylon Connect");
 			if (hDev == null)
 			{
-				_logger.Debug("Pylon Device IS Null");
+                Hanbo.Log.LogManager.Debug("Pylon Device IS Null");
 				hDev = createDevice();
 			}
 			if (hDev != null)
 			{
-				_logger.Debug("Pylon Device IS Not Null");
+                Hanbo.Log.LogManager.Debug("Pylon Device IS Not Null");
 				_isConnected = Pylon.DeviceIsOpen(hDev);
-				_logger.Debug("Pylon DeviceIsOpen Check :" + _isConnected);
+                Hanbo.Log.LogManager.Debug("Pylon DeviceIsOpen Check :" + _isConnected);
 				if (!_isConnected)
 				{
-					_logger.Debug("Pylon DeviceOpen");
+                    Hanbo.Log.LogManager.Debug("Pylon DeviceOpen");
 					Pylon.DeviceOpen(hDev, Pylon.cPylonAccessModeControl | Pylon.cPylonAccessModeStream);
-					_logger.Debug("Pylon resetDriveModeFeatures");
+                    Hanbo.Log.LogManager.Debug("Pylon resetDriveModeFeatures");
 					resetDrivenModeFeatures();
 				}
 				_isConnected = Pylon.DeviceIsOpen(hDev);
@@ -63,12 +61,12 @@ namespace Hanbo.Image.Grab
 			numDevices = Pylon.EnumerateDevices();
 			if (0 == numDevices)
 			{
-				_logger.Debug("找不到影像裝置");
+                Hanbo.Log.LogManager.Debug("找不到影像裝置");
 				_lastestMessage = "找不到影像裝置";
 			}
 			else
 			{
-				_logger.Debug("建立 Pylon Device Handle");
+                Hanbo.Log.LogManager.Debug("建立 Pylon Device Handle");
 				device = Pylon.CreateDeviceByIndex(0);
 			}
 			return device;
@@ -369,7 +367,7 @@ namespace Hanbo.Image.Grab
 
 		private void resetDrivenModeFeatures()
 		{
-			_logger.Debug("Pylon DriveMode: " + _drivenMode);
+            Hanbo.Log.LogManager.Debug("Pylon DriveMode: " + _drivenMode);
 			switch (_drivenMode)
 			{
 				case PylonDrivenMode.Chunk:

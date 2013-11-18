@@ -3,7 +3,6 @@ using Hanbo.Helper;
 using MeasureModule;
 using MeasureModule.Resolver;
 using MeasureModule.ViewModel;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,9 +20,6 @@ namespace Hanbo.WindowControlWrapper
 	public delegate void GeoDataGridViewRecordChangeNotify(GeoDataGridViewNotifyType notifyType, object data);
 	public class GeoDataGridViewManager
 	{
-		private static Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
-		//
 		private DataGridView _GridViewContainer;
 		private BindingSource _BindingSource;
 		private BindingList<GeoDataGridViewModel> _DataList;
@@ -572,7 +568,7 @@ namespace Hanbo.WindowControlWrapper
 					}
 					catch (Exception ex)
 					{
-						logger.Error(ex);
+						Hanbo.Log.LogManager.Error(ex);
 					}
 
 				}
@@ -1019,7 +1015,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			catch (Exception ex)
 			{
-				logger.Error("計算距離 Error:" + ex.Message);
+                Hanbo.Log.LogManager.Error("計算距離 Error:" + ex.Message);
 				MessageBox.Show(Hanbo.Resources.Resource.Message_DistanceCalculationError);
 			}
 		}
@@ -1288,7 +1284,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex);
+                Hanbo.Log.LogManager.Error(ex);
 			}
 		}
 		#region TreeView  原生方法

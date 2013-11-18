@@ -1,6 +1,5 @@
 ﻿using HalconDotNet;
 using MeasureModule.ViewModel;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,6 @@ namespace MeasureModule
 {
 	public class ContourDisplayHelper
 	{
-		private static Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public static ResultDisplayViewModel CreateDisplayViewModel(GeoDataGridViewModel model)
 		{
 			ResultDisplayViewModel viewModel = null;
@@ -79,7 +77,7 @@ namespace MeasureModule
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex);
+				Hanbo.Log.LogManager.Error(ex);
 			}
 
 			return viewModel;

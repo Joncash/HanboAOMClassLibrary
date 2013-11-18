@@ -35,9 +35,6 @@
     <Reference Include="halcondotnet">
       <HintPath>..\..\..\..\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="PylonC.NET, Version=3.0.0.2900, Culture=neutral, PublicKeyToken=a77e8471c5919d5a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files\Basler\pylon 2.3\pylonc.net\bin\PylonC.NET.dll</HintPath>
@@ -71,10 +68,12 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Log\Hanbo.Log.csproj">
+      <Project>{37fd6f2e-0078-4a9e-a447-2ae526cadc7d}</Project>
+      <Name>Hanbo.Log</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

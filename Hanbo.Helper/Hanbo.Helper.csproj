@@ -35,9 +35,6 @@
     <Reference Include="halcondotnet">
       <HintPath>C:\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -67,12 +64,12 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Log\Hanbo.Log.csproj">
+      <Project>{37fd6f2e-0078-4a9e-a447-2ae526cadc7d}</Project>
+      <Name>Hanbo.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Models\Hanbo.Models.csproj">
       <Project>{374acc46-4c98-4de9-8ed8-fbfeb769f1f2}</Project>
       <Name>Hanbo.Models</Name>
