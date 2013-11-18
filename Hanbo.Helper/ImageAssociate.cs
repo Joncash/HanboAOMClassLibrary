@@ -32,7 +32,6 @@ namespace Hanbo.Helper
 				HTuple sWidth, sHeight, tWidth, tHeight;
 				sourceImage.GetImageSize(out sWidth, out sHeight);
 				tailImage.GetImageSize(out tWidth, out tHeight);
-
 				HOperatorSet.ConcatObj(sourceImage, tailImage, out images);
 
 				//產生參數

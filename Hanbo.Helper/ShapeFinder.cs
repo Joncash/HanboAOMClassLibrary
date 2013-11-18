@@ -29,7 +29,7 @@ namespace Hanbo.Helper
 		private static Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
 		private HTuple _minScore = 0.5;
-		private HTuple _numMatches = 99;
+		private HTuple _numMatches = 9999;
 		private HTuple _maxOverlap = 0.5;
 		private HTuple _subpixAlgo = "least_squares";
 		private HTuple _numberOfLevel = 6;

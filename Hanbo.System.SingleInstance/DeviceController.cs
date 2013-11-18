@@ -15,7 +15,7 @@ namespace Hanbo.System.SingleInstance
 		private static CameraSettingSection _section = ConfigurationManager.GetSection("CameraSettingSection") as CameraSettingSection;
 		private static FrameGrabberArgs _fgArgs;
 		private static GrabImageWorkingMan _grabImageWorkingMan;
-		private static LineScanGrabImageWorkingMan _linescan;
+		//private static LineScanGrabImageWorkingMan _linescan;
 		private static MotionController _motionController;
 		private static bool _grabImageManInstanceUsed = false;
 
@@ -55,29 +55,29 @@ namespace Hanbo.System.SingleInstance
 			//
 		}
 
-		/// <summary>
-		/// 釋放 CCD 資源
-		/// </summary>
-		public static void ReleaseGrabImageWorkingManInstance()
-		{
-			//_grabImageWorkingMan.Cancel();
-			_grabImageManInstanceUsed = false;
+        /// <summary>
+        /// 釋放 CCD 資源
+        /// </summary>
+        public static void ReleaseGrabImageWorkingManInstance()
+        {
+            //_grabImageWorkingMan.Cancel();
+            _grabImageManInstanceUsed = false;
 
-			_linescan.Cancel();
-		}
-		public static LineScanGrabImageWorkingMan GetLineScanInstance()
-		{
-			if (_linescan == null)
-			{
-				_linescan = new LineScanGrabImageWorkingMan();
-			}
-			else
-			{
-				_linescan.RemoveAllRegisterEvent();
-			}
-			_grabImageManInstanceUsed = (_linescan != null);
-			return _linescan;
-		}
+            //_linescan.Cancel();
+        }
+        //public static LineScanGrabImageWorkingMan GetLineScanInstance()
+        //{
+        //    if (_linescan == null)
+        //    {
+        //        _linescan = new LineScanGrabImageWorkingMan();
+        //    }
+        //    else
+        //    {
+        //        _linescan.RemoveAllRegisterEvent();
+        //    }
+        //    _grabImageManInstanceUsed = (_linescan != null);
+        //    return _linescan;
+        //}
 		public static GrabImageWorkingMan GetGrabImageWorkingManInstance()
 		{
 			if (_fgArgs == null)
