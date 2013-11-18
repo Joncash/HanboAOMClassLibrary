@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Argument\AutoExportArgument.cs" />
     <Compile Include="ExportMacroPlanViewModel.cs" />
+    <Compile Include="LanguageViewModel.cs" />
     <Compile Include="MacroViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShapeViewModel.cs" />

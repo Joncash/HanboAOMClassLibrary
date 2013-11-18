@@ -1,4 +1,5 @@
-﻿using Hanbo.Models.Argument;
+﻿using Hanbo.Models;
+using Hanbo.Models.Argument;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -280,5 +281,20 @@ namespace Hanbo.Helper
 			}
 			return inVisibleFields;
 		}
+
+        /// <summary>
+        /// 取得顯示語言 ViewModel
+        /// </summary>
+        /// <returns>{Text, Code}</returns>
+        public static List<LanguageViewModel> GetLanguageViewModels()
+        {
+            return new List<LanguageViewModel>() { 
+			new LanguageViewModel(){ Text = "中文 (Chinese) + 英文 (English)", Code = "Hybrid"},
+			//new LanguageViewModel(){ Text = "中文 (Chinese)", Code = "zh-TW"},
+			//new LanguageViewModel(){ Text = "英文 (English)", Code = "en-US"},
+            	
+			};
+        }
+        
 	}
 }
