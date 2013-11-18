@@ -70,6 +70,15 @@ namespace MeasureModule
 		public override void UpdateResults()
 		{
 			if (mMeasAssist.mImage == null) return;
+			//init result
+			mResult = new FitLineResult()
+			{
+				Col1 = new HTuple(),
+				Row1 = new HTuple(),
+				Col2 = new HTuple(),
+				Row2 = new HTuple(),
+			};
+
 			var image = mMeasAssist.mImage;
 
 			HObject rectangle, imageReduced, edges, contoursSplit;
@@ -131,9 +140,11 @@ namespace MeasureModule
 		/// </summary>
 		public override void UpdateXLD()
 		{
-			if (mResult.Row1 == null) return;
+			//clear display
 			mEdgeXLD.Dispose();
 			mEdgeXLD.GenEmptyObj();
+
+			if (mResult.Row1 == null || mResult.Row1.TupleLength() == 0) return;
 			HXLDCont edge = new HXLDCont();
 			var rows = new HTuple(new double[] { mResult.Row1, mResult.Row2 });
 			var cols = new HTuple(new double[] { mResult.Col1, mResult.Col2 });
@@ -153,18 +164,13 @@ namespace MeasureModule
 
 		public override MeasureViewModel GetViewModel()
 		{
-			MeasureViewModel viewMoel = null;
-			if (mResult.Row1 != null && mResult.Row1.TupleLength() > 0)
+			return new MeasureViewModel()
 			{
-				viewMoel = new MeasureViewModel()
-				{
-					Row1 = mResult.Row1,
-					Col1 = mResult.Col1,
-					Row2 = mResult.Row2,
-					Col2 = mResult.Col2,
-				};
-			}
-			return viewMoel;
+				Row1 = mResult.Row1,
+				Col1 = mResult.Col1,
+				Row2 = mResult.Row2,
+				Col2 = mResult.Col2,
+			};
 		}
 
 	}

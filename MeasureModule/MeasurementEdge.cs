@@ -142,9 +142,15 @@ namespace MeasureModule
 
 		public override MeasureViewModel GetViewModel()
 		{
-			MeasureViewModel viewMoel = null;
-
-			//¦³­È
+			//init value
+			MeasureViewModel viewMoel = new MeasureViewModel()
+			{
+				Row1 = new HTuple(),
+				Col1 = new HTuple(),
+				Row2 = new HTuple(),
+				Col2 = new HTuple(),
+				Distance = new HTuple(),
+			};
 			if (mResult.rowEdge != null && mResult.rowEdge.TupleLength() > 0)
 			{
 				HXLDCont edgeXLD;
