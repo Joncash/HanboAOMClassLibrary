@@ -32,5 +32,15 @@ namespace Hanbo.SDMS.Model.Properties {
                 return ((string)(this["AOM_SDMSConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\sqlexpress;Initial Catalog=AOM_SDMS;User ID=hanbo_user")]
+        public string AOM_SDMSConnectionString1 {
+            get {
+                return ((string)(this["AOM_SDMSConnectionString1"]));
+            }
+        }
     }
 }

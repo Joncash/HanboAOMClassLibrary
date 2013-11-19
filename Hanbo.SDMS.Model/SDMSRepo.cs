@@ -13,24 +13,34 @@ namespace Hanbo.SDMS.Model
 	public class SDMSRepo
 	{
 		private static SDMSDataContext _dc = new SDMSDataContext();
+
+		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser, string trainingImageFilepath)
+		{
+			return SaveMacroPlan(macroName, macroGuid, shapeModelFilepath, note, trainingImage, exportUnit, matchingParamData, measureBinaryData, measureAssistantParamData, upperLight, bottomLight, shapeView, loginUser, trainingImageFilepath, null);
+		}
+
 		/// <summary>
-		/// 巨集編程儲存新檔
+		/// 儲存程式編輯
 		/// </summary>
 		/// <param name="macroName"></param>
 		/// <param name="macroGuid"></param>
-		/// <param name="shapeModleFilepath"></param>
+		/// <param name="shapeModelFilepath"></param>
 		/// <param name="note"></param>
 		/// <param name="trainingImage"></param>
 		/// <param name="exportUnit"></param>
 		/// <param name="matchingParamData"></param>
 		/// <param name="measureBinaryData"></param>
+		/// <param name="measureAssistantParamData"></param>
 		/// <param name="upperLight"></param>
 		/// <param name="bottomLight"></param>
+		/// <param name="shapeView"></param>
+		/// <param name="loginUser"></param>
+		/// <param name="trainingImageFilepath"></param>
+		/// <param name="snapshot"></param>
 		/// <returns></returns>
-		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModleFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser, string trainingImageFilepath)
+		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser, string trainingImageFilepath, Binary snapshot)
 		{
 			bool success = true;
-
 			try
 			{
 				MacroPlan plan = _dc.MacroPlan.SingleOrDefault(p => p.MacroGuid == macroGuid);
@@ -40,7 +50,7 @@ namespace Hanbo.SDMS.Model
 					{
 						MacroName = macroName,
 						MacroGuid = macroGuid,
-						ShapeModelFilepath = shapeModleFilepath,
+						ShapeModelFilepath = shapeModelFilepath,
 						Note = note,
 						TrainingImage = trainingImage,
 						TrainingImageFilepath = trainingImageFilepath,
@@ -60,6 +70,7 @@ namespace Hanbo.SDMS.Model
 						ModelCol = shapeView.Col,
 						ModelAngle = shapeView.Angle,
 						IsDeleted = false,
+						Snapshot = snapshot,
 					};
 					_dc.MacroPlan.InsertOnSubmit(plan);
 				}
@@ -67,7 +78,7 @@ namespace Hanbo.SDMS.Model
 				{
 					//Update
 					plan.MacroName = macroName;
-					plan.ShapeModelFilepath = shapeModleFilepath;
+					plan.ShapeModelFilepath = shapeModelFilepath;
 					plan.Note = note;
 					plan.TrainingImage = trainingImage;
 					plan.TrainingImageFilepath = trainingImageFilepath;
@@ -85,6 +96,7 @@ namespace Hanbo.SDMS.Model
 					plan.ModelCol = shapeView.Col;
 					plan.ModelAngle = shapeView.Angle;
 					plan.IsDeleted = false;
+					plan.Snapshot = snapshot;
 				}
 				_dc.SubmitChanges();
 			}
@@ -160,7 +172,7 @@ namespace Hanbo.SDMS.Model
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error(ex.Message);
+				Hanbo.Log.LogManager.Error(ex.Message);
 			}
 			finally
 			{
@@ -278,7 +290,7 @@ namespace Hanbo.SDMS.Model
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error(ex.Message);
+				Hanbo.Log.LogManager.Error(ex.Message);
 				errMsg = ex.Message;
 			}
 			finally
@@ -368,7 +380,7 @@ namespace Hanbo.SDMS.Model
 				}
 				catch (Exception ex)
 				{
-                    Hanbo.Log.LogManager.Error(ex);
+					Hanbo.Log.LogManager.Error(ex);
 				}
 			}
 			return model;
@@ -433,7 +445,7 @@ namespace Hanbo.SDMS.Model
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error(ex);
+				Hanbo.Log.LogManager.Error(ex);
 			}
 			return success;
 		}
@@ -479,7 +491,7 @@ namespace Hanbo.SDMS.Model
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error(ex);
+				Hanbo.Log.LogManager.Error(ex);
 			}
 			return success;
 		}

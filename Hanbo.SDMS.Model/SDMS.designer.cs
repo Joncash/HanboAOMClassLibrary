@@ -48,7 +48,7 @@ namespace Hanbo.SDMS.Model
     #endregion
 		
 		public SDMSDataContext() : 
-				base(global::Hanbo.SDMS.Model.Properties.Settings.Default.AOM_SDMSConnectionString, mappingSource)
+				base(global::Hanbo.SDMS.Model.Properties.Settings.Default.AOM_SDMSConnectionString1, mappingSource)
 		{
 			OnCreated();
 		}
@@ -1036,6 +1036,8 @@ namespace Hanbo.SDMS.Model
 		
 		private System.Nullable<bool> _IsDeleted;
 		
+		private System.Data.Linq.Binary _Snapshot;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1086,6 +1088,8 @@ namespace Hanbo.SDMS.Model
     partial void OnModifiedOnChanged();
     partial void OnIsDeletedChanging(System.Nullable<bool> value);
     partial void OnIsDeletedChanged();
+    partial void OnSnapshotChanging(System.Data.Linq.Binary value);
+    partial void OnSnapshotChanged();
     #endregion
 		
 		public MacroPlan()
@@ -1549,6 +1553,26 @@ namespace Hanbo.SDMS.Model
 					this._IsDeleted = value;
 					this.SendPropertyChanged("IsDeleted");
 					this.OnIsDeletedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Snapshot", DbType="VarBinary(MAX)", UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary Snapshot
+		{
+			get
+			{
+				return this._Snapshot;
+			}
+			set
+			{
+				if ((this._Snapshot != value))
+				{
+					this.OnSnapshotChanging(value);
+					this.SendPropertyChanging();
+					this._Snapshot = value;
+					this.SendPropertyChanged("Snapshot");
+					this.OnSnapshotChanged();
 				}
 			}
 		}
