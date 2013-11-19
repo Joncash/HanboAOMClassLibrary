@@ -113,6 +113,24 @@ namespace Hanbo.SDMS.Model
 			return _dc.MacroPlan.SingleOrDefault(p => p.MacroGuid == macroGuid);
 		}
 
+		public static int DeleteMacroPlan(string[] macroGuids)
+		{
+			int affectRows = 0;
+			try
+			{
+				var plans = _dc.MacroPlan.Where(p => macroGuids.Contains(p.MacroGuid));
+				affectRows = plans.Count();
+				_dc.MacroPlan.DeleteAllOnSubmit(plans);
+				_dc.SubmitChanges();
+			}
+			catch (Exception ex)
+			{
+				affectRows = 0;
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			return affectRows;
+		}
+
 		public static bool UserIDExists(string uid)
 		{
 			var exists = _dc.UserMember.Any(p => p.UserID == uid);

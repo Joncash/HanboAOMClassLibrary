@@ -485,6 +485,16 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 將會刪除所選擇的資料，是否刪除？
+        ///( Are you sure to delete the selected items ? ).
+        /// </summary>
+        public static string Message_DeleteSelectedItemNotice {
+            get {
+                return ResourceManager.GetString("Message_DeleteSelectedItemNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 點成圓幾何相依物件不存在 (Dependency objects does not exists).
         /// </summary>
         public static string Message_DependencyNotExists {

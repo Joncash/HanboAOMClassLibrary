@@ -464,4 +464,8 @@ Some other measurement are depend on this item, if remove it will lose the depen
     <value>計算距離發生錯誤
 ( Distance Calculation Error )</value>
   </data>
+  <data name="Message_DeleteSelectedItemNotice" xml:space="preserve">
+    <value>將會刪除所選擇的資料，是否刪除？
+( Are you sure to delete the selected items ? )</value>
+  </data>
 </root>
