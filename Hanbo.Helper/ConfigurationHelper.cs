@@ -282,19 +282,29 @@ namespace Hanbo.Helper
 			return inVisibleFields;
 		}
 
-        /// <summary>
-        /// 取得顯示語言 ViewModel
-        /// </summary>
-        /// <returns>{Text, Code}</returns>
-        public static List<LanguageViewModel> GetLanguageViewModels()
-        {
-            return new List<LanguageViewModel>() { 
+		/// <summary>
+		/// 取得顯示語言 ViewModel
+		/// </summary>
+		/// <returns>{Text, Code}</returns>
+		public static List<LanguageViewModel> GetLanguageViewModels()
+		{
+			return new List<LanguageViewModel>() { 
 			new LanguageViewModel(){ Text = "中文 (Chinese) + 英文 (English)", Code = "Hybrid"},
 			//new LanguageViewModel(){ Text = "中文 (Chinese)", Code = "zh-TW"},
 			//new LanguageViewModel(){ Text = "英文 (English)", Code = "en-US"},
             	
 			};
-        }
-        
+		}
+
+		/// <summary>
+		/// 取得一個位於程式暫存區的檔案路徑
+		/// </summary>
+		/// <returns></returns>
+		public static string GetTmpFilepath()
+		{
+			var dir = GetTmpFileDir();
+			var name = Guid.NewGuid().ToString();
+			return Path.Combine(dir, name);
+		}
 	}
 }
