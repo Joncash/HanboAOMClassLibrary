@@ -205,5 +205,10 @@ namespace ViewROI
 					break;
 			}
 		}
+		protected double _ZoomRatio = 1.0;
+		public void SetZoomRatio(double zoomFactor)
+		{
+			_ZoomRatio = zoomFactor;
+		}
 	}//end of class
 }//end of namespace

@@ -354,10 +354,11 @@ namespace ViewROI
 					if (roi.Visiable)
 					{
 						window.SetLineStyle(roi.flagLineStyle);
+						roi.SetZoomRatio(_zoomFactor);
 						roi.draw(window);
 					}
 				}
-
+				
 				//µe Active ROI
 				if (activeROIidx != -1)
 				{
@@ -483,5 +484,10 @@ namespace ViewROI
 			NotifyRCObserver(ROIController.EVENT_Reload_ROI);
 		}
 
+		private double _zoomFactor = 1.0;
+		public void SetZoomFactor(double zoomFactor)
+		{
+			_zoomFactor = zoomFactor;
+		}
 	}//end of class
 }//end of namespace

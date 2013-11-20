@@ -67,16 +67,20 @@ namespace ViewROI
 			MakeROI(model.CenterRow, model.CenterCol, model.Radius);
 		}
 
+		//畫 4個角及中間的 Handle Rectangle 大小
+		private double _HandleRectangleWidth = 10.0;
+		private double _HandleRectangleHeight = 10.0;
+
 		/// <summary>Paints the ROI into the supplied window</summary>
 		/// <param name="window">HALCON window</param>
 		public override void draw(HalconDotNet.HWindow window)
 		{
 			window.DispCircle(midR, midC, radius);
 
-			var rectangelWidth = 10;
-			var rectangelHeight = 10;
-			window.DispRectangle2(row1, col1, 0, rectangelWidth, rectangelHeight);
-			window.DispRectangle2(midR, midC, 0, rectangelWidth, rectangelHeight);
+			var w = _HandleRectangleWidth * _ZoomRatio;
+			var h = _HandleRectangleHeight * _ZoomRatio;
+			window.DispRectangle2(row1, col1, 0, w, h);
+			window.DispRectangle2(midR, midC, 0, w, h);
 		}
 
 		/// <summary> 

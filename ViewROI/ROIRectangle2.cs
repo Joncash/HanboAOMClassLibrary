@@ -20,7 +20,7 @@ namespace ViewROI
 	public class ROIRectangle2 : ROI
 	{
 
-		/// <summary>Half length of the rectangle side, perpendicular to phi</summary>
+		/// <summary>Half length of the rectangle side, perpendicular to phi</summary>h
 		private double length1;
 
 		/// <summary>Half length of the rectangle side, in direction of phi</summary>
@@ -129,19 +129,27 @@ namespace ViewROI
 			MakeROI(model.CenterRow, model.CenterCol, model.Phi, model.Length, model.Width);
 		}
 
+		//畫 4個角及中間的 Handle Rectangle 大小
+		private double _HandleRectangleWidth = 10.0;
+		private double _HandleRectangleHeight = 10.0;
+
+		//Arrow 大小
+		private double _ArrowSize = 2.0;
+
 		/// <summary>Paints the ROI into the supplied window</summary>
 		/// <param name="window">HALCON window</param>
 		public override void draw(HalconDotNet.HWindow window)
 		{
-			//畫 4個角及中間的 Handle Rectangle
-			var rectangleWidth = 10;
-			var rectangleHeight = 10;
+			var w = _HandleRectangleWidth * _ZoomRatio;
+			var h = _HandleRectangleHeight * _ZoomRatio;
+			var arrowSize = _ArrowSize * _ZoomRatio;
+
 			window.DispRectangle2(midR, midC, -phi, length1, length2);
 			for (int i = 0; i < NumHandles; i++)
-				window.DispRectangle2(rows[i].D, cols[i].D, -phi, rectangleWidth, rectangleHeight);
+				window.DispRectangle2(rows[i].D, cols[i].D, -phi, w, h);
 
 			window.DispArrow(midR, midC, midR + (Math.Sin(phi) * length1 * 1.2),
-				midC + (Math.Cos(phi) * length1 * 1.2), 2.0);
+				midC + (Math.Cos(phi) * length1 * 1.2), arrowSize);
 
 		}
 
