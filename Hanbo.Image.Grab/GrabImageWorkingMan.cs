@@ -52,7 +52,7 @@ namespace Hanbo.Image.Grab
 		private int _delay = 58; // FPS = 17
 		private FrameGrabberArgs _FGArgs;
 		private HFramegrabber _hFrameGrabber;
-		
+
 		//
 		#endregion
 
@@ -188,7 +188,7 @@ namespace Hanbo.Image.Grab
 						}
 						catch (HalconDotNet.HOperatorException ex)
 						{
-                            Hanbo.Log.LogManager.Error(ex);
+							Hanbo.Log.LogManager.Error(ex);
 							if (GrabImageException != null)
 							{
 								GrabImageException(ex);
@@ -199,7 +199,7 @@ namespace Hanbo.Image.Grab
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error(ex);
+				Hanbo.Log.LogManager.Error(ex);
 				if (GrabImageException != null)
 				{
 					GrabImageException(ex);
@@ -275,7 +275,7 @@ namespace Hanbo.Image.Grab
 				}
 				Status.Message = ex.Message;
 				Status.Stage = GrabStage.Closed;
-                Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.SnapShot()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+				Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.SnapShot()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
 			}
 			finally
 			{
@@ -323,7 +323,7 @@ namespace Hanbo.Image.Grab
 				}
 				Status.Message = ex.Message;
 				Status.Stage = GrabStage.Closed;
-                Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+				Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
 			}
 			finally
 			{
@@ -383,7 +383,7 @@ namespace Hanbo.Image.Grab
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Debug("[Dispose] Exception: " + ex.Message);
+				Hanbo.Log.LogManager.Debug("[Dispose] Exception: " + ex.Message);
 			}
 		}
 		public HObject GetCurrentImage()
@@ -402,22 +402,23 @@ namespace Hanbo.Image.Grab
 		{
 			if (_hFrameGrabber == null || !_hFrameGrabber.IsInitialized())
 			{
+
 				_hFrameGrabber = new HFramegrabber(_FGArgs.Name,
-													_FGArgs.HorizontalResolution,
-													_FGArgs.VerticalResolution,
-													_FGArgs.ImageWidth,
-													_FGArgs.ImageHeight,
-													_FGArgs.StartRow,
-													_FGArgs.StartColumn,
-													_FGArgs.Field,
-													new HTuple(_FGArgs.BitsPerChannel),
-													new HTuple(_FGArgs.ColorSpace),
-													new HTuple(_FGArgs.Generic),
-													_FGArgs.ExternalTrigger,
-													new HTuple(_FGArgs.CameraType),
-													new HTuple(_FGArgs.Device),
-													new HTuple(_FGArgs.Port),
-													new HTuple(_FGArgs.LineIn));
+															_FGArgs.HorizontalResolution,
+															_FGArgs.VerticalResolution,
+															_FGArgs.ImageWidth,
+															_FGArgs.ImageHeight,
+															_FGArgs.StartRow,
+															_FGArgs.StartColumn,
+															_FGArgs.Field,
+															new HTuple(_FGArgs.BitsPerChannel),
+															new HTuple(_FGArgs.ColorSpace),
+															new HTuple(_FGArgs.Generic),
+															_FGArgs.ExternalTrigger,
+															new HTuple(_FGArgs.CameraType),
+															new HTuple(_FGArgs.Device),
+															new HTuple(_FGArgs.Port),
+															new HTuple(_FGArgs.LineIn));
 			}
 		}
 		#endregion
