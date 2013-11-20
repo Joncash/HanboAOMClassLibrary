@@ -30,6 +30,7 @@ namespace PD3_Ethernet_LightControl
 		}
 		private void CCSLightControlForm_Load(object sender, EventArgs e)
 		{
+			CCSLightControlForm_LocationChanged(sender, e);
 			_lightControlManager = DeviceController.GetCCSLightControlManagerInstance();
 			_lightControlManager.On_SafetyClosed += _lightControlManager_On_SafetyClosed;
 			_lightControlManager.StartProbeConnetion(_heartbeatInterval);
@@ -251,7 +252,10 @@ namespace PD3_Ethernet_LightControl
 			//ControlPanel.Enabled = false;
 		}
 
-
-
+		private void CCSLightControlForm_LocationChanged(object sender, EventArgs e)
+		{
+			var win = sender as Form;
+			LocationLabel.Text = String.Format("x: {0} y: {1}", win.Location.X, win.Location.Y);
+		}
 	}
 }

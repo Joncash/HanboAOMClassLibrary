@@ -47,6 +47,7 @@
 			this.ResetButton = new System.Windows.Forms.Button();
 			this.LightConnectTimer = new System.Windows.Forms.Timer(this.components);
 			this.TraceConnectTimer = new System.Windows.Forms.Timer(this.components);
+			this.LocationLabel = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -173,10 +174,16 @@
 			this.TraceConnectTimer.Interval = 200;
 			this.TraceConnectTimer.Tick += new System.EventHandler(this.TraceConnectTimer_Tick);
 			// 
+			// LocationLabel
+			// 
+			resources.ApplyResources(this.LocationLabel, "LocationLabel");
+			this.LocationLabel.Name = "LocationLabel";
+			// 
 			// CCSLightControlForm
 			// 
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.LocationLabel);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.ControlPanel);
 			this.Controls.Add(this.ResetButton);
@@ -184,6 +191,7 @@
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CCSLightControlForm_FormClosing);
 			this.Load += new System.EventHandler(this.CCSLightControlForm_Load);
 			this.Shown += new System.EventHandler(this.CCSLightControlForm_Shown);
+			this.LocationChanged += new System.EventHandler(this.CCSLightControlForm_LocationChanged);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
@@ -215,5 +223,6 @@
 		private System.Windows.Forms.ToolTip LightControlToolTip;
 		private System.Windows.Forms.Timer LightConnectTimer;
 		private System.Windows.Forms.Timer TraceConnectTimer;
+		private System.Windows.Forms.Label LocationLabel;
 	}
 }

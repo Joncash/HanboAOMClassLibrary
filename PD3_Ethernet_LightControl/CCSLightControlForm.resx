@@ -321,28 +321,28 @@
     <value>293, 17</value>
   </metadata>
   <data name="StatusLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 17</value>
+    <value>54, 17</value>
   </data>
   <data name="StatusLabel.Text" xml:space="preserve">
     <value>Loading</value>
   </data>
   <data name="IPLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 17</value>
+    <value>94, 17</value>
   </data>
   <data name="IPLabel.Text" xml:space="preserve">
     <value>IP Address: N/A</value>
   </data>
   <data name="PortLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 17</value>
+    <value>59, 17</value>
   </data>
   <data name="PortLabel.Text" xml:space="preserve">
     <value>Port: N/A</value>
   </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 75</value>
+    <value>0, 74</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>364, 22</value>
+    <value>362, 22</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>66</value>
@@ -360,7 +360,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="ControlPanel.Location" type="System.Drawing.Point, System.Drawing">
     <value>-3, 0</value>
@@ -381,7 +381,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ControlPanel.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <metadata name="LightControlToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>409, 17</value>
@@ -408,7 +408,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ResetButton.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <metadata name="LightConnectTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>569, 17</value>
@@ -416,6 +416,33 @@
   <metadata name="TraceConnectTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>724, 17</value>
   </metadata>
+  <data name="LocationLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="LocationLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>386, 33</value>
+  </data>
+  <data name="LocationLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 13</value>
+  </data>
+  <data name="LocationLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>69</value>
+  </data>
+  <data name="LocationLabel.Text" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;LocationLabel.Name" xml:space="preserve">
+    <value>LocationLabel</value>
+  </data>
+  <data name="&gt;&gt;LocationLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LocationLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;LocationLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -423,7 +450,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>364, 97</value>
+    <value>362, 96</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1558,7 +1585,7 @@
 </value>
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing">
-    <value>380, 135</value>
+    <value>378, 135</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>光源控制器 ( Light Controller )</value>
