@@ -56,7 +56,6 @@
     </Compile>
     <Compile Include="SDMSDataContext.cs" />
     <Compile Include="SDMSRepo.cs" />
-    <Compile Include="UserMemberViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

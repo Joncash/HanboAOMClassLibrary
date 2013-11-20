@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Hanbo.Custom.Attribute;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace Hanbo.SDMS.Model
+namespace Hanbo.Models
 {
 	public class UserMemberViewModel
 	{
 		private string _Uid;
-		[DisplayName("使用者帳號")]
+		[LocalizedDisplayNameAttribute("", "使用者帳號 ( Account ID )")]
 		public string Uid
 		{
 			get { return _Uid; }
@@ -38,7 +39,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private string _Email;
-		[DisplayName("電子郵件信箱")]
+		[LocalizedDisplayNameAttribute("", "電子郵件信箱 ( Email )")]
 		public string Email
 		{
 			get { return _Email; }
@@ -53,7 +54,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private string _UName;
-		[DisplayName("使用者名稱")]
+		[LocalizedDisplayNameAttribute("", "使用者名稱 ( Account Name )")]
 		public string UName
 		{
 			get { return _UName; }
@@ -68,7 +69,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private string _DeptName;
-		[DisplayName("部門")]
+		[LocalizedDisplayNameAttribute("", "部門 ( Department Name )")]
 		public string DeptName
 		{
 			get { return _DeptName; }
@@ -83,7 +84,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private bool _AuthorizedSingle;
-		[DisplayName("單項量測功能")]
+		[LocalizedDisplayNameAttribute("", "手動量測 ( Manual Measurement )")]
 		public bool AuthorizedSingle
 		{
 			get { return _AuthorizedSingle; }
@@ -98,7 +99,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private bool _AuthorizedContinue;
-		[DisplayName("連續測量功能")]
+		[LocalizedDisplayNameAttribute("", "自動化測量 ( Automation Measurement )")]
 		public bool AuthorizedContinue
 		{
 			get { return _AuthorizedContinue; }
@@ -113,7 +114,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private bool _AuthorizedMacroPlan;
-		[DisplayName("巨集編程功能")]
+		[LocalizedDisplayNameAttribute("","程式編輯 ( Automation Planning )")]
 		public bool AuthorizedMacroPlan
 		{
 			get { return _AuthorizedMacroPlan; }
@@ -128,7 +129,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private bool _AuthorizedAdjust;
-		[DisplayName("影像校正功能")]
+		[LocalizedDisplayNameAttribute("", " CCD 校正 ( Camera Calibration )")]
 		public bool AuthorizedAdjust
 		{
 			get { return _AuthorizedAdjust; }
@@ -143,7 +144,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private bool _AuthorizedAccount;
-		[DisplayName("帳號管理功能")]
+		[LocalizedDisplayNameAttribute("", "帳號管理功能 ( Account Management )")]
 		public bool AuthorizedAccount
 		{
 			get { return _AuthorizedAccount; }
@@ -158,7 +159,7 @@ namespace Hanbo.SDMS.Model
 		}
 
 		private bool _AccountDisable;
-		[DisplayName("帳號停用")]
+		[LocalizedDisplayNameAttribute("", "帳號停用 ( Account Disabled )")]
 		public bool AccountDisable
 		{
 			get { return _AccountDisable; }

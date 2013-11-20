@@ -47,6 +47,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShapeViewModel.cs" />
     <Compile Include="SpecViewModel.cs" />
+    <Compile Include="UserMemberViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Custom.Attribute\Hanbo.Custom.Attribute.csproj">
+      <Project>{f615c268-d194-4b8e-9d2a-04cad755988e}</Project>
+      <Name>Hanbo.Custom.Attribute</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
