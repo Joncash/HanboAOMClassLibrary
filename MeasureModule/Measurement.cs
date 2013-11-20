@@ -71,6 +71,10 @@ namespace MeasureModule
 			mMeasureRegion = new HRegion();
 			initROI(roi);
 		}
+		public ROI GetMeasureROI()
+		{
+			return mRoi;
+		}
 		private void initROI(ROI roi)
 		{
 			if (roi == null) return;
@@ -346,7 +350,6 @@ namespace MeasureModule
 		/// </summary>
 		public void UpdateMeasureRegion()
 		{
-
 			mMeasureRegion.Dispose();
 			mMeasureRegion.GenEmptyObj();
 			switch (mROIType)

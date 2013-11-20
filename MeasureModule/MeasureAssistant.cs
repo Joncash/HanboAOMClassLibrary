@@ -696,7 +696,10 @@ namespace MeasureModule
 
 			for (int i = 0; i < mMeasureList.Count; i++)
 			{
-				val = ((Measurement)mMeasureList[i]).getMeasureResults();
+				var mMeasure = ((Measurement)mMeasureList[i]);
+				var roi = mMeasure.GetMeasureROI();
+				if (!roi.Visiable) continue;
+				val = mMeasure.getMeasureResults();
 				if (val.IsInitialized())
 					obj = obj.ConcatObj(val);
 			}
