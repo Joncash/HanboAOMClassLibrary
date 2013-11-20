@@ -60,6 +60,10 @@
       <Project>{11ee3837-fcab-4492-b7c8-333429ea6d1c}</Project>
       <Name>Hanbo.Image.Grab</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Log\Hanbo.Log.csproj">
+      <Project>{37fd6f2e-0078-4a9e-a447-2ae526cadc7d}</Project>
+      <Name>Hanbo.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Resources\Hanbo.Resources.csproj">
       <Project>{997bcb46-e343-45e3-ba64-b054381499cd}</Project>
       <Name>Hanbo.Resources</Name>

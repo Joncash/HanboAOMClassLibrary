@@ -25,6 +25,7 @@ namespace Hanbo.System.SingleInstance
 			catch (Exception ex)
 			{
 				result.ExceptionDetail = ex;
+				Hanbo.Log.LogManager.Error(ex);
 			}
 			return result;
 		}
