@@ -6,6 +6,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Hanbo.Helper
 {
@@ -305,6 +306,35 @@ namespace Hanbo.Helper
 			var dir = GetTmpFileDir();
 			var name = Guid.NewGuid().ToString();
 			return Path.Combine(dir, name);
+		}
+
+		public static string GetCalibrationCameraFilepath()
+		{
+			string filename = ConfigurationManager.AppSettings["CalibratedCameraParam"] ?? "";
+			if (!File.Exists(filename)) filename = "";
+			return filename;
+		}
+
+		public static LightViewModel GetLightSettings(string settingName)
+		{
+			var model = new LightViewModel();
+			string settingFile = ConfigurationManager.AppSettings["LightSettings"] ?? "";
+			if (File.Exists(settingFile))
+			{
+				//read
+				var xDoc = XDocument.Load(settingFile);
+				if (xDoc != null)
+				{
+					var lightDTOs = xDoc.Root.Element(settingName).Elements("Settings").Select(p => new LightDTO()
+					{
+						Channel = p.Element("Channel").Value,
+						Intensity = p.Element("Intensity").Value,
+						OnOff = p.Element("OnOff").Value,
+					}).ToList();
+					model.LightDTOs = new List<LightDTO>(lightDTOs);
+				}
+			}
+			return model;
 		}
 	}
 }

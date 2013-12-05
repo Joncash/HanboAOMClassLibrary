@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--光源控制器的預設值設定檔-->
+<LightSettings>
+	<PlanLight>
+		<Settings id="1" name="TopLight" description="Upper light channel">
+			<Channel note="chanle of CCS">1</Channel>
+			<OnOff note="if on, set to 1, else set to 0">1</OnOff>
+			<Intensity note="light intensity is set to 0 ~ 255">20</Intensity>
+		</Settings>
+		<Settings id="2" name="BottomLight" description="Bottom light channel">
+			<Channel>2</Channel>
+			<OnOff>1</OnOff>
+			<Intensity>50</Intensity>
+		</Settings>
+	</PlanLight>
+	<CalibrationLight>
+		<Settings id="1" name="TopLight" description="Upper light channel">
+			<Channel>1</Channel>
+			<OnOff>1</OnOff>
+			<Intensity>20</Intensity>
+		</Settings>
+		<Settings id="2" name="BottomLight" description="Bottom light channel">
+			<Channel>2</Channel>
+			<OnOff>1</OnOff>
+			<Intensity>50</Intensity>
+		</Settings>
+	</CalibrationLight>
+</LightSettings>
