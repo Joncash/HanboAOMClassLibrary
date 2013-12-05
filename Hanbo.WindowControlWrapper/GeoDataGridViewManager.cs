@@ -465,6 +465,7 @@ namespace Hanbo.WindowControlWrapper
 						item.Row1 = crossPointViewModel.Row1;
 						item.Col1 = crossPointViewModel.Col1;
 					}
+					updateDependGeoObject(item);
 				}
 				else if (item.GeoType == MeasureType.DistanceX)
 				{
@@ -1015,7 +1016,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error("計算距離 Error:" + ex.Message);
+				Hanbo.Log.LogManager.Error("計算距離 Error:" + ex.Message);
 				MessageBox.Show(Hanbo.Resources.Resource.Message_DistanceCalculationError);
 			}
 		}
@@ -1284,7 +1285,7 @@ namespace Hanbo.WindowControlWrapper
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error(ex);
+				Hanbo.Log.LogManager.Error(ex);
 			}
 		}
 		#region TreeView  原生方法
