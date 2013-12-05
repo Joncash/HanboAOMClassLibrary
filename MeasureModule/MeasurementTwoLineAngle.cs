@@ -63,14 +63,18 @@ namespace MeasureModule
 			try
 			{
 				_Result = DistanceHelper.AngleLineToLine(_geoModelOne, _geoModelTwo);
-				if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+				if (_Result != null)
 				{
-					Rectify(_Result.Row, _Result.Col, out _ResultWorld.Row, out _ResultWorld.Col);
+					if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+					{
+						Rectify(_Result.Row, _Result.Col, out _ResultWorld.Row, out _ResultWorld.Col);
+					}
+					else
+					{
+						_ResultWorld = new AngleResult(_Result);
+					}
 				}
-				else
-				{
-					_ResultWorld = new AngleResult(_Result);
-				}
+
 			}
 			catch (HOperatorException ex)
 			{
