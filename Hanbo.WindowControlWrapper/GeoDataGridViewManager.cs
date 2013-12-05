@@ -1027,27 +1027,26 @@ namespace Hanbo.WindowControlWrapper
 			if (firstModel != null && secondModel != null)
 			{
 				var newModel = DistanceHelper.CaculateDistance(MeasureViewModelResolver.Resolve(firstModel), MeasureViewModelResolver.Resolve(secondModel));
-				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
-				var number = _DataList.Count + 1;
-				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_Distance;
-				result = new GeoDataGridViewModel()
+				if (newModel != null)
 				{
-					Name = measureName,
-					Distance = newModel.Distance,
-					WorldDistance = pixelToRealWorldValue(newModel.Distance),
-					//RowNumber = nextRowNumber,
-					Icon = _ImageList[MeasureType.Distance.ToString()],
-					GeoType = MeasureType.Distance,
-					Row1 = newModel.Row1,
-					Col1 = newModel.Col1,
-					Row2 = newModel.Row2,
-					Col2 = newModel.Col2,
-					//DependGeoIndices = new int[] { firstModel.RowNumber, secondModel.RowNumber },
-					DependGeoRowNames = new string[] { firstModel.RecordID, secondModel.RecordID },
-					Selected = false,
-					Unit = _ExportUnit,
-					//ROIIndex = -1,
-				};
+					var number = _DataList.Count + 1;
+					var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_Distance;
+					result = new GeoDataGridViewModel()
+					{
+						Name = measureName,
+						Distance = newModel.Distance,
+						WorldDistance = pixelToRealWorldValue(newModel.Distance),
+						Icon = _ImageList[MeasureType.Distance.ToString()],
+						GeoType = MeasureType.Distance,
+						Row1 = newModel.Row1,
+						Col1 = newModel.Col1,
+						Row2 = newModel.Row2,
+						Col2 = newModel.Col2,
+						DependGeoRowNames = new string[] { firstModel.RecordID, secondModel.RecordID },
+						Selected = false,
+						Unit = _ExportUnit,
+					};
+				}
 			}
 			else
 			{
