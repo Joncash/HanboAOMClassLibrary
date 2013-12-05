@@ -15,6 +15,16 @@ namespace MeasureModule
 
 	public static class DistanceHelper
 	{
+		//定義 點 與 線的類型
+		private static MeasureType[] _pointTypes = new MeasureType[] { MeasureType.Point, MeasureType.Circle, MeasureType.PointCircle, MeasureType.CrossPoint };
+		private static MeasureType[] _lineTypes = new MeasureType[] { MeasureType.Line
+														, MeasureType.Distance
+														, MeasureType.DistanceX
+														, MeasureType.DistanceY
+														, MeasureType.FitLine
+														, MeasureType.SymmetryLine};
+
+		#region old Functions
 		public static DistanceResult LineToLine(Measurement first, Measurement second, HTuple angle, LineDirection direction)
 		{
 			//get value
@@ -121,127 +131,9 @@ namespace MeasureModule
 			return AngleLineToLine(line1, line2);
 		}
 
-		/// <summary>
-		/// 計算線與線的角度
-		/// </summary>
-		/// <param name="line1">IMeasureGeoModel 線段1</param>
-		/// <param name="line2">IMeasureGeoModel 線段2</param>
-		/// <returns></returns>
-		public static AngleResult AngleLineToLine(IMeasureGeoModel line1, IMeasureGeoModel line2)
-		{
-			//check
-			if (line1 == null || line2 == null) return null;
-			if (line1.Row1 == null && line1.Row1.TupleLength() == 0
-				&& line2.Row1 == null && line2.Row1.TupleLength() == 0) return null;
+		#endregion
 
-			//act
-			HTuple angle, firstPhi, secondPhi, interRow, interCol, isParallel;
-			HOperatorSet.AngleLx(line1.Row1, line1.Col1, line1.Row2, line1.Col2, out firstPhi);
-
-			HOperatorSet.AngleLx(line2.Row1, line2.Col1, line2.Row2, line2.Col2, out secondPhi);
-
-			HOperatorSet.IntersectionLl(line1.Row1, line1.Col1, line1.Row2, line1.Col2, line2.Row1, line2.Col1, line2.Row2, line2.Col2,
-				out interRow, out interCol, out isParallel);
-			HOperatorSet.AngleLl(line1.Row1, line1.Col1, line1.Row2, line1.Col2, line2.Row1, line2.Col1, line2.Row2, line2.Col2, out angle);
-			return new AngleResult()
-			{
-				Angle = angle,
-				StartPhi = firstPhi,
-				EndPhi = secondPhi,
-				Row = interRow,
-				Col = interCol,
-			};
-		}
-
-		/// <summary>
-		/// 回傳 Distance
-		/// </summary>
-		/// <param name="pointA"></param>
-		/// <param name="pointB"></param>
-		/// <returns></returns>
-		public static double PointToPoint(IMeasureGeoModel pointA, IMeasureGeoModel pointB)
-		{
-			//check
-			if (pointA == null || pointB == null) return 0;
-			if (pointA.Row1 == null && pointA.Row1.TupleLength() == 0
-				&& pointB.Row1 == null && pointB.Row1.TupleLength() == 0) return 0;
-
-			//act
-			HTuple distanceMin;
-			HOperatorSet.DistancePp(pointA.Row1, pointA.Col1, pointB.Row1, pointB.Col1, out distanceMin);
-			return distanceMin.D;
-		}
-
-		/// <summary>
-		/// 計算距離
-		/// </summary>
-		/// <param name="firstModel"></param>
-		/// <param name="secondModel"></param>
-		/// <returns></returns>
-		public static MeasureViewModel CaculateDistance(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
-		{
-			MeasureType[] pointTypes = new MeasureType[] { MeasureType.Point, MeasureType.Circle, MeasureType.PointCircle, MeasureType.CrossPoint };
-			MeasureType[] lineTypes = new MeasureType[] { MeasureType.Line
-														, MeasureType.Distance
-														, MeasureType.DistanceX
-														, MeasureType.DistanceY
-														, MeasureType.FitLine
-														, MeasureType.SymmetryLine};
-			int sum = 0;
-			if (pointTypes.Contains(firstModel.GeoType)) sum += 1;
-			if (pointTypes.Contains(secondModel.GeoType)) sum += 1;
-			if (lineTypes.Contains(firstModel.GeoType)) sum += 2;
-			if (lineTypes.Contains(secondModel.GeoType)) sum += 2;
-
-			MeasureViewModel newModel = null;
-			double distance = 0.0;
-			switch (sum)
-			{
-				case 2:
-					// Point to Point
-					distance = PointToPoint(firstModel, secondModel);
-					newModel = new MeasureViewModel()
-					{
-						Distance = distance,
-						Row1 = firstModel.Row1,
-						Col1 = firstModel.Col1,
-						Row2 = secondModel.Row1,
-						Col2 = secondModel.Col1,
-					};
-					break;
-				case 3:
-					// Point to Line or line to point
-					var isLineModel = (firstModel.Row2 != null && firstModel.Row2.D >= 0.0);
-					var point = (isLineModel) ? secondModel : firstModel;
-					var line = (isLineModel) ? firstModel : secondModel;
-					HTuple projRow, projCol;
-					HOperatorSet.ProjectionPl(point.Row1, point.Col1, line.Row1, line.Col1, line.Row2, line.Col2, out projRow, out projCol);
-					distance = PointToLine(firstModel, secondModel);
-					newModel = new MeasureViewModel()
-					{
-						Distance = distance,
-						Row1 = point.Row1,
-						Col1 = point.Col1,
-						Row2 = projRow,
-						Col2 = projCol,
-					};
-					break;
-				case 4:
-					// line to line
-					var model = GetTwoLineShortestPointModel(firstModel, secondModel);
-					//distance = LineToLine(firstModel, secondModel);
-					newModel = new MeasureViewModel()
-					{
-						Row1 = model.Row1,
-						Row2 = model.Row2,
-						Col1 = model.Col1,
-						Col2 = model.Col2,
-						Distance = model.Distance,
-					};
-					break;
-			}
-			return newModel;
-		}
+		#region Tested
 
 		public static double CircleToCircle(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
 		{
@@ -258,6 +150,177 @@ namespace MeasureModule
 			return PointToLine(firstModel, secondModel);
 		}
 
+
+
+		/// <summary>
+		/// 計算點到點的距離, 發生錯誤，則回傳 -1
+		/// </summary>
+		/// <param name="pointA">點模型</param>
+		/// <param name="pointB">點模型</param>
+		/// <returns></returns>
+		public static double PointToPoint(IMeasureGeoModel pointA, IMeasureGeoModel pointB)
+		{
+			double distance = -1;
+			if (isMeasureModelValid(pointA) && isMeasureModelValid(pointB))
+			{
+				HTuple distanceMin;
+				HOperatorSet.DistancePp(pointA.Row1, pointA.Col1, pointB.Row1, pointB.Col1, out distanceMin);
+				distance = distanceMin;
+			}
+			return distance;
+		}
+
+		/// <summary>
+		/// 計算點到線的距離, 發生錯誤，則回傳 -1
+		/// </summary>
+		/// <param name="firstModel">第一個 Model</param>
+		/// <param name="secondModel">第二個 Model</param>
+		/// <returns></returns>
+		public static double PointToLine(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
+		{
+			double distance = -1;
+			var model = GetPointToLineMeasureModel(firstModel, secondModel);
+
+			if (model != null)
+			{
+				distance = model.Distance;
+			}
+			return distance;
+		}
+
+		/// <summary>
+		/// 計算線到線的距離，發生錯誤回傳 -1
+		/// </summary>
+		/// <param name="firstModel"></param>
+		/// <param name="secondModel"></param>
+		/// <returns></returns>
+		public static double LineToLine(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
+		{
+			var model = GetTwoLineShortestPointModel(firstModel, secondModel);
+			double distance = (model != null) ? model.Distance.D : -1;
+			return distance;
+		}
+
+		/// <summary>
+		/// 檢查 Measure model 是否合法
+		/// </summary>
+		/// <param name="model">IMeasureGeoModel</param>
+		/// <returns></returns>
+		private static bool isMeasureModelValid(IMeasureGeoModel model)
+		{
+			bool modelValid = false;
+			bool pointParamCheckValid = (
+					model != null
+					&& model.Row1 != null
+					&& model.Col1 != null
+					&& model.Row1.TupleLength() > 0
+					&& model.Col1.TupleLength() > 0
+					&& model.Row1 > -1
+					&& model.Col1 > -1);
+
+			var isLineModel = _lineTypes.Contains(model.GeoType);
+			if (isLineModel)
+			{
+				modelValid = pointParamCheckValid && (
+					model.Row2 != null
+					&& model.Col2 != null
+					&& model.Row2.TupleLength() > 0
+					&& model.Col2.TupleLength() > 0
+					&& model.Row2 > -1
+					&& model.Col2 > -1);
+			}
+			else
+			{
+				modelValid = pointParamCheckValid;
+			}
+			return modelValid;
+		}
+
+		/// <summary>
+		/// 計算兩元素距離
+		/// </summary>
+		/// <param name="firstModel"></param>
+		/// <param name="secondModel"></param>
+		/// <returns></returns>
+		public static MeasureViewModel CaculateDistance(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
+		{
+			int sum = 0;
+			if (_pointTypes.Contains(firstModel.GeoType)) sum += 1;
+			if (_pointTypes.Contains(secondModel.GeoType)) sum += 1;
+			if (_lineTypes.Contains(firstModel.GeoType)) sum += 2;
+			if (_lineTypes.Contains(secondModel.GeoType)) sum += 2;
+
+			MeasureViewModel newModel = null;
+			double distance = -1;
+			switch (sum)
+			{
+				case 2:
+					// Point to Point
+					distance = PointToPoint(firstModel, secondModel);
+					if (distance > -1)
+					{
+						newModel = new MeasureViewModel()
+						{
+							Distance = distance,
+							Row1 = firstModel.Row1,
+							Col1 = firstModel.Col1,
+							Row2 = secondModel.Row1,
+							Col2 = secondModel.Col1,
+						};
+					}
+					break;
+				case 3:
+					// Point to Line or line to point
+					newModel = GetPointToLineMeasureModel(firstModel, secondModel);
+					break;
+				case 4:
+					// line to line
+					newModel = GetTwoLineShortestPointModel(firstModel, secondModel) as MeasureViewModel;
+					break;
+			}
+			return newModel;
+		}
+
+		/// <summary>
+		/// 取得點到線的量測模型
+		/// </summary>
+		/// <param name="firstModel"></param>
+		/// <param name="secondModel"></param>
+		/// <returns></returns>
+		public static MeasureViewModel GetPointToLineMeasureModel(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
+		{
+			MeasureViewModel model = null;
+			if (isMeasureModelValid(firstModel) && isMeasureModelValid(secondModel))
+			{
+				var isLineModel = (_lineTypes.Contains(firstModel.GeoType));
+				var pointModel = (isLineModel) ? secondModel : firstModel;
+				var lineModel = (isLineModel) ? firstModel : secondModel;
+
+				//取得投影點
+				double projectionRow, projectionCol;
+				getProjectionPoint(pointModel, lineModel, out projectionRow, out projectionCol);
+
+				//計算距離
+				if (projectionRow > 0 && projectionCol > 0)
+				{
+					HTuple distanceMin;
+					HOperatorSet.DistancePp(pointModel.Row1, pointModel.Col1, projectionRow, projectionCol, out distanceMin);
+					model = new MeasureViewModel()
+					{
+						Distance = distanceMin,
+						Row1 = pointModel.Row1,
+						Col1 = pointModel.Col1,
+						Row2 = projectionRow,
+						Col2 = projectionCol,
+					};
+				}
+			}
+			return model;
+		}
+
+
+
+
 		/// <summary>
 		/// 取得兩線段之間最短的兩點模型
 		/// </summary>
@@ -268,7 +331,9 @@ namespace MeasureModule
 		{
 			MeasureViewModel shortestModel = null;
 
-			try
+			var modelValid = (isMeasureModelValid(line1) && isMeasureModelValid(line2));
+
+			if (modelValid)
 			{
 				var modelList = new List<IMeasureGeoModel>();
 				//線段 1 的中點
@@ -310,15 +375,10 @@ namespace MeasureModule
 
 				//線段
 				shortestModel = modelList.OrderBy(p => p.Distance.D).Take(1).SingleOrDefault() as MeasureViewModel;
-
-			}
-			catch (Exception ex)
-			{
-                Hanbo.Log.LogManager.Error("GetTwoLineShortestPointModel Exception: " + ex.Message);
-
 			}
 			return shortestModel;
 		}
+
 		/// <summary>
 		/// 取得點到線的投影點模型
 		/// </summary>
@@ -327,21 +387,19 @@ namespace MeasureModule
 		/// <returns>point to Projection point Model ( 2 point, projectionPoint at (col2, row2))</returns>
 		private static IMeasureGeoModel getProjectionPlModel(IMeasureGeoModel point, IMeasureGeoModel line)
 		{
-			MeasureViewModel model = null;
 			HTuple rowProj, colProj, distance;
-			if (point != null && line != null)
+			HOperatorSet.ProjectionPl(point.Row1, point.Col1, line.Row1, line.Col1, line.Row2, line.Col2
+									, out rowProj, out colProj);
+			HOperatorSet.DistancePp(point.Row1, point.Col1, rowProj, colProj
+									, out distance);
+			MeasureViewModel model = new MeasureViewModel()
 			{
-				HOperatorSet.ProjectionPl(point.Row1, point.Col1, line.Row1, line.Col1, line.Row2, line.Col2, out rowProj, out colProj);
-				HOperatorSet.DistancePp(point.Row1, point.Col1, rowProj, colProj, out distance);
-				model = new MeasureViewModel()
-				{
-					Row1 = new HTuple(point.Row1),
-					Col1 = new HTuple(point.Col1),
-					Row2 = new HTuple(rowProj),
-					Col2 = new HTuple(colProj),
-					Distance = new HTuple(distance),
-				};
-			}
+				Row1 = new HTuple(point.Row1),
+				Col1 = new HTuple(point.Col1),
+				Row2 = new HTuple(rowProj),
+				Col2 = new HTuple(colProj),
+				Distance = new HTuple(distance),
+			};
 			return model;
 		}
 		private static IMeasureGeoModel getMidPoint(IMeasureGeoModel line)
@@ -354,49 +412,65 @@ namespace MeasureModule
 				Col1 = new HTuple(midC),
 			};
 		}
-		public static double LineToLine(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
+
+
+		/// <summary>
+		/// 計算點到線的投影點
+		/// </summary>
+		/// <param name="pointModel">點模型</param>
+		/// <param name="lineModel">線模型</param>
+		/// <param name="projectionRow">點到線的投影位置 (row)</param>
+		/// <param name="projectionCol">點到線的投影位置 (col)</param>
+		private static void getProjectionPoint(IMeasureGeoModel pointModel, IMeasureGeoModel lineModel
+											, out double projectionRow, out double projectionCol)
 		{
-			var line1 = firstModel;
-			var line2 = secondModel;
+			projectionRow = projectionCol = -1;
+			if (isMeasureModelValid(pointModel) && isMeasureModelValid(lineModel))
+			{
+				HTuple projRow, projCol;
+				//計算點到線的投影點
+				HOperatorSet.ProjectionPl(pointModel.Row1, pointModel.Col1
+										, lineModel.Row1, lineModel.Col1, lineModel.Row2, lineModel.Col2
+										, out projRow, out projCol);
+				projectionRow = projRow;
+				projectionCol = projCol;
+			}
+		}
+		#endregion
 
+		/// <summary>
+		/// 計算線與線的角度
+		/// </summary>
+		/// <param name="line1">IMeasureGeoModel 線段1</param>
+		/// <param name="line2">IMeasureGeoModel 線段2</param>
+		/// <returns></returns>
+		public static AngleResult AngleLineToLine(IMeasureGeoModel line1, IMeasureGeoModel line2)
+		{
+			AngleResult result = null;
+			//check
+			if (isMeasureModelValid(line1) && isMeasureModelValid(line2))
+			{
+				//act
+				HTuple angle, firstPhi, secondPhi, interRow, interCol, isParallel;
+				HOperatorSet.AngleLx(line1.Row1, line1.Col1, line1.Row2, line1.Col2, out firstPhi);
 
-			var model = GetTwoLineShortestPointModel(line1, line2);
+				HOperatorSet.AngleLx(line2.Row1, line2.Col1, line2.Row2, line2.Col2, out secondPhi);
 
-
-			//HTuple distanceMin, distanceMax;
-			//HOperatorSet.DistanceSs(line1.Row1, line1.Col1, line1.Row2, line1.Col2, line2.Row1, line2.Col1, line2.Row2, line2.Col2, out distanceMin, out distanceMax);
-			return model.Distance;
+				HOperatorSet.IntersectionLl(line1.Row1, line1.Col1, line1.Row2, line1.Col2, line2.Row1, line2.Col1, line2.Row2, line2.Col2,
+					out interRow, out interCol, out isParallel);
+				HOperatorSet.AngleLl(line1.Row1, line1.Col1, line1.Row2, line1.Col2, line2.Row1, line2.Col1, line2.Row2, line2.Col2, out angle);
+				result = new AngleResult()
+				{
+					Angle = angle,
+					StartPhi = firstPhi,
+					EndPhi = secondPhi,
+					Row = interRow,
+					Col = interCol,
+				};
+			}
+			return result;
 		}
 
-
-		public static double PointToLine(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
-		{
-			HTuple distanceMin, distanceMax;
-			var isLineModel = (firstModel.Row2 != null && firstModel.Row2.D >= 0.0);
-			var point = (isLineModel) ? secondModel : firstModel;
-			var line = (isLineModel) ? firstModel : secondModel;
-
-			/*
-			 直線方程式 p1 (x1,y1), p2(x2,y2)
-			 y-y1      y2-y1 (dy)
-			 ------ = --------
-			 x-x1      x2-x1 (dx)
-			 
-			 y-y1 = (dy/dx) * (x-x1)
-			 y = (dy/dx) * (x-x1) + y1
-			 * 
-			 y = 
-		
-			var dy = line.Row2 - line.Row1;
-			var dx = line.Col2 - line.Col1;
-				 */
-
-			HTuple projRow, projCol;
-			HOperatorSet.ProjectionPl(point.Row1, point.Col1, line.Row1, line.Col1, line.Row2, line.Col2, out projRow, out projCol);
-			HOperatorSet.DistancePp(point.Row1, point.Col1, projRow, projCol, out distanceMin);
-			//HOperatorSet.DistancePs(point.Row1, point.Col1, line.Row1, line.Col1, line.Row2, line.Col2, out distanceMin, out distanceMax);
-			return distanceMin;
-		}
 
 		/// <summary>
 		/// 擬合圓
@@ -664,7 +738,7 @@ namespace MeasureModule
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error(ex);
+				Hanbo.Log.LogManager.Error(ex);
 			}
 			return index;
 		}
