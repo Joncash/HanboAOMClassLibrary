@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TestData>
+	<!--============= Point to Point Test Cases ================-->
+	<Case description="point to point distance, right case">
+		<MeasureModel>
+			<Row1>0</Row1>
+			<Col1>0</Col1>
+			<Row2></Row2>
+			<Col2></Col2>
+			<Distance></Distance>
+			<GeoType>Point</GeoType>
+		</MeasureModel>
+		<MeasureModel>
+			<Row1>10</Row1>
+			<Col1>0</Col1>
+			<Row2></Row2>
+			<Col2></Col2>
+			<Distance></Distance>
+			<GeoType>Point</GeoType>
+		</MeasureModel>
+		<Expected>10</Expected>
+	</Case>
+	<Case description="point to point distance, error case">
+		<MeasureModel>
+			<Row1>0</Row1>
+			<Col1>0</Col1>
+			<Row2></Row2>
+			<Col2></Col2>
+			<Distance></Distance>
+			<GeoType>Point</GeoType>
+		</MeasureModel>
+		<MeasureModel>
+			<Row1></Row1>
+			<Col1></Col1>
+			<Row2></Row2>
+			<Col2></Col2>
+			<Distance></Distance>
+			<GeoType>Point</GeoType>
+		</MeasureModel>
+		<Expected>-1</Expected>
+	</Case>
+
+	<!--============= Point to Line, or Line to Point Test Cases ================-->
+	<Case description="Point to Line distance, right case">
+		<MeasureModel>
+			<Row1>10</Row1>
+			<Col1>10</Col1>
+			<Row2></Row2>
+			<Col2></Col2>
+			<Distance></Distance>
+			<GeoType>Point</GeoType>
+		</MeasureModel>
+		<MeasureModel>
+			<Row1>5</Row1>
+			<Col1>20</Col1>
+			<Row2>15</Row2>
+			<Col2>20</Col2>
+			<Distance></Distance>
+			<GeoType>Line</GeoType>
+		</MeasureModel>
+		<Expected>10</Expected>
+	</Case>
+	<Case description="line to Line distance, right case">
+		<MeasureModel>
+			<Row1>10</Row1>
+			<Col1>0</Col1>
+			<Row2>20</Row2>
+			<Col2>0</Col2>
+			<Distance></Distance>
+			<GeoType>Line</GeoType>
+		</MeasureModel>
+		<MeasureModel>
+			<Row1>10</Row1>
+			<Col1>10</Col1>
+			<Row2>30</Row2>
+			<Col2>10</Col2>
+			<Distance></Distance>
+			<GeoType>Line</GeoType>
+		</MeasureModel>
+		<Expected>10</Expected>
+	</Case>
+</TestData>
