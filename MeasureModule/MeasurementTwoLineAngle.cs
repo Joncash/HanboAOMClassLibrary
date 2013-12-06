@@ -108,15 +108,20 @@ namespace MeasureModule
 		/// <returns></returns>
 		public override MeasureViewModel GetViewModel()
 		{
-			return new MeasureViewModel()
+			MeasureViewModel model = null;
+			if (_Result != null)
 			{
-				Row1 = _Result.Row,
-				Col1 = _Result.Col,
-				StartPhi = _Result.StartPhi,
-				EndPhi = _Result.EndPhi,
-				Angle = _Result.Angle,
-				Distance = _Result.Distance
-			};
+				model = new MeasureViewModel()
+				{
+					Row1 = _Result.Row,
+					Col1 = _Result.Col,
+					StartPhi = _Result.StartPhi,
+					EndPhi = _Result.EndPhi,
+					Angle = _Result.Angle,
+					Distance = _Result.Distance
+				};
+			}
+			return model;
 		}
 	}
 }

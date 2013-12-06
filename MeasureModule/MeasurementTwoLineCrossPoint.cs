@@ -48,13 +48,16 @@ namespace MeasureModule
 			try
 			{
 				_Result = DistanceHelper.IntersetionLine(_geoModelOne, _geoModelTwo);
-				if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+				if (_Result != null)
 				{
-					Rectify(_Result.Row1, _Result.Col1, out _ResultWorld.Row1, out _ResultWorld.Col1);
-				}
-				else
-				{
-					_ResultWorld = new PointResult(_Result);
+					if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+					{
+						Rectify(_Result.Row1, _Result.Col1, out _ResultWorld.Row1, out _ResultWorld.Col1);
+					}
+					else
+					{
+						_ResultWorld = new PointResult(_Result);
+					}
 				}
 			}
 			catch (HOperatorException ex)
@@ -77,6 +80,7 @@ namespace MeasureModule
 
 			var size = 15;
 			var angle = 0.735398;
+			if (_Result == null) return;
 			if (_Result.Row1 == null) return;
 			if (_Result.Row1.Length > 0)
 			{
@@ -110,12 +114,16 @@ namespace MeasureModule
 		/// <returns></returns>
 		public override MeasureViewModel GetViewModel()
 		{
-			return new MeasureViewModel()
+			MeasureViewModel model = null;
+			if (_Result != null)
 			{
-				Row1 = _Result.Row1,
-				Col1 = _Result.Col1,
-			};
+				model = new MeasureViewModel()
+				{
+					Row1 = _Result.Row1,
+					Col1 = _Result.Col1,
+				};
+			}
+			return model;
 		}
-
 	}
 }

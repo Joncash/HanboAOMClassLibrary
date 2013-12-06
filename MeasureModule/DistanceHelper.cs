@@ -24,6 +24,15 @@ namespace MeasureModule
 														, MeasureType.FitLine
 														, MeasureType.SymmetryLine};
 
+		public static bool IsPointType(IMeasureGeoModel model)
+		{
+			return _pointTypes.Contains(model.GeoType);
+		}
+		public static bool isLineType(IMeasureGeoModel model)
+		{
+			return _lineTypes.Contains(model.GeoType);
+		}
+
 		#region old Functions
 		public static DistanceResult LineToLine(Measurement first, Measurement second, HTuple angle, LineDirection direction)
 		{
@@ -549,44 +558,43 @@ namespace MeasureModule
 		public static LineResult CalculateSymmetryLine(IMeasureGeoModel modelOne, IMeasureGeoModel modelTwo)
 		{
 			LineResult result = null;
+			var modelValid = isMeasureModelValid(modelOne) && isMeasureModelValid(modelTwo);
 
-			//取得第一條線段的中點
-			var pointModel = new MeasureViewModel()
+			if (modelValid)
 			{
-				Row1 = (modelOne.Row1 + modelOne.Row2) / 2.0,
-				Col1 = (modelOne.Col1 + modelOne.Col2) / 2.0,
-			};
+				//取得第一條線段的中點
+				var pointModel = getMidPoint(modelOne);
 
-			var lineModel = modelTwo;
+				var lineModel = modelTwo;
 
-			//計算第一線段中點到第二線段上的投影點(垂直距離)
-			HTuple rowProj, colProj;
-			HOperatorSet.ProjectionPl(pointModel.Row1, pointModel.Col1, lineModel.Row1, lineModel.Col1, lineModel.Row2, lineModel.Col2, out rowProj, out colProj);
+				//計算第一線段中點到第二線段上的投影點(垂直距離)
+				HTuple rowProj, colProj;
+				HOperatorSet.ProjectionPl(pointModel.Row1, pointModel.Col1, lineModel.Row1, lineModel.Col1, lineModel.Row2, lineModel.Col2, out rowProj, out colProj);
 
-			//計算第一線段中點與第二線段上的投影點距離 (point to point)
-			HTuple distance;
-			HOperatorSet.DistancePp(rowProj, colProj, pointModel.Row1, pointModel.Col1, out distance);
+				//計算第一線段中點與第二線段上的投影點距離 (point to point)
+				HTuple distance;
+				HOperatorSet.DistancePp(rowProj, colProj, pointModel.Row1, pointModel.Col1, out distance);
 
-			//取兩線中點
-			var cRow = (pointModel.Row1 + rowProj) / 2.0;
-			var cCol = (pointModel.Col1 + colProj) / 2.0;
+				//取兩線中點
+				var cRow = (pointModel.Row1 + rowProj) / 2.0;
+				var cCol = (pointModel.Col1 + colProj) / 2.0;
 
-			//取角度
-			HTuple angle;
-			HOperatorSet.AngleLx(lineModel.Row1, lineModel.Col1, lineModel.Row2, lineModel.Col2, out angle);
+				//取角度
+				HTuple angle;
+				HOperatorSet.AngleLx(lineModel.Row1, lineModel.Col1, lineModel.Row2, lineModel.Col2, out angle);
 
-			//線段
-			double[] rows, cols;
-			DetermineLine(cRow, cCol, angle, distance, out rows, out cols);
-			result = new LineResult()
-			{
-				Row1 = rows[0],
-				Row2 = rows[1],
-				Col1 = cols[0],
-				Col2 = cols[1],
-				Distance = distance,
-			};
-
+				//線段
+				double[] rows, cols;
+				DetermineLine(cRow, cCol, angle, distance, out rows, out cols);
+				result = new LineResult()
+				{
+					Row1 = rows[0],
+					Row2 = rows[1],
+					Col1 = cols[0],
+					Col2 = cols[1],
+					Distance = distance,
+				};
+			}
 			return result;
 		}
 
@@ -611,61 +619,70 @@ namespace MeasureModule
 		public static PointResult IntersetionLine(IMeasureGeoModel geoModelOne, IMeasureGeoModel geoModelTwo)
 		{
 			PointResult result = null;
-
-			HTuple row, col, isParallel;
-			HOperatorSet.IntersectionLl(geoModelOne.Row1, geoModelOne.Col1, geoModelOne.Row2, geoModelOne.Col2,
-										geoModelTwo.Row1, geoModelTwo.Col1, geoModelTwo.Row2, geoModelTwo.Col2,
-										out row, out col, out isParallel);
-			result = new PointResult()
+			var modelValid = isMeasureModelValid(geoModelOne) && isMeasureModelValid(geoModelTwo);
+			if (modelValid)
 			{
-				Row1 = row,
-				Col1 = col,
-				IsParallel = isParallel,
-			};
+				HTuple row, col, isParallel;
+				HOperatorSet.IntersectionLl(geoModelOne.Row1, geoModelOne.Col1, geoModelOne.Row2, geoModelOne.Col2,
+											geoModelTwo.Row1, geoModelTwo.Col1, geoModelTwo.Row2, geoModelTwo.Col2,
+											out row, out col, out isParallel);
+				result = new PointResult()
+				{
+					Row1 = row,
+					Col1 = col,
+					IsParallel = isParallel,
+				};
+			}
 			return result;
 		}
 
 		/// <summary>
 		/// 計算兩點 X 方向距離
 		/// </summary>
-		/// <param name="_geoModelOne">點 1</param>
-		/// <param name="_geoModelTwo">點 2</param>
+		/// <param name="pointOne">點 1</param>
+		/// <param name="pointTwo">點 2</param>
 		/// <returns></returns>
-		public static LineResult DistanceX(IMeasureGeoModel _geoModelOne, IMeasureGeoModel _geoModelTwo)
+		public static LineResult DistanceX(IMeasureGeoModel pointOne, IMeasureGeoModel pointTwo)
 		{
 			LineResult result = null;
-			var distanceX = Math.Abs(_geoModelOne.Col1.D - _geoModelTwo.Col1.D);
-
-
-			result = new LineResult()
+			var modelValid = isMeasureModelValid(pointOne) && isMeasureModelValid(pointTwo);
+			if (modelValid)
 			{
-				Col1 = _geoModelOne.Col1,
-				Col2 = _geoModelTwo.Col1,
-				Row1 = _geoModelOne.Row1,
-				Row2 = _geoModelOne.Row1,
-				Distance = distanceX,
-			};
+				var distanceX = Math.Abs(pointOne.Col1.D - pointTwo.Col1.D);
+				result = new LineResult()
+				{
+					Col1 = pointOne.Col1,
+					Col2 = pointTwo.Col1,
+					Row1 = pointOne.Row1,
+					Row2 = pointOne.Row1,
+					Distance = distanceX,
+				};
+			}
 			return result;
 		}
 
 		/// <summary>
 		/// 計算兩點 Y 方向距離
 		/// </summary>
-		/// <param name="_geoModelOne">點 1</param>
-		/// <param name="_geoModelTwo">點 2</param>
+		/// <param name="pointOne">點 1</param>
+		/// <param name="pointTwo">點 2</param>
 		/// <returns></returns>
-		public static LineResult DistanceY(IMeasureGeoModel _geoModelOne, IMeasureGeoModel _geoModelTwo)
+		public static LineResult DistanceY(IMeasureGeoModel pointOne, IMeasureGeoModel pointTwo)
 		{
 			LineResult result = null;
-			var distanceY = Math.Abs(_geoModelOne.Row1.D - _geoModelTwo.Row1.D);
-			result = new LineResult()
+			var modelValid = isMeasureModelValid(pointOne) && isMeasureModelValid(pointTwo);
+			if (modelValid)
 			{
-				Col1 = _geoModelOne.Col1,
-				Col2 = _geoModelOne.Col1,
-				Row1 = _geoModelOne.Row1,
-				Row2 = _geoModelTwo.Row1,
-				Distance = distanceY,
-			};
+				var distanceY = Math.Abs(pointOne.Row1.D - pointTwo.Row1.D);
+				result = new LineResult()
+				{
+					Col1 = pointOne.Col1,
+					Col2 = pointOne.Col1,
+					Row1 = pointOne.Row1,
+					Row2 = pointTwo.Row1,
+					Distance = distanceY,
+				};
+			}
 			return result;
 		}
 
@@ -756,5 +773,87 @@ namespace MeasureModule
 			return area.D;
 		}
 
+
+		public static MeasureViewModel Get3PointToCircleModel(IMeasureGeoModel pAModel
+															, IMeasureGeoModel pBModel
+															, IMeasureGeoModel pCModel)
+		{
+			MeasureViewModel model = null;
+			var modelValid = isMeasureModelValid(pAModel) && isMeasureModelValid(pBModel) && isMeasureModelValid(pCModel);
+			if (modelValid)
+			{
+				double circleX, circleY;
+				caculateCenterOfCircle(pAModel, pBModel, pCModel, out circleX, out circleY);
+				if (circleX > -1 && circleY > -1)
+				{
+					//radius
+					HTuple radius;
+					HOperatorSet.DistancePp(pAModel.Row1, pAModel.Col1, circleY, circleX, out radius);
+					model = new MeasureViewModel()
+					{
+						Row1 = circleY,
+						Col1 = circleX,
+						Distance = radius,
+					};
+				}
+			}
+			return model;
+		}
+
+		/// <summary>
+		/// 3點求圓
+		/// </summary>
+		/// <param name="pA"></param>
+		/// <param name="pB"></param>
+		/// <param name="pC"></param>
+		/// <param name="circleCenterX">圓心 x 座標</param>
+		/// <param name="circleCenterY">圓心 y 座標</param>
+		private static void caculateCenterOfCircle(IMeasureGeoModel pA
+												, IMeasureGeoModel pB
+												, IMeasureGeoModel pC
+												, out double circleCenterX
+												, out double circleCenterY)
+		{
+			var a1 = pA.Col1;
+			var b1 = pA.Row1;
+			var a2 = pB.Col1;
+			var b2 = pB.Row1;
+			var a3 = pC.Col1;
+			var b3 = pC.Row1;
+			var a1s = Math.Pow(a1, 2);
+			var a2s = Math.Pow(a2, 2);
+			var a3s = Math.Pow(a3, 2);
+			var b1s = Math.Pow(b1, 2);
+			var b2s = Math.Pow(b2, 2);
+			var b3s = Math.Pow(b3, 2);
+
+			circleCenterX = (a1s * b2
+					- a1s * b3
+					+ b1 * b3s
+					- b1 * a2s
+					+ b3 * a2s
+					- b3s * b2
+					+ b3 * b2s
+					- b1 * b2s
+					+ b1 * a3s
+					- b1s * b3
+					- a3s * b2
+					+ b1s * b2) /
+					(2 * (a1 * b2 + a3 * b1 - a3 * b2 - a1 * b3 - a2 * b1 + a2 * b3));
+
+			circleCenterY = -0.5 * (-1 * a1 * a2s
+		   + a2 * b1s
+		   - a1 * b2s
+		   - a3 * a1s
+		   - a2 * b3s
+		   - a3 * b1s
+		   + a3 * a2s
+		   + a1 * b3s
+		   + a3 * b2s
+		   + a1 * a3s
+		   - a2 * a3s
+		   + a2 * a1s) /
+		   (a1 * b2 + a3 * b1 - a3 * b2 - a1 * b3 - a2 * b1 + a2 * b3);
+		}
 	}
 }

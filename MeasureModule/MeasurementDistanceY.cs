@@ -47,13 +47,16 @@ namespace MeasureModule
 			try
 			{
 				_Result = DistanceHelper.DistanceY(_geoModelOne, _geoModelTwo);
-				if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+				if (_Result != null)
 				{
-					Rectify(_Result.Row1, _Result.Col1, out _ResultWorld.Row1, out _ResultWorld.Col1);
-				}
-				else
-				{
-					_ResultWorld = new LineResult(_Result);
+					if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+					{
+						Rectify(_Result.Row1, _Result.Col1, out _ResultWorld.Row1, out _ResultWorld.Col1);
+					}
+					else
+					{
+						_ResultWorld = new LineResult(_Result);
+					}
 				}
 			}
 			catch (HOperatorException ex)
@@ -73,7 +76,7 @@ namespace MeasureModule
 			//clear
 			mEdgeXLD.Dispose();
 			mEdgeXLD.GenEmptyObj();
-
+			if (_Result == null) return;
 			if (_Result.Row1 == null) return;
 			if (_Result.Row1.Length > 0)
 			{
@@ -106,14 +109,19 @@ namespace MeasureModule
 		/// <returns></returns>
 		public override MeasureViewModel GetViewModel()
 		{
-			return new MeasureViewModel()
+			MeasureViewModel model = null;
+			if (_Result != null)
 			{
-				Row1 = _Result.Row1,
-				Col1 = _Result.Col1,
-				Col2 = _Result.Col2,
-				Row2 = _Result.Row2,
-				Distance = _Result.Distance,
-			};
+				model = new MeasureViewModel()
+				{
+					Row1 = _Result.Row1,
+					Col1 = _Result.Col1,
+					Col2 = _Result.Col2,
+					Row2 = _Result.Row2,
+					Distance = _Result.Distance,
+				};
+			}
+			return model;
 		}
 	}
 }

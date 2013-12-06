@@ -16,7 +16,7 @@ using ViewROI;
 
 namespace Hanbo.WindowControlWrapper
 {
-	public enum GeoDataGridViewNotifyType { DeleteRow, ShowGeoImage, TreeView_AfterCheck, TreeView_AfterSelect, ReloadData, UpdateData }
+	public enum GeoDataGridViewNotifyType { DeleteRow, ShowGeoImage, TreeView_AfterCheck, TreeView_AfterSelect, ReloadData, UpdateData, ErrorMessage }
 	public delegate void GeoDataGridViewRecordChangeNotify(GeoDataGridViewNotifyType notifyType, object data);
 	public class GeoDataGridViewManager
 	{
@@ -169,23 +169,7 @@ namespace Hanbo.WindowControlWrapper
 
 		public void SetUnit(string unit)
 		{
-			//var colimnDict = new Dictionary<string, string>() { 
-			//	{"WorldDistance", Hanbo.Resources.Resource.Model_WorldDistance},
-			//	{"Normal", Hanbo.Resources.Resource.Model_Normal},
-			//	{"LowerBound", Hanbo.Resources.Resource.Model_LowerLimit},
-			//	{"UpperBound", Hanbo.Resources.Resource.Model_UppderLimit},
-			//};
-
 			_ExportUnit = unit;
-			//foreach (var item in colimnDict)
-			//{
-			//	var name = item.Key;
-			//	var disp = item.Value;
-			//	var column = _GridViewContainer.Columns[name];
-			//	if (column != null) column.HeaderText = disp + " ( " + _ExportUnit + " )";
-			//}
-
-
 			//更新Data
 			foreach (var item in _DataList.Where(p => p.Distance > 0.0))
 			{
@@ -287,30 +271,15 @@ namespace Hanbo.WindowControlWrapper
 			if (_TreeViewContainer != null)
 			{
 				var number = _DataList.Count;
-				//var geoNode = getGeoTreeNode(geoModel);
-
-
 				var roiNodeName = String.IsNullOrEmpty(geoModel.Name) ? String.Format("{0} {1}", number.ToString("d2"), activeROI.ROIMeasureType) : geoModel.Name;
 				var roiImageKey = activeROI.ROIMeasureType.ToString();
 				var index = _TreeViewContainer.Nodes.Count;
 				TreeNode roiNode = new TreeNode() { Name = geoModel.RecordID, Text = roiNodeName, ImageKey = roiImageKey, SelectedImageKey = roiImageKey, Checked = activeROI.Visiable };
 				roiNode.Tag = activeROI;
-				//roiNode.Nodes.Add(geoNode);
-				//geoNode.Nodes.Add(roiNode);
 
 				_TreeViewContainer.Nodes.Add(roiNode);
 				_TreeViewContainer.Focus();
 				_TreeViewContainer.SelectedNode = roiNode;
-				//HideCheckBox(_TreeViewContainer, geoNode);
-
-				//node.Nodes.Add(
-
-				//var treeNode = _TreeViewContainer.Nodes[index];
-				//treeNode.Tag = activeROI;
-				//treeNode.Checked = true;
-				//_TreeViewContainer.Focus();
-
-				//_TreeViewContainer.SelectedNode = treeNode;
 			}
 
 		}
@@ -407,92 +376,66 @@ namespace Hanbo.WindowControlWrapper
 				var firstModel = _DataList.SingleOrDefault(p => p.RecordID == firstID);
 				var secondModel = _DataList.SingleOrDefault(p => p.RecordID == secondID);
 				var thirdModel = _DataList.SingleOrDefault(p => p.RecordID == thirdID);
-				if (item.GeoType == MeasureType.Distance)
+				GeoDataGridViewModel newModel = null;
+				switch (item.GeoType)
 				{
-					//重新計算距離
-					var newDistanceModel = makeDistanceGeoDataViewModel(firstModel, secondModel);
-					if (newDistanceModel != null)
-					{
-						item.Distance = newDistanceModel.Distance;
-						item.WorldDistance = newDistanceModel.WorldDistance;
-						item.Row1 = newDistanceModel.Row1;
-						item.Col1 = newDistanceModel.Col1;
-						item.Row2 = newDistanceModel.Row2;
-						item.Col2 = newDistanceModel.Col2;
-					}
+					case MeasureType.Angle:
+						newModel = makeAngleGeoDataViewModel(firstModel, secondModel);
+						break;
+					case MeasureType.CrossPoint:
+						newModel = makeCrossPointGeoDataViewModel(firstModel, secondModel);
+						break;
+					case MeasureType.Distance:
+						newModel = makeDistanceGeoDataViewModel(firstModel, secondModel);
+						break;
+					case MeasureType.DistanceX:
+						newModel = makeDistanceXGeoDataViewModel(firstModel, secondModel);
+						break;
+					case MeasureType.DistanceY:
+						newModel = makeDistanceYGeoDataViewModel(firstModel, secondModel);
+						break;
+					case MeasureType.PointCircle:
+						newModel = make3PointToCircleGeoDataViewModel(firstModel, secondModel, thirdModel);
+						break;
+					case MeasureType.SymmetryLine:
+						newModel = makeSymmetryLineGeoDataViewModel(firstModel, secondModel);
+						break;
 				}
-				else if (item.GeoType == MeasureType.Angle)
+				reAssignModelValue(item, newModel);
+			}
+		}
+
+		private void reAssignModelValue(GeoDataGridViewModel item, GeoDataGridViewModel newModel)
+		{
+			var lineTypes = new MeasureType[] { MeasureType.Distance, MeasureType.DistanceX, MeasureType.DistanceY, MeasureType.SymmetryLine };
+			var isCrossPoint = (item.GeoType == MeasureType.CrossPoint);
+			if (newModel == null)
+			{
+				item.Row1 = -1;
+				item.Col1 = -1;
+				item.Row2 = -1;
+				item.Col2 = -1;
+				item.Distance = 0;
+				item.WorldDistance = 0;
+			}
+			else
+			{
+				item.Row1 = newModel.Row1;
+				item.Col1 = newModel.Col1;
+				if (!isCrossPoint)
 				{
-					var newAngleModel = makeAngleGeoDataViewModel(firstModel, secondModel);
-					if (newAngleModel != null)
+					if (lineTypes.Contains(item.GeoType))
 					{
-						item.Row1 = newAngleModel.Row1;
-						item.Col1 = newAngleModel.Col1;
-						item.Distance = newAngleModel.Distance;
-						item.WorldDistance = newAngleModel.WorldDistance;
+						item.Row2 = newModel.Row2;
+						item.Col2 = newModel.Col2;
 					}
+					item.Distance = newModel.Distance;
+					item.WorldDistance = newModel.WorldDistance;
 				}
-				else if (item.GeoType == MeasureType.SymmetryLine)
-				{
-					var newSymmetryModel = makeSymmetryLineGeoDataViewModel(firstModel, secondModel);
-					if (newSymmetryModel != null)
-					{
-						item.Distance = newSymmetryModel.Distance;
-						item.WorldDistance = newSymmetryModel.WorldDistance;
-						item.Row1 = newSymmetryModel.Row1;
-						item.Col1 = newSymmetryModel.Col1;
-						item.Row2 = newSymmetryModel.Row2;
-						item.Col2 = newSymmetryModel.Col2;
-					}
-				}
-				else if (item.GeoType == MeasureType.PointCircle)
-				{
-					//重新計算 3 點成圓
-					var circlPointViewModel = Make3PointToCircleGeoDataViewModel(firstModel, secondModel, thirdModel);
-					if (circlPointViewModel != null)
-					{
-						item.Row1 = circlPointViewModel.Row1;
-						item.Col1 = circlPointViewModel.Col1;
-						item.Distance = circlPointViewModel.Distance;
-						item.WorldDistance = circlPointViewModel.WorldDistance;
-					}
-				}
-				else if (item.GeoType == MeasureType.CrossPoint)
-				{
-					var crossPointViewModel = MakeCrossPointGeoDataViewModel(firstModel, secondModel);
-					if (crossPointViewModel != null)
-					{
-						item.Row1 = crossPointViewModel.Row1;
-						item.Col1 = crossPointViewModel.Col1;
-					}
-					updateDependGeoObject(item);
-				}
-				else if (item.GeoType == MeasureType.DistanceX)
-				{
-					var distanceXViewModel = MakeDistanceXGeoDataViewModel(firstModel, secondModel);
-					if (distanceXViewModel != null)
-					{
-						item.Row1 = distanceXViewModel.Row1;
-						item.Row2 = distanceXViewModel.Row2;
-						item.Col1 = distanceXViewModel.Col1;
-						item.Col2 = distanceXViewModel.Col2;
-						item.Distance = distanceXViewModel.Distance;
-						item.WorldDistance = distanceXViewModel.WorldDistance;
-					}
-				}
-				else if (item.GeoType == MeasureType.DistanceY)
-				{
-					var distanceYViewModel = makeDistanceYGeoDataViewModel(firstModel, secondModel);
-					if (distanceYViewModel != null)
-					{
-						item.Row1 = distanceYViewModel.Row1;
-						item.Row2 = distanceYViewModel.Row2;
-						item.Col1 = distanceYViewModel.Col1;
-						item.Col2 = distanceYViewModel.Col2;
-						item.Distance = distanceYViewModel.Distance;
-						item.WorldDistance = distanceYViewModel.WorldDistance;
-					}
-				}
+			}
+			if (isCrossPoint)
+			{
+				updateDependGeoObject(item);
 			}
 		}
 
@@ -755,7 +698,6 @@ namespace Hanbo.WindowControlWrapper
 			var mModel = measure.GetViewModel();
 			if (mModel != null)
 			{
-				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
 				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_YwayDistance;
 				result = new GeoDataGridViewModel()
@@ -763,23 +705,20 @@ namespace Hanbo.WindowControlWrapper
 					Name = measureName,
 					Distance = mModel.Distance,
 					WorldDistance = pixelToRealWorldValue(mModel.Distance),
-					//RowNumber = nextRowNumber,
 					Icon = _ImageList[MeasureType.DistanceY.ToString()],
 					GeoType = MeasureType.DistanceY,
 					Row1 = mModel.Row1,
 					Col1 = mModel.Col1,
 					Row2 = mModel.Row2,
 					Col2 = mModel.Col2,
-					//DependGeoIndices = new int[] { lineOne.RowNumber, lineTwo.RowNumber },
 					DependGeoRowNames = new string[] { pA.RecordID, pB.RecordID },
 					Selected = false,
 					Unit = _ExportUnit,
-					//ROIIndex = -1,
 				};
 			}
 			else
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_DistanceYWarning);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage, Hanbo.Resources.Resource.Message_DistanceYWarning);
 			}
 			return result;
 		}
@@ -788,18 +727,17 @@ namespace Hanbo.WindowControlWrapper
 		{
 			var pA = _DataList[checkRows[0].Index];
 			var pB = _DataList[checkRows[1].Index];
-			var distanceXModel = MakeDistanceXGeoDataViewModel(pA, pB);
+			var distanceXModel = makeDistanceXGeoDataViewModel(pA, pB);
 			if (distanceXModel != null) this.addMeasuredViewModel(distanceXModel);
 		}
 
-		private GeoDataGridViewModel MakeDistanceXGeoDataViewModel(GeoDataGridViewModel pA, GeoDataGridViewModel pB)
+		private GeoDataGridViewModel makeDistanceXGeoDataViewModel(GeoDataGridViewModel pA, GeoDataGridViewModel pB)
 		{
 			GeoDataGridViewModel result = null;
 			var measure = new MeasurementDistanceX(MeasureViewModelResolver.Resolve(pA), MeasureViewModelResolver.Resolve(pB), mAssistant);
 			var mModel = measure.GetViewModel();
 			if (mModel != null)
 			{
-				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
 				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_XwayDistance; ;
 				result = new GeoDataGridViewModel()
@@ -807,23 +745,20 @@ namespace Hanbo.WindowControlWrapper
 					Name = measureName,
 					Distance = mModel.Distance,
 					WorldDistance = pixelToRealWorldValue(mModel.Distance),
-					//RowNumber = nextRowNumber,
 					Icon = _ImageList[MeasureType.DistanceX.ToString()],
 					GeoType = MeasureType.DistanceX,
 					Row1 = mModel.Row1,
 					Col1 = mModel.Col1,
 					Row2 = mModel.Row2,
 					Col2 = mModel.Col2,
-					//DependGeoIndices = new int[] { lineOne.RowNumber, lineTwo.RowNumber },
 					DependGeoRowNames = new string[] { pA.RecordID, pB.RecordID },
 					Selected = false,
 					Unit = _ExportUnit,
-					//ROIIndex = -1,
 				};
 			}
 			else
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_DistanceXWarning);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage, Hanbo.Resources.Resource.Message_DistanceXWarning);
 			}
 			return result;
 
@@ -833,44 +768,46 @@ namespace Hanbo.WindowControlWrapper
 		{
 			var pA = _DataList[checkRows[0].Index];
 			var pB = _DataList[checkRows[1].Index];
-			var crossPointModel = MakeCrossPointGeoDataViewModel(pA, pB);
+			var crossPointModel = makeCrossPointGeoDataViewModel(pA, pB);
 			if (crossPointModel != null) this.addMeasuredViewModel(crossPointModel);
 		}
 
-		private GeoDataGridViewModel MakeCrossPointGeoDataViewModel(GeoDataGridViewModel lineOne, GeoDataGridViewModel lineTwo)
+		private GeoDataGridViewModel makeCrossPointGeoDataViewModel(GeoDataGridViewModel lineOne, GeoDataGridViewModel lineTwo)
 		{
 			GeoDataGridViewModel result = null;
-
 			var measure = new MeasurementTwoLineCrossPoint(MeasureViewModelResolver.Resolve(lineOne), MeasureViewModelResolver.Resolve(lineTwo), mAssistant);
-			var resultData = measure.getMeasureResultData();
-			var isParallel = (resultData as PointResult).IsParallel;
-			if (isParallel)
+			var mModel = measure.GetViewModel();
+			if (mModel != null)
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_CrossPointWarning);
-			}
-			else
-			{
-				var mModel = measure.GetViewModel();
-				if (mModel != null)
+				var resultData = measure.getMeasureResultData();
+				var isParallel = (resultData as PointResult).IsParallel;
+				if (isParallel)
 				{
-					//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
+					notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage
+						, Hanbo.Resources.Resource.Message_CrossPointWarning);
+				}
+				else
+				{
 					var number = _DataList.Count + 1;
 					var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_CrossPoint;
 					result = new GeoDataGridViewModel()
 					{
 						Name = measureName,
-						//RowNumber = nextRowNumber,
 						Icon = _ImageList[MeasureType.CrossPoint.ToString()],
 						GeoType = MeasureType.CrossPoint,
 						Row1 = mModel.Row1,
 						Col1 = mModel.Col1,
-						//DependGeoIndices = new int[] { lineOne.RowNumber, lineTwo.RowNumber },
 						DependGeoRowNames = new string[] { lineOne.RecordID, lineTwo.RecordID },
 						Selected = false,
 						Unit = "",
-						//ROIIndex = -1,
 					};
 				}
+			}
+			else
+			{
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage
+					, "運算模型資料不正確！");
+
 			}
 			return result;
 		}
@@ -880,7 +817,7 @@ namespace Hanbo.WindowControlWrapper
 			var pA = _DataList[checkRows[0].Index];
 			var pB = _DataList[checkRows[1].Index];
 			var pC = _DataList[checkRows[2].Index];
-			var circlPointViewModel = Make3PointToCircleGeoDataViewModel(pA, pB, pC);
+			var circlPointViewModel = make3PointToCircleGeoDataViewModel(pA, pB, pC);
 			if (circlPointViewModel != null) this.addMeasuredViewModel(circlPointViewModel);
 		}
 
@@ -906,7 +843,6 @@ namespace Hanbo.WindowControlWrapper
 			var mModel = measure.GetViewModel();
 			if (mModel != null)
 			{
-				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
 				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_Angle;
 				result = new GeoDataGridViewModel()
@@ -914,21 +850,19 @@ namespace Hanbo.WindowControlWrapper
 					Name = measureName,
 					Distance = mModel.Distance,
 					WorldDistance = mModel.Distance,
-					//RowNumber = nextRowNumber,
 					Icon = _ImageList[MeasureType.Angle.ToString()],
 					GeoType = MeasureType.Angle,
 					Row1 = mModel.Row1,
 					Col1 = mModel.Col1,
-					//DependGeoIndices = new int[] { lineOne.RowNumber, lineTwo.RowNumber },
 					DependGeoRowNames = new string[] { lineOne.RecordID, lineTwo.RecordID },
 					Selected = false,
 					Unit = "Angle",
-					//ROIIndex = -1,
 				};
 			}
 			else
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_AngleError);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage,
+									Hanbo.Resources.Resource.Message_AngleError);
 			}
 			return result;
 		}
@@ -955,7 +889,6 @@ namespace Hanbo.WindowControlWrapper
 			var mModel = measure.GetViewModel();
 			if (mModel != null)
 			{
-				//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
 				var number = _DataList.Count + 1;
 				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_SymmetryLine;
 				result = new GeoDataGridViewModel()
@@ -963,7 +896,6 @@ namespace Hanbo.WindowControlWrapper
 					Name = measureName,
 					Distance = mModel.Distance,
 					WorldDistance = pixelToRealWorldValue(mModel.Distance),
-					//RowNumber = nextRowNumber,
 					Icon = _ImageList[MeasureType.SymmetryLine.ToString()],
 					GeoType = MeasureType.SymmetryLine,
 					Row1 = mModel.Row1,
@@ -971,15 +903,14 @@ namespace Hanbo.WindowControlWrapper
 					Row2 = mModel.Row2,
 					Col2 = mModel.Col2,
 					DependGeoRowNames = new string[] { lineOne.RecordID, lineTwo.RecordID },
-					//DependGeoIndices = new int[] { lineOne.RowNumber, lineTwo.RowNumber },
 					Selected = false,
 					Unit = _ExportUnit,
-					//ROIIndex = -1,
 				};
 			}
 			else
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_SymmetryLineError);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage,
+									Hanbo.Resources.Resource.Message_SymmetryLineError);
 			}
 			return result;
 		}
@@ -1050,7 +981,8 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_DependencyNotExists);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage,
+									Hanbo.Resources.Resource.Message_DependencyNotExists);
 			}
 			return result;
 		}
@@ -1062,83 +994,42 @@ namespace Hanbo.WindowControlWrapper
 		/// <param name="pB">幾何模型 點 B</param>
 		/// <param name="pC">幾何模型 點 C</param>
 		/// <returns></returns>
-		public GeoDataGridViewModel Make3PointToCircleGeoDataViewModel(GeoDataGridViewModel pA, GeoDataGridViewModel pB, GeoDataGridViewModel pC)
+		private GeoDataGridViewModel make3PointToCircleGeoDataViewModel(GeoDataGridViewModel pA, GeoDataGridViewModel pB, GeoDataGridViewModel pC)
 		{
 			GeoDataGridViewModel result = null;
-			if (pA != null && pB != null && pC != null)
+			var pAModel = MeasureViewModelResolver.Resolve(pA);
+			var pBModel = MeasureViewModelResolver.Resolve(pB);
+			var pcModel = MeasureViewModelResolver.Resolve(pC);
+
+			var isAllPointModel = DistanceHelper.IsPointType(pAModel) && DistanceHelper.IsPointType(pBModel) && DistanceHelper.IsPointType(pcModel);
+			if (!isAllPointModel)
 			{
-				HTuple a1;
-				HTuple b1;
-				HTuple x;
-				HTuple y;
-				try
+				MessageBox.Show(Hanbo.Resources.Resource.Message_DependencyNotExists);
+				return result;
+			}
+			MeasureViewModel newModel = DistanceHelper.Get3PointToCircleModel(pAModel, pBModel, pcModel);
+			if (newModel != null)
+			{
+				var number = _DataList.Count + 1;
+				var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_3PointCircle;
+				result = new GeoDataGridViewModel()
 				{
-					//計算 圓 ROI 資訊
-					caculateCenterOfCircle(pA, pB, pC, out a1, out b1, out x, out y);
-					if (x != null && x.TupleLength() > 0)
-					{
-						HTuple roiRadius;
-						HOperatorSet.DistancePp(b1, a1, y, x, out roiRadius);
-						//var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
-						var number = _DataList.Count + 1;
-						var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_3PointCircle;
-						result = new GeoDataGridViewModel()
-						{
-							Name = measureName,
-							Distance = roiRadius,
-							WorldDistance = pixelToRealWorldValue(roiRadius),
-							//RowNumber = nextRowNumber,
-							Icon = _ImageList[MeasureType.PointCircle.ToString()],
-							GeoType = MeasureType.PointCircle,
-							Row1 = y,
-							Col1 = x,
-							//DependGeoIndices = new int[] { pA.RowNumber, pB.RowNumber, pC.RowNumber },
-							DependGeoRowNames = new string[] { pA.RecordID, pB.RecordID, pC.RecordID },
-							Selected = false,
-							Unit = _ExportUnit,
-							//ROIIndex = -1,
-						};
-					}
-					else
-					{
-						MessageBox.Show(Hanbo.Resources.Resource.Message_3PointCircleWarning);
-					}
-
-
-					/*
-					var model = DistanceHelper.GetFitCircleModel(currImage, roiRadius, y, x);
-					if (model.Distance != null && model.Distance.TupleLength() > 0)
-					{
-						var nextRowNumber = _geoGeoDataBindingList.Select(p => p.RowNumber).Max() + 1;
-						result = new GeoDataViewModel()
-						{
-							Distance = model.Distance,
-							WorldDistance = pixelToMiniMeter(model.Distance),
-							RowNumber = nextRowNumber,
-							Icon = App.Measure.Properties.Resources._3pointCircle,
-							GeoType = MeasureType.PointCircle,
-							Row1 = model.Row1,
-							Col1 = model.Col1,
-							DependGeoIndices = new int[] { pA.RowNumber, pB.RowNumber, pC.RowNumber },
-							Selected = false,
-							ROIIndex = -1,
-						};
-					}
-					 
-					else
-					{
-						MessageBox.Show("此 3 點無法在目前選擇的區域中擬合最佳圓！");
-					}
-					 */
-				}
-				catch
-				{
-					MessageBox.Show("Fit Circle Error");
-				}
+					Name = measureName,
+					Distance = newModel.Distance,
+					WorldDistance = pixelToRealWorldValue(newModel.Distance),
+					Icon = _ImageList[MeasureType.PointCircle.ToString()],
+					GeoType = MeasureType.PointCircle,
+					Row1 = newModel.Row1,
+					Col1 = newModel.Col1,
+					DependGeoRowNames = new string[] { pA.RecordID, pB.RecordID, pC.RecordID },
+					Selected = false,
+					Unit = _ExportUnit,
+				};
 			}
 			else
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_DependencyNotExists);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage,
+					Hanbo.Resources.Resource.Message_3PointCircleWarning);
 			}
 			return result;
 		}
@@ -1327,9 +1218,5 @@ namespace Hanbo.WindowControlWrapper
 		}
 		#endregion
 		#endregion
-
-
-
-
 	}
 }
