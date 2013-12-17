@@ -234,15 +234,19 @@ namespace Hanbo.WindowControlWrapper
 			}
 		}
 
-		private void setTreeNodeFocus(string id)
+		private void setTreeNodeFocus(string id, bool searchChild)
 		{
 			if (_TreeViewContainer == null) return;
-			var nodes = _TreeViewContainer.Nodes.Find(id, false);
+			var nodes = _TreeViewContainer.Nodes.Find(id, searchChild);
 			if (nodes.Length > 0)
 			{
 				_TreeViewContainer.Focus();
 				_TreeViewContainer.SelectedNode = nodes[0];
 			}
+		}
+		private void setTreeNodeFocus(string id)
+		{
+			setTreeNodeFocus(id, false);
 		}
 
 		/// <summary>
@@ -473,6 +477,7 @@ namespace Hanbo.WindowControlWrapper
 			initColumn();
 
 			//Event
+			_GridViewContainer.CellClick += _GridViewContainer_CellClick;
 			_GridViewContainer.CellEndEdit += _GridViewContainer_CellEndEdit;
 			_GridViewContainer.CellContentClick += DataGridView_CellContentClick;
 			_GridViewContainer.CellDoubleClick += DataGridView_CellDoubleClick;
@@ -481,6 +486,22 @@ namespace Hanbo.WindowControlWrapper
 			//Default value
 			_ExportUnit = "mm";
 
+		}
+
+		void _GridViewContainer_CellClick(object sender, DataGridViewCellEventArgs e)
+		{
+			// GridViewCell 與 TreeView 互動
+			if (DoCalculate == CalcuteType.None && _TreeViewContainer != null)
+			{
+				var gridView = sender as DataGridView;
+				DataGridViewRow row = gridView.Rows[e.RowIndex];
+				var rowCell = row.Cells["RecordID"];//.Value as ROIViewModel;
+				if (rowCell != null)
+				{
+					var recordID = rowCell.Value.ToString();
+					setTreeNodeFocus(recordID, true);
+				}
+			}
 		}
 
 		void _GridViewContainer_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -654,6 +675,7 @@ namespace Hanbo.WindowControlWrapper
 		private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
 		{
 			var gridView = sender as DataGridView;
+
 			if (gridView.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
 			{
 				gridView.EndEdit();
@@ -1118,7 +1140,21 @@ namespace Hanbo.WindowControlWrapper
 		void _TreeViewContainer_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			ROI roi = e.Node.Tag as ROI;
+			setGridViewCellFocus(e.Node);
 			notifyRecordChanged(GeoDataGridViewNotifyType.TreeView_AfterSelect, roi);
+		}
+
+		private void setGridViewCellFocus(TreeNode treeNode)
+		{
+			var rowModel = _GridViewContainer.Rows.Cast<DataGridViewRow>()
+						.Where(p => p.Cells["RecordID"].Value.ToString() == treeNode.Name)
+						.Select(p => new
+						{
+							RowIndex = p.Cells["Name"].RowIndex,
+							ColumnIndex = p.Cells["Name"].ColumnIndex
+						}).FirstOrDefault();
+			if (rowModel != null)
+				_GridViewContainer.CurrentCell = _GridViewContainer[rowModel.ColumnIndex, rowModel.RowIndex];
 		}
 		public void SetTreeViewNodeActivate(ROI activeROI)
 		{
