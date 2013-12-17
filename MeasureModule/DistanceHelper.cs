@@ -619,7 +619,10 @@ namespace MeasureModule
 		public static PointResult IntersetionLine(IMeasureGeoModel geoModelOne, IMeasureGeoModel geoModelTwo)
 		{
 			PointResult result = null;
-			var modelValid = isMeasureModelValid(geoModelOne) && isMeasureModelValid(geoModelTwo);
+			var modelValid = isMeasureModelValid(geoModelOne)
+								&& isMeasureModelValid(geoModelTwo)
+								&& isLineType(geoModelOne)
+								&& isLineType(geoModelTwo);
 			if (modelValid)
 			{
 				HTuple row, col, isParallel;

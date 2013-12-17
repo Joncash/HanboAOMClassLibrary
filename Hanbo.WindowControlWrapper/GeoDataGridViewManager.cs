@@ -832,7 +832,8 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_AngleWarning);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage
+					, Hanbo.Resources.Resource.Message_AngleWarning);
 			}
 		}
 
@@ -878,7 +879,8 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_SymmetryLineWarning);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage
+					, Hanbo.Resources.Resource.Message_SymmetryLineWarning);
 			}
 		}
 
@@ -948,7 +950,8 @@ namespace Hanbo.WindowControlWrapper
 			catch (Exception ex)
 			{
 				Hanbo.Log.LogManager.Error("計算距離 Error:" + ex.Message);
-				MessageBox.Show(Hanbo.Resources.Resource.Message_DistanceCalculationError);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage
+					, Hanbo.Resources.Resource.Message_DistanceCalculationError);
 			}
 		}
 
@@ -1004,7 +1007,8 @@ namespace Hanbo.WindowControlWrapper
 			var isAllPointModel = DistanceHelper.IsPointType(pAModel) && DistanceHelper.IsPointType(pBModel) && DistanceHelper.IsPointType(pcModel);
 			if (!isAllPointModel)
 			{
-				MessageBox.Show(Hanbo.Resources.Resource.Message_DependencyNotExists);
+				notifyRecordChanged(GeoDataGridViewNotifyType.ErrorMessage
+					, Hanbo.Resources.Resource.Message_DependencyNotExists);
 				return result;
 			}
 			MeasureViewModel newModel = DistanceHelper.Get3PointToCircleModel(pAModel, pBModel, pcModel);
@@ -1032,58 +1036,6 @@ namespace Hanbo.WindowControlWrapper
 					Hanbo.Resources.Resource.Message_3PointCircleWarning);
 			}
 			return result;
-		}
-
-		/// <summary>
-		/// 平面座標上 3 個點計算擬合圓
-		/// </summary>
-		/// <param name="checkRows"></param>
-		/// <param name="a1"></param>
-		/// <param name="b1"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		private void caculateCenterOfCircle(GeoDataGridViewModel pA, GeoDataGridViewModel pB, GeoDataGridViewModel pC, out HTuple a1, out HTuple b1, out HTuple x, out HTuple y)
-		{
-			a1 = pA.Col1;
-			b1 = pA.Row1;
-			var a2 = pB.Col1;
-			var b2 = pB.Row1;
-			var a3 = pC.Col1;
-			var b3 = pC.Row1;
-			var a1s = Math.Pow(a1, 2);
-			var a2s = Math.Pow(a2, 2);
-			var a3s = Math.Pow(a3, 2);
-			var b1s = Math.Pow(b1, 2);
-			var b2s = Math.Pow(b2, 2);
-			var b3s = Math.Pow(b3, 2);
-
-			x = (a1s * b2
-					- a1s * b3
-					+ b1 * b3s
-					- b1 * a2s
-					+ b3 * a2s
-					- b3s * b2
-					+ b3 * b2s
-					- b1 * b2s
-					+ b1 * a3s
-					- b1s * b3
-					- a3s * b2
-					+ b1s * b2) /
-					(2 * (a1 * b2 + a3 * b1 - a3 * b2 - a1 * b3 - a2 * b1 + a2 * b3));
-
-			y = -0.5 * (-1 * a1 * a2s
-		   + a2 * b1s
-		   - a1 * b2s
-		   - a3 * a1s
-		   - a2 * b3s
-		   - a3 * b1s
-		   + a3 * a2s
-		   + a1 * b3s
-		   + a3 * b2s
-		   + a1 * a3s
-		   - a2 * a3s
-		   + a2 * a1s) /
-		   (a1 * b2 + a3 * b1 - a3 * b2 - a1 * b3 - a2 * b1 + a2 * b3);
 		}
 
 		private void initColumn()
