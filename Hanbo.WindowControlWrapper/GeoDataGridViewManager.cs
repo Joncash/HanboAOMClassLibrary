@@ -135,6 +135,28 @@ namespace Hanbo.WindowControlWrapper
 		/// </summary>
 		public void Refresh()
 		{
+			//檢查資料, 標記顏色
+			foreach (DataGridViewRow row in _GridViewContainer.Rows)
+			{
+				var cell = row.Cells["GeoType"];
+				if (cell != null)
+				{
+					string cellValue = cell.Value.ToString();
+					MeasureType geotype;
+					if (Enum.TryParse<MeasureType>(cellValue, out geotype))
+					{
+						var valid = false;
+						var rowBegin = row.Cells["Row1"].Value.ToString();
+						var distance = row.Cells["Distance"].Value.ToString();
+						valid = (!DistanceHelper.IsResultType(geotype)) ? rowBegin != "-1" : distance != "-1";
+						Color cellColor = (!valid) ? Color.OrangeRed : System.Drawing.SystemColors.Control;
+						foreach (DataGridViewCell colorCell in row.Cells)
+						{
+							colorCell.Style.BackColor = cellColor;
+						}
+					}
+				}
+			}
 			_GridViewContainer.Refresh();
 		}
 

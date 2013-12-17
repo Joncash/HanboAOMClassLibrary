@@ -45,9 +45,17 @@ namespace MeasureModule
 		{
 			return _pointTypes.Contains(model.GeoType);
 		}
+		public static bool IsPointType(MeasureType type)
+		{
+			return _pointTypes.Contains(type);
+		}
 		public static bool isLineType(IMeasureGeoModel model)
 		{
 			return _lineTypes.Contains(model.GeoType);
+		}
+		public static bool isLineType(MeasureType type)
+		{
+			return _lineTypes.Contains(type);
 		}
 
 		#region old Functions
