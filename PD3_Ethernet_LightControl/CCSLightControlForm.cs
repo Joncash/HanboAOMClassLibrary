@@ -16,6 +16,7 @@ namespace PD3_Ethernet_LightControl
 	public partial class CCSLightControlForm : Form
 	{
 		CCSLightControlManager _lightControlManager;
+		CCSLightControlAssistant _lightControlAssistant;
 
 		private bool _lock = false;
 		private bool _isConnected = false;
@@ -30,10 +31,13 @@ namespace PD3_Ethernet_LightControl
 		}
 		private void CCSLightControlForm_Load(object sender, EventArgs e)
 		{
+
 			CCSLightControlForm_LocationChanged(sender, e);
 			_lightControlManager = DeviceController.GetCCSLightControlManagerInstance();
 			_lightControlManager.On_SafetyClosed += _lightControlManager_On_SafetyClosed;
 			_lightControlManager.StartProbeConnetion(_heartbeatInterval);
+
+			_lightControlAssistant = new CCSLightControlAssistant(_lightControlManager);
 			initializeLightControl();
 		}
 
@@ -114,9 +118,10 @@ namespace PD3_Ethernet_LightControl
 				numericUpDown2.ValueChanged += new EventHandler(intensityChanged);
 				numericUpDown3.ValueChanged += new EventHandler(intensityChanged);
 
+				_lightControlAssistant.SendMessage(_lightControlManager.GetChannelStatusModel(new string[] { "00", "01", "02" }));
 				//init panel value
-				_lightControlManager.GetChannelStatusAsync(new string[] { "00", "01", "02" });
-				_lightControlManager.On_ProbeConnectionWorked += _lightControlManager_On_ProbeConnectionWorked;
+				//_lightControlManager.GetChannelStatusAsync(new string[] { "00", "01", "02" });
+				//_lightControlManager.On_ProbeConnectionWorked += _lightControlManager_On_ProbeConnectionWorked;
 				//_lightControlManager.StartProbeConnetion(null);
 			}
 			ResetButton.Enabled = true;
@@ -146,7 +151,10 @@ namespace PD3_Ethernet_LightControl
 				{
 					var channel = (string)upDown.Tag;
 					var intensity = (int)upDown.Value;
-					_lightControlManager.SetLightIntensityAsync(intensity, channel);
+					var model = _lightControlManager.GetIntesnityModel(intensity, channel);
+					_lightControlAssistant.SendMessage(model);
+
+					//_lightControlManager.SetLightIntensityAsync(intensity, channel);
 				}
 			}
 		}
@@ -160,7 +168,10 @@ namespace PD3_Ethernet_LightControl
 				{
 					var channel = (string)ck.Tag;
 					var onOff = ck.Checked ? LightSwitch.On : LightSwitch.OFF;
-					_lightControlManager.SetLightOnOffAsync(onOff, channel);
+					var model = _lightControlManager.GetLightOnOffModel(onOff, channel);
+					_lightControlAssistant.SendMessage(model);
+
+					//_lightControlManager.SetLightOnOffAsync(onOff, channel);
 				}
 			}
 		}

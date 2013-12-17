@@ -43,6 +43,10 @@ namespace LightControl
 		public int ControllerPort { get; set; }
 		public IPEndPoint ControllerEndPoint;
 		public bool IsDoSafetyCloseDone { get { return _isSafetyCloseDone; } }
+		public bool IsReady()
+		{
+			return !_bgWorker.IsBusy && Connected;
+		}
 
 
 		private Socket _client;
@@ -243,6 +247,8 @@ namespace LightControl
 				_bgWorker.RunWorkerAsync(model);
 			}
 		}
+
+
 
 		/// <summary>
 		/// 設定光源亮度, 非同步方法
@@ -484,6 +490,59 @@ namespace LightControl
 			Dispose();
 		}
 
+		public void SendMessage(object model)
+		{
+			if (!_bgWorker.IsBusy)
+			{
+				_bgWorker.RunWorkerAsync(model);
+			}
+		}
 
+		public CCSCommandModel GetIntesnityModel(int intensity, string channel)
+		{
+			var instruction = "F";
+			if (intensity < 0) intensity = 0;
+			if (intensity > 255) intensity = 255;
+
+			var data = intensity.ToString().PadLeft(3, '0');
+			var model = new CCSCommandModel()
+			{
+				ChannelCommands = new Dictionary<string, InstructionModel>()
+				{
+					{channel, new InstructionModel(){Instruction = instruction, Data = data}}
+				},
+			};
+			return model;
+		}
+
+		public CCSCommandModel GetLightOnOffModel(LightSwitch onOff, string channel)
+		{
+			var instruction = "L";
+			var model = new CCSCommandModel()
+			{
+				ChannelCommands = new Dictionary<string, InstructionModel>()
+				{
+					{channel, new InstructionModel(){Instruction = instruction, Data = ((int)onOff).ToString()}}
+				},
+			};
+			return model;
+		}
+
+		public CCSCommandModel GetChannelStatusModel(string[] channels)
+		{
+			var instruction = "M";
+			var channelsCommand = new Dictionary<string, InstructionModel>();
+
+			foreach (var channel in channels)
+			{
+				channelsCommand.Add(channel, new InstructionModel() { Instruction = instruction, Data = "" });
+			}
+			//prepare data
+			var model = new CCSCommandModel()
+			{
+				ChannelCommands = channelsCommand,
+			};
+			return model;
+		}
 	}
 }
