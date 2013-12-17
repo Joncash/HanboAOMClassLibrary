@@ -415,8 +415,8 @@ namespace Hanbo.WindowControlWrapper
 				item.Col1 = -1;
 				item.Row2 = -1;
 				item.Col2 = -1;
-				item.Distance = 0;
-				item.WorldDistance = 0;
+				item.Distance = -1;
+				item.WorldDistance = -1;
 			}
 			else
 			{

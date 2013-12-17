@@ -23,6 +23,23 @@ namespace MeasureModule
 														, MeasureType.DistanceY
 														, MeasureType.FitLine
 														, MeasureType.SymmetryLine};
+		private static MeasureType[] _resultTypes = new MeasureType[] { 
+			MeasureType.Circle, MeasureType.PointCircle
+			, MeasureType.Distance
+			, MeasureType.DistanceX
+			, MeasureType.DistanceY
+			, MeasureType.Angle
+		};
+
+		public static bool IsResultType(IMeasureGeoModel model)
+		{
+			return _resultTypes.Contains(model.GeoType);
+		}
+
+		public static bool IsResultType(MeasureType type)
+		{
+			return _resultTypes.Contains(type);
+		}
 
 		public static bool IsPointType(IMeasureGeoModel model)
 		{
