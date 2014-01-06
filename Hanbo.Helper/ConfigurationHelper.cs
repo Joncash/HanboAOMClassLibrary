@@ -47,6 +47,11 @@ namespace Hanbo.Helper
 			{
 				var lines = File.ReadAllLines(_settingPath, Encoding.UTF8);
 				var line = lines.Skip(1).Take(1).SingleOrDefault();
+				string exportStyle = lines.Skip(2).Take(1).SingleOrDefault();
+				if (exportStyle != null)
+				{
+					_autoExportSettings.IsMahrExport = (exportStyle == "Mahr");
+				}
 				if (line != null)
 				{
 					var parts = line.Split(',');

@@ -19,5 +19,10 @@ namespace Hanbo.Models.Argument
 
 		public AutoExportArgumentPostfixType PostfixType;
 		public AutoExportArgumentPrefixType PrefixType;
+
+		/// <summary>
+		/// 是否為 Mahr 格式輸出
+		/// </summary>
+		public bool IsMahrExport { get; set; }
 	}
 }
