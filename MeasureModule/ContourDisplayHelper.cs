@@ -9,7 +9,13 @@ namespace MeasureModule
 {
 	public class ContourDisplayHelper
 	{
-		public static ResultDisplayViewModel CreateDisplayViewModel(GeoDataGridViewModel model)
+		/// <summary>
+		/// 建立文字及圖形
+		/// </summary>
+		/// <param name="model"></param>
+		/// <param name="textOnly">是否只建立文字</param>
+		/// <returns></returns>
+		public static ResultDisplayViewModel CreateDisplayViewModel(GeoDataGridViewModel model, bool textOnly)
 		{
 			ResultDisplayViewModel viewModel = null;
 
@@ -34,7 +40,6 @@ namespace MeasureModule
 						viewModel = new ResultDisplayViewModel()
 						{
 							DisplayText = dispName,
-							ImageXLD = dispXLD,
 							PositionX = posX,
 							PositionY = posY,
 						};
@@ -46,7 +51,6 @@ namespace MeasureModule
 						viewModel = new ResultDisplayViewModel()
 						{
 							DisplayText = dispName,
-							ImageXLD = dispXLD,
 							PositionX = posX,
 							PositionY = posY,
 						};
@@ -64,7 +68,6 @@ namespace MeasureModule
 						viewModel = new ResultDisplayViewModel()
 						{
 							DisplayText = dispName,
-							ImageXLD = dispXLD,
 							PositionX = posX,
 							PositionY = posY,
 							FirstArrowX = model.Col1,
@@ -74,6 +77,10 @@ namespace MeasureModule
 						};
 						break;
 				}
+				//
+				if (!textOnly && viewModel != null)
+					viewModel.ImageXLD = dispXLD;
+
 			}
 			catch (Exception ex)
 			{
@@ -82,5 +89,13 @@ namespace MeasureModule
 
 			return viewModel;
 		}
+
+
+		public static ResultDisplayViewModel CreateDisplayViewModel(GeoDataGridViewModel model)
+		{
+			return CreateDisplayViewModel(model, false);
+		}
+
+
 	}
 }
