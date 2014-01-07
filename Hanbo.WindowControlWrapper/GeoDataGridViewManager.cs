@@ -149,7 +149,7 @@ namespace Hanbo.WindowControlWrapper
 						var rowBegin = row.Cells["Row1"].Value.ToString();
 						var distance = row.Cells["Distance"].Value.ToString();
 						valid = (!DistanceHelper.IsResultType(geotype)) ? rowBegin != "-1" : distance != "-1";
-						Color cellColor = (!valid) ? Color.OrangeRed : System.Drawing.SystemColors.Control;
+						Color cellColor = (!valid) ? Color.OrangeRed : Color.White;
 						foreach (DataGridViewCell colorCell in row.Cells)
 						{
 							colorCell.Style.BackColor = cellColor;
