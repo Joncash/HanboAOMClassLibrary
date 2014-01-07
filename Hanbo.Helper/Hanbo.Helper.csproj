@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="CameraSystem.cs" />
     <Compile Include="ConfigurationHelper.cs" />
+    <Compile Include="ExportHelper.cs" />
     <Compile Include="HanboSecurityHelper.cs" />
     <Compile Include="ImageConventer.cs" />
     <Compile Include="LicenseChecker.cs" />

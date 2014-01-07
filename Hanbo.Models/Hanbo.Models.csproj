@@ -46,6 +46,7 @@
     <Compile Include="LightDTO.cs" />
     <Compile Include="LightViewModel.cs" />
     <Compile Include="MacroViewModel.cs" />
+    <Compile Include="MeasureExportModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShapeViewModel.cs" />
     <Compile Include="SpecViewModel.cs" />
