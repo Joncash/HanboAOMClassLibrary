@@ -749,7 +749,7 @@ namespace ViewROI
 				var prevScaleC = (double)((ImgCol2 - ImgCol1) / imageWidth);
 				foreach (var wViewModel in WriteStringList)
 				{
-
+					window.SetColor("red");
 					HOperatorSet.SetTposition(window, wViewModel.Row, wViewModel.Col);
 					HOperatorSet.WriteString(window, wViewModel.Text);
 				}

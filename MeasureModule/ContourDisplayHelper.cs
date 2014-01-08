@@ -47,7 +47,7 @@ namespace MeasureModule
 
 					case ViewROI.MeasureType.CrossPoint:
 					case ViewROI.MeasureType.Point:
-						dispXLD.GenCrossContourXld(model.Row1, model.Col1, 6, 0.785398);
+						dispXLD.GenCrossContourXld(model.Row1, model.Col1, 12, 0.785398);
 						viewModel = new ResultDisplayViewModel()
 						{
 							DisplayText = dispName,
@@ -62,9 +62,14 @@ namespace MeasureModule
 					case ViewROI.MeasureType.FitLine:
 					case ViewROI.MeasureType.Line:
 					case ViewROI.MeasureType.SymmetryLine:
-						dispXLD.GenContourPolygonXld(new double[] { model.Row1, model.Row2 }, new double[] { model.Col1, model.Col2 });
+						var arrowXLD = new HXLDCont();
+						//dispXLD.GenContourPolygonXld(new double[] { model.Row1, model.Row2 }, new double[] { model.Col1, model.Col2 });
 						posX = (model.Col1 + model.Col2) / 2.0;
 						posY = (model.Row1 + model.Row2) / 2.0;
+
+						//arrowModel.CenterY, arrowModel.CenterX, 
+						//arrowModel.FirstArrowY, arrowModel.FirstArrowX
+						//, arrowSize);
 						viewModel = new ResultDisplayViewModel()
 						{
 							DisplayText = dispName,
@@ -95,7 +100,5 @@ namespace MeasureModule
 		{
 			return CreateDisplayViewModel(model, false);
 		}
-
-
 	}
 }
