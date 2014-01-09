@@ -79,6 +79,7 @@
     <Compile Include="AngleResult.cs" />
     <Compile Include="CircleResult.cs" />
     <Compile Include="ContourDisplayHelper.cs" />
+    <Compile Include="Converter\ProgGraphicModelConverter.cs" />
     <Compile Include="DistanceHelper.cs" />
     <Compile Include="DistanceResult.cs" />
     <Compile Include="FitLineResult.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="MeasureViewModel.cs" />
     <Compile Include="PointResult.cs" />
     <Compile Include="PositionLocater.cs" />
+    <Compile Include="Converter\GeoDataGridViewModelConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolver\MeasureViewModelResolver.cs" />
     <Compile Include="ResultDisplayViewModel.cs" />

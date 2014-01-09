@@ -95,6 +95,9 @@
     <Compile Include="ROICircularArc.cs" />
     <Compile Include="ROIController.cs" />
     <Compile Include="ROILine.cs" />
+    <Compile Include="ROIProgCircle.cs" />
+    <Compile Include="ROIProgDistance.cs" />
+    <Compile Include="Model\ProgGraphicModel.cs" />
     <Compile Include="ROIRectangle1.cs" />
     <Compile Include="ROIRectangle2.cs" />
     <Compile Include="ROIViewModel.cs" />
