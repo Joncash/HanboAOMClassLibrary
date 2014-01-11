@@ -51,15 +51,19 @@ namespace Hanbo.Models
 		/// </summary>
 		public string CH1 { get; set; }
 
+		public bool CH1Switch { get; set; }
+
 		/// <summary>
 		/// CH2 光源亮度 
 		/// </summary>
 		public string CH2 { get; set; }
+		public bool CH2Switch { get; set; }
 
 		/// <summary>
 		/// CH3 光源亮度 
 		/// </summary>
 		public string CH3 { get; set; }
+		public string CH3Switch { get; set; }
 
 		public string ExportUnit { get; set; }
 	}

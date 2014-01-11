@@ -343,6 +343,9 @@ namespace Hanbo.SDMS.Model
 				CH1 = p.UpperLightValue,
 				CH2 = p.BottomLigthValue,
 
+				CH1Switch = (p.UpperLightSwitch.HasValue) ? (p.UpperLightSwitch.Value) : false,
+				CH2Switch = (p.BottomLightSiwtch.HasValue) ? (p.BottomLightSiwtch.Value) : false,
+
 				//
 				AlgoDLLFilepath = "",
 				SpecFilepath = "",
