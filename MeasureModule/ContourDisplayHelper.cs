@@ -36,7 +36,7 @@ namespace MeasureModule
 
 					case ViewROI.MeasureType.Circle:
 					case ViewROI.MeasureType.PointCircle:
-						dispXLD.GenCircleContourXld(model.Row1, model.Col1, model.Distance / 2.0, 0.0, 6.28318, "positive", 1.0);
+						dispXLD.GenCircleContourXld(model.Row1, model.Col1, model.Distance, 0.0, 6.28318, "positive", 1.0);
 						viewModel = new ResultDisplayViewModel()
 						{
 							DisplayText = dispName,
