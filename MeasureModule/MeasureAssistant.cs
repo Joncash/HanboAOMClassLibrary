@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using HalconDotNet;
 using System.Collections;
 using ViewROI;
@@ -17,6 +17,7 @@ namespace MeasureModule
 	/// </summary>
 	public class MeasureAssistant
 	{
+		private static bool _doFitLineAlgo = ConfigurationHelper.GetDoFitLineAlgo();
 		public int SubpixThreadhold = 128;
 		public void SetSubpixThreadhold(int val)
 		{
@@ -24,9 +25,7 @@ namespace MeasureModule
 			UpdateExecute(ALL_ROI);
 		}
 
-		/// <summary>Index of the selected ROI.</summary>
-		public int mActRoiIdx;
-
+		#region private variables
 		/// <summary>Reference to the ROI controller instance.</summary>
 		private ROIController roiController;
 
@@ -35,6 +34,11 @@ namespace MeasureModule
 
 		/// <summary>Reference to list of ROI instances.</summary>
 		private ArrayList mROIList;
+		#endregion
+
+		#region public variables
+		/// <summary>Index of the selected ROI.</summary>
+		public int mActRoiIdx;
 
 		/// <summary>HALCON image used for measuring.</summary>
 		public HImage mImage;
@@ -165,12 +169,13 @@ namespace MeasureModule
 
 
 		public MeasureDelegate NotifyMeasureObserver;
+		#endregion
 
+		#region å»ºæ§‹å­
+		public MeasureAssistant()
+		{
 
-		private static bool _doFitLineAlgo = ConfigurationHelper.GetDoFitLineAlgo();
-
-		/* To create the measure controller class the ROI 
-		   controller has to be provided for initialization */
+		}
 		public MeasureAssistant(ROIController CRoi)
 		{
 			exceptionText = "";
@@ -183,6 +188,44 @@ namespace MeasureModule
 			//default param
 			initializeDefaultParam();
 		}
+		#endregion
+
+		#region private methods
+		private void initializeDefaultParam()
+		{
+			this.mThresh = 40.0;
+			this.mSigma = 1.0;
+			this.mRoiWidth = 10;
+			this.mInterpolation = "bilinear";
+			this.mSelPair = false;
+			this.mTransition = "all";
+			this.mPosition = "last";
+			this.mDispEdgeLength = 30;
+			this.mDispROIWidth = true;
+			this.setUnit("cm");
+
+			this.mInitThresh = 40.0;
+			this.mInitSigma = 1.0;
+			this.mInitRoiWidth = 10;
+		}
+
+		/// <summary>
+		/// Clear the measure object at the index DelIdx from
+		/// the measure object list and release the resources used
+		/// </summary>
+		private void removeMeasureObjectIdx(int DelIdx)
+		{
+			Measurement m = (Measurement)mMeasureList[DelIdx];
+			mMeasureList.RemoveAt(DelIdx);
+			m.ClearMeasurement();
+			mActRoiIdx = -1;
+		}
+		#endregion
+
+		#region public methods
+
+		/* To create the measure controller class the ROI 
+		   controller has to be provided for initialization */
 		public MeasureAssistantParam GetMeasureAssistantParam()
 		{
 			return new MeasureAssistantParam()
@@ -204,7 +247,7 @@ namespace MeasureModule
 			};
 		}
 		/// <summary>
-		/// ¸ü¤J¶q´ú°Ñ¼Æ
+		/// è¼‰å…¥é‡æ¸¬åƒæ•¸
 		/// </summary>
 		/// <param name="param"></param>
 		public void ReloadMeasureAssistantParam(MeasureAssistantParam param)
@@ -224,27 +267,8 @@ namespace MeasureModule
 			this.mInitSigma = param.mInitSigma;
 			this.mInitRoiWidth = param.mInitRoiWidth;
 		}
-		private void initializeDefaultParam()
-		{
-			this.mThresh = 40.0;
-			this.mSigma = 1.0;
-			this.mRoiWidth = 10;
-			this.mInterpolation = "bilinear";
-			this.mSelPair = false;
-			this.mTransition = "all";
-			this.mPosition = "last";
-			this.mDispEdgeLength = 30;
-			this.mDispROIWidth = true;
-			this.setUnit("cm");
 
-			this.mInitThresh = 40.0;
-			this.mInitSigma = 1.0;
-			this.mInitRoiWidth = 10;
-		}
-		public MeasureAssistant()
-		{
 
-		}
 
 		/*********************************************************/
 		/*                  setter-methods                       */
@@ -612,7 +636,7 @@ namespace MeasureModule
 		{
 			int count = mMeasureList.Count;
 			for (int i = 0; i < count; i++)
-				RemoveMeasureObjectIdx(0);
+				removeMeasureObjectIdx(0);
 
 			if (NotifyMeasureObserver != null)
 				NotifyMeasureObserver(EVENT_UPDATE_REMOVE);
@@ -625,23 +649,13 @@ namespace MeasureModule
 		public void RemoveMeasureObjectActIdx()
 		{
 			int DelIdx = roiController.getDelROIIdx();
-			RemoveMeasureObjectIdx(DelIdx);
+			removeMeasureObjectIdx(DelIdx);
 
 			if (NotifyMeasureObserver != null)
 				NotifyMeasureObserver(EVENT_UPDATE_REMOVE);
 		}
 
-		/// <summary>
-		/// Clear the measure object at the index DelIdx from
-		/// the measure object list and release the resources used
-		/// </summary>
-		private void RemoveMeasureObjectIdx(int DelIdx)
-		{
-			Measurement m = (Measurement)mMeasureList[DelIdx];
-			mMeasureList.RemoveAt(DelIdx);
-			m.ClearMeasurement();
-			mActRoiIdx = -1;
-		}
+
 
 		/// <summary>
 		/// Factory method to create measure objects
@@ -743,7 +757,7 @@ namespace MeasureModule
 		}
 
 		/// <summary>
-		/// ¨ú±o ¥Ø«e§@¥Î¤¤ ROI,  Pure ªº¶q´úµ²ªG
+		/// å–å¾— ç›®å‰ä½œç”¨ä¸­ ROI,  Pure çš„é‡æ¸¬çµæœ
 		/// </summary>
 		/// <returns></returns>
 		public MeasureResult GetMeasureResult()
@@ -752,7 +766,7 @@ namespace MeasureModule
 		}
 
 		/// <summary>
-		/// ¨ú±o¥Ø«e§@¥Î¤¤ ROI ªº¶q´úª«¥ó
+		/// å–å¾—ç›®å‰ä½œç”¨ä¸­ ROI çš„é‡æ¸¬ç‰©ä»¶
 		/// </summary>
 		/// <returns></returns>
 		public Measurement GetMeasurement()
@@ -894,6 +908,7 @@ namespace MeasureModule
 			}
 			UpdateMeasure(-1);
 		}
+		#endregion
 
 	}//end of class
 }//end of namespace
