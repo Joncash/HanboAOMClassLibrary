@@ -11,19 +11,19 @@
     <classShape Id="ec5dd55f-51e5-4e58-be20-2acaa814575f" absoluteBounds="0.75, 1, 2, 1.3862939453124998">
       <DataClassMoniker Name="/SDMSDataContext/Code_Function" />
       <nestedChildShapes>
-        <elementListCompartment Id="51a370ac-11d0-4e0a-aa75-ff3aab48b34c" absoluteBounds="0.76500000000000012, 1.46, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="51a370ac-11d0-4e0a-aa75-ff3aab48b34c" absoluteBounds="0.76500000059604645, 1.4600000008940697, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="e4926861-50df-4a8a-99dd-36a5a021972c" absoluteBounds="0.75, 5.375, 2, 2.9247054036458326">
+    <classShape Id="e4926861-50df-4a8a-99dd-36a5a021972c" absoluteBounds="0.75, 5.375, 2, 2.9247054036458318">
       <DataClassMoniker Name="/SDMSDataContext/UserMember" />
       <nestedChildShapes>
-        <elementListCompartment Id="8812fa99-2268-40da-a3da-af9c0b410bd7" absoluteBounds="0.76500000000000012, 5.835, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="8812fa99-2268-40da-a3da-af9c0b410bd7" absoluteBounds="0.76500000059604645, 5.83500000089407, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="8f871844-23fc-4e9a-ba47-6452c73ef6f6" absoluteBounds="3.5, 0.875, 2, 1.5785953776041666">
       <DataClassMoniker Name="/SDMSDataContext/UserAuthorizedFunction" />
       <nestedChildShapes>
-        <elementListCompartment Id="0562eca3-6aaf-4a42-a6b9-b917dc740e5a" absoluteBounds="3.5149999999999997, 1.335, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="0562eca3-6aaf-4a42-a6b9-b917dc740e5a" absoluteBounds="3.5150000005960464, 1.3350000008940697, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <associationConnector edgePoints="[(2.75 : 1.69314697265625); (3.5 : 1.69314697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
@@ -33,17 +33,17 @@
         <classShapeMoniker Id="8f871844-23fc-4e9a-ba47-6452c73ef6f6" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 7.03770182291667); (3.59375 : 7.03770182291667); (3.59375 : 2.45359537760417)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.75 : 7.03770182291667); (3.59375 : 7.03770182291667); (3.59375 : 2.45359537760417)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/SDMSDataContext/UserMember/UserMember_UserAuthorizedFunction" />
       <nodes>
         <classShapeMoniker Id="e4926861-50df-4a8a-99dd-36a5a021972c" />
         <classShapeMoniker Id="8f871844-23fc-4e9a-ba47-6452c73ef6f6" />
       </nodes>
     </associationConnector>
-    <classShape Id="5b2bafec-8e8d-4b4c-83ab-3b0a35c6cde0" absoluteBounds="6.125, 2.75, 2, 5.2323225911458326">
+    <classShape Id="b2c03852-0b3a-4e6d-abaf-b39032660bfe" absoluteBounds="6.75, 0.75, 2, 5.6169254557291666">
       <DataClassMoniker Name="/SDMSDataContext/MacroPlan" />
       <nestedChildShapes>
-        <elementListCompartment Id="140d7a54-a61e-4896-b3d2-26672edcf464" absoluteBounds="6.14, 3.21, 1.9700000000000002, 4.672322591145833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="55fe6338-759a-45a8-af33-d168980da88d" absoluteBounds="6.7650000000000006, 1.21, 1.9700000000000002, 5.0569254557291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

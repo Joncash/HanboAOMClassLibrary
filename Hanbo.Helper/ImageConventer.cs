@@ -10,6 +10,9 @@ using System.Text;
 
 namespace Hanbo.Helper
 {
+	/// <summary>
+	/// 參考用類別
+	/// </summary>
 	public class ImageConventer
 	{
 		/// <summary>

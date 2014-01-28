@@ -373,7 +373,7 @@ namespace MeasureModule
 
 		public static double PointToLine(IMeasureGeoModel firstModel, IMeasureGeoModel secondModel)
 		{
-			HTuple distanceMin, distanceMax;
+			HTuple distanceMin;//, distanceMax;
 			var isLineModel = (firstModel.Row2 != null && firstModel.Row2.D >= 0.0);
 			var point = (isLineModel) ? secondModel : firstModel;
 			var line = (isLineModel) ? firstModel : secondModel;

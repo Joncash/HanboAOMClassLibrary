@@ -33,10 +33,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="halcondotnet">
-      <HintPath>..\..\..\..\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
+      <HintPath>C:\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
-      <HintPath>..\..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
+      <HintPath>..\..\AOM_SDMS\packages\NLog.2.1.0\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PylonC.NET, Version=3.0.0.2900, Culture=neutral, PublicKeyToken=a77e8471c5919d5a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -58,6 +58,8 @@
     <Compile Include="GrabImageWorkingMan.cs" />
     <Compile Include="IGrabImage.cs" />
     <Compile Include="IGrab.cs" />
+    <Compile Include="LineScanGrabImageWorkingMan.cs" />
+    <Compile Include="LineScanMan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HalconGrabber.cs" />
     <Compile Include="PylonFeature.cs" />
@@ -71,6 +73,8 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
