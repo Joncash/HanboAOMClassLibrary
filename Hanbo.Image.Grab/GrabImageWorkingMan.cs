@@ -285,63 +285,9 @@ namespace Hanbo.Image.Grab
 			}
 		}
 
-		/// <summary>
-		/// 狀態改變通知
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void statusChangedNotify(object sender, GrabImageStatusChangedEventArgs e)
-		{
-			if (On_GrabImageStatusChanged != null)
-			{
-				On_GrabImageStatusChanged(sender, e);
-			}
-		}
 
-		private void connection()
-		{
-			//設定狀態
-			setStatus(GrabInstruction.Connect, GrabStage.Connecting, GrabState.Busy);
-			try
-			{
-				if (On_GrabImageConnecting != null)
-				{
-					On_GrabImageConnecting();
-				}
-				statusChangedNotify(null, new GrabImageStatusChangedEventArgs() { Status = this.Status });
-				setHFramegrabber();
 
-				Status.IsConnection = true;
-				Status.Stage = GrabStage.Connected;
-			}
-			catch (HalconDotNet.HOperatorException ex)
-			{
-				setStatus(GrabInstruction.Connect, GrabStage.Closed, GrabState.Idle);
-				if (GrabImageException != null)
-				{
-					GrabImageException(ex);
-				}
-				Status.Message = ex.Message;
-				Status.Stage = GrabStage.Closed;
 				Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
-			}
-			finally
-			{
-				if (On_GrabImageConnected != null)
-				{
-					On_GrabImageConnected();
-				}
-				setStatus(GrabInstruction.Connect, Status.Stage, GrabState.Idle);
-				statusChangedNotify(null, new GrabImageStatusChangedEventArgs() { Status = this.Status });
-			}
-		}
-
-		private void setStatus(GrabInstruction instruction, GrabStage stage, GrabState state)
-		{
-			Status.Instruction = instruction;
-			Status.Stage = stage;
-			Status.State = state;
-		}
 
 		/// <summary>
 		/// NotImplementedException
@@ -390,6 +336,20 @@ namespace Hanbo.Image.Grab
 		{
 			return _currentImage;
 		}
+
+		/// <summary>
+		/// Celar all Register evetns
+		/// </summary>
+		public void RemoveAllRegisterEvent()
+		{
+			On_GrabImageStatusChanged = null;
+			On_GrabImageConnecting = null;
+			On_GrabImageConnected = null;
+			GrabImageException = null;
+			GrabImageStart = null;
+			GrabImageChanged = null;
+			GrabImageStopped = null;
+		}
 		#endregion
 
 		#region private methods
@@ -422,19 +382,62 @@ namespace Hanbo.Image.Grab
 			}
 		}
 		#endregion
+		private void setStatus(GrabInstruction instruction, GrabStage stage, GrabState state)
+		{
+			Status.Instruction = instruction;
+			Status.Stage = stage;
+			Status.State = state;
+		}
 
 		/// <summary>
-		/// Celar all Register evetns
+		/// 狀態改變通知
 		/// </summary>
-		public void RemoveAllRegisterEvent()
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void statusChangedNotify(object sender, GrabImageStatusChangedEventArgs e)
 		{
-			On_GrabImageStatusChanged = null;
-			On_GrabImageConnecting = null;
-			On_GrabImageConnected = null;
-			GrabImageException = null;
-			GrabImageStart = null;
-			GrabImageChanged = null;
-			GrabImageStopped = null;
+			if (On_GrabImageStatusChanged != null)
+			{
+				On_GrabImageStatusChanged(sender, e);
+			}
+		}
+
+		private void connection()
+		{
+			//設定狀態
+			setStatus(GrabInstruction.Connect, GrabStage.Connecting, GrabState.Busy);
+			try
+			{
+				if (On_GrabImageConnecting != null)
+				{
+					On_GrabImageConnecting();
+				}
+				statusChangedNotify(null, new GrabImageStatusChangedEventArgs() { Status = this.Status });
+				setHFramegrabber();
+
+				Status.IsConnection = true;
+				Status.Stage = GrabStage.Connected;
+			}
+			catch (HalconDotNet.HOperatorException ex)
+			{
+				setStatus(GrabInstruction.Connect, GrabStage.Closed, GrabState.Idle);
+				if (GrabImageException != null)
+				{
+					GrabImageException(ex);
+				}
+				Status.Message = ex.Message;
+				Status.Stage = GrabStage.Closed;
+				_logger.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+			}
+			finally
+			{
+				if (On_GrabImageConnected != null)
+				{
+					On_GrabImageConnected();
+				}
+				setStatus(GrabInstruction.Connect, Status.Stage, GrabState.Idle);
+				statusChangedNotify(null, new GrabImageStatusChangedEventArgs() { Status = this.Status });
+			}
 		}
 	}
 

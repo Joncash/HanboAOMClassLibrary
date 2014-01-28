@@ -10,6 +10,25 @@ namespace Hanbo.System.SingleInstance
 {
 	public class DeviceChecker
 	{
+        public static DeviceCheckResult LineScanCheck()
+        {
+            DeviceCheckResult result = new DeviceCheckResult() { Success = false, Message = "", ExceptionDetail = null, Name = "LineScanCheck" };
+            try
+            {
+                //var imageHandle = DeviceController.GetLineScanInstance();
+                //imageHandle.Connect();
+                //result.Success = imageHandle.Connected;
+                //if (!imageHandle.Connected)
+                //    result.Message = Hanbo.Resources.Resource.CameraNotReadyMessage;
+                //DeviceController.ReleaseGrabImageWorkingManInstance();
+            }
+            catch (Exception ex)
+            {
+                result.ExceptionDetail = ex;
+            }
+            return result;
+        }
+
 		public static DeviceCheckResult CCDCheck()
 		{
 			DeviceCheckResult result = new DeviceCheckResult() { Success = false, Message = "", ExceptionDetail = null, Name = "CCDCheck" };
