@@ -194,7 +194,7 @@ namespace MeasureModule.ViewModel
 		}
 
 		/// <summary>
-		/// 相依的資料列們
+		/// 相依的資料列們, 記錄的是 RecordID
 		/// </summary>
 		private string[] _DependGeoRowNames;
 		public string[] DependGeoRowNames
