@@ -59,10 +59,12 @@ namespace Hanbo.WindowControlWrapper
 		public void LoadRecord(BindingList<GeoDataGridViewModel> bindingList)
 		{
 			this.Clear();
+			//把資料全部加入
 			foreach (var geoModel in bindingList)
 			{
 				if (geoModel.ROIModel != null)
 				{
+					//重建且重計算所有的 ROI
 					this._DataList.Add(geoModel);
 					var reloadROI = geoModel.ROIModel.MakeROI();
 					reloadROI.ROIMeasureType = geoModel.GeoType;
@@ -72,9 +74,14 @@ namespace Hanbo.WindowControlWrapper
 				}
 				else
 				{
+					//加入舊的非 ROI 的資料列
 					addMeasuredViewModel(geoModel);
-					notifyRecordChanged(GeoDataGridViewNotifyType.ReloadData, "");
 				}
+			}
+			//取得所有的 Record, 並更新其相依的資料列
+			foreach (var item in _DataList)
+			{
+				updateDependGeoObject(item);
 			}
 			this.Refresh();
 		}
@@ -386,13 +393,18 @@ namespace Hanbo.WindowControlWrapper
 			return iconImage;
 		}
 
-		private void updateDependGeoObject(GeoDataGridViewModel roiGeoOwner)
+		/// <summary>
+		/// 更新相依的物件
+		/// </summary>
+		/// <param name="geoParent">傳入小孩的父親</param>
+		private void updateDependGeoObject(GeoDataGridViewModel geoParent)
 		{
 			//去除自已以外，其他有相依的資料列們
-			var hasDependRecords = _DataList.Where(p => p.DependGeoRowNames != null && p.RecordID != roiGeoOwner.RecordID);
+			var hasDependObjectRecords = _DataList.Where(p => p.DependGeoRowNames != null
+													&& p.RecordID != geoParent.RecordID);
 
 			//與本列相關的資料列
-			var oneToManyGeoList = hasDependRecords.Where(q => q.DependGeoRowNames.Contains(roiGeoOwner.RecordID));
+			var oneToManyGeoList = hasDependObjectRecords.Where(q => q.DependGeoRowNames.Contains(geoParent.RecordID));
 
 			foreach (var item in oneToManyGeoList)
 			{
