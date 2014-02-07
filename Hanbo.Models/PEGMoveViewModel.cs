@@ -18,7 +18,7 @@ namespace Hanbo.Models
 		/// <summary>
 		/// X 方向移動 Loop
 		/// </summary>
-		public int xMoveLoop { get; set; }
+		public int XMoveLoop { get; set; }
 
 		/// <summary>
 		/// Y 方向移動 Pixel

@@ -14,9 +14,13 @@ namespace Hanbo.SDMS.Model
 	{
 		private static SDMSDataContext _dc = new SDMSDataContext();
 
-		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser, string trainingImageFilepath)
+		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser
+			, string trainingImageFilepath
+			, double objectXLength, double objectYLength)
 		{
-			return SaveMacroPlan(macroName, macroGuid, shapeModelFilepath, note, trainingImage, exportUnit, matchingParamData, measureBinaryData, measureAssistantParamData, upperLight, bottomLight, shapeView, loginUser, trainingImageFilepath, null);
+			return SaveMacroPlan(macroName, macroGuid, shapeModelFilepath, note, trainingImage, exportUnit, matchingParamData, measureBinaryData, measureAssistantParamData, upperLight, bottomLight, shapeView, loginUser
+				, trainingImageFilepath, null
+				, objectXLength, objectYLength);
 		}
 
 		/// <summary>
@@ -38,7 +42,9 @@ namespace Hanbo.SDMS.Model
 		/// <param name="trainingImageFilepath"></param>
 		/// <param name="snapshot"></param>
 		/// <returns></returns>
-		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser, string trainingImageFilepath, Binary snapshot)
+		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser
+			, string trainingImageFilepath, Binary snapshot
+			, double objectXLength, double objectYLength)
 		{
 			bool success = true;
 			try
@@ -71,6 +77,8 @@ namespace Hanbo.SDMS.Model
 						ModelAngle = shapeView.Angle,
 						IsDeleted = false,
 						Snapshot = snapshot,
+						ObjectXLength = objectXLength,
+						ObjectYLength = objectYLength,
 					};
 					_dc.MacroPlan.InsertOnSubmit(plan);
 				}
@@ -97,6 +105,8 @@ namespace Hanbo.SDMS.Model
 					plan.ModelAngle = shapeView.Angle;
 					plan.IsDeleted = false;
 					plan.Snapshot = snapshot;
+					plan.ObjectXLength = objectXLength;
+					plan.ObjectYLength = objectYLength;
 				}
 				_dc.SubmitChanges();
 			}
@@ -357,6 +367,8 @@ namespace Hanbo.SDMS.Model
 				MeasureBinData = p.MeasureBinaryData,
 				MAParamBinData = p.MeasureAssistantBinaryData,
 				ExportUnit = p.ExportUnit,
+				LengthX = (p.ObjectXLength != null && p.ObjectXLength.HasValue) ? p.ObjectXLength.Value : 0.0,
+				LengthY = (p.ObjectYLength != null && p.ObjectYLength.HasValue) ? p.ObjectYLength.Value : 0.0,
 			}).ToList();
 
 			return data;
