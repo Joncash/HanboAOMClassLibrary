@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.625" name="SDMS">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="SDMS">
   <DataContextMoniker Name="/SDMSDataContext" />
   <nestedChildShapes>
     <classShape Id="c757a8b2-1f45-4118-8982-6af6d0d5eeed" absoluteBounds="3.75, 3.75, 2, 1.9068933105468746">
@@ -40,10 +40,10 @@
         <classShapeMoniker Id="8f871844-23fc-4e9a-ba47-6452c73ef6f6" />
       </nodes>
     </associationConnector>
-    <classShape Id="82b53adf-34b1-4f39-8f18-d7b36f1505a0" absoluteBounds="7, 3, 2, 5.4179813639322907">
+    <classShape Id="c6de2794-1188-4daf-98ad-5d42346196a7" absoluteBounds="6.125, 2, 2, 5.7875695800781246">
       <DataClassMoniker Name="/SDMSDataContext/MacroPlan" />
       <nestedChildShapes>
-        <elementListCompartment Id="64d697c3-8499-4731-8990-8098e84110f1" absoluteBounds="7.015, 3.46, 1.9700000000000002, 4.8579813639322911" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="09388ad4-3765-41a2-be96-aa10ca1b6db9" absoluteBounds="6.14, 2.46, 1.9700000000000002, 5.227569580078125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

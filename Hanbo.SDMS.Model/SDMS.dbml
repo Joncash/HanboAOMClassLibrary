@@ -71,6 +71,8 @@
       <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Snapshot" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="TechnicalDrawingModel" Type="System.Xml.Linq.XElement" DbType="Xml" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="ObjectXLength" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="ObjectYLength" Type="System.Double" DbType="Float" CanBeNull="true" />
     </Type>
   </Table>
 </Database>
