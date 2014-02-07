@@ -266,7 +266,6 @@ namespace Hanbo.Image.Grab
             //while (true)
             //{
             int bufferIndex;              /* Index of the buffer. */
-            Byte min = 255, max = 0;
             long chunkWidth = _PEGX; /* data retrieved from the chunk parser */
             long chunkHeight = _PEGY; /* data retrieved from the chunk parser */
 
