@@ -12,7 +12,7 @@ namespace Hanbo.SDMS.Model
 {
 	public class SDMSRepo
 	{
-		private static SDMSDataContext _dc = new SDMSDataContext();
+		private static SDMSDataContext _dc = new SDMSDataContext() { CommandTimeout = 10 * 60, };
 
 		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser
 			, string trainingImageFilepath
