@@ -285,10 +285,6 @@ namespace Hanbo.Image.Grab
 			}
 		}
 
-
-
-				Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
-
 		/// <summary>
 		/// NotImplementedException
 		/// </summary>
@@ -427,7 +423,7 @@ namespace Hanbo.Image.Grab
 				}
 				Status.Message = ex.Message;
 				Status.Stage = GrabStage.Closed;
-				_logger.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
+				Hanbo.Log.LogManager.Debug("[GrabImageWorkingMan.connection()] HOperatorException:" + ex.Message + " [StackTrack]" + ex.StackTrace);
 			}
 			finally
 			{
