@@ -48,10 +48,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MotionApp\Hanbo.ACS\Hanbo.ACS.csproj">
-      <Project>{968ae6aa-09ad-4cf7-8aa1-c158678adb66}</Project>
-      <Name>Hanbo.ACS</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Configuration.Settings\Hanbo.Configuration.Settings.csproj">
       <Project>{d3f62b01-465c-4ff3-9ae7-5e4eb14f2aac}</Project>
       <Name>Hanbo.Configuration.Settings</Name>
