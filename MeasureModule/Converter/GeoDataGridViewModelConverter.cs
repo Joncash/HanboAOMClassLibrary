@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ViewROI;
+using ViewROI.Model;
 
 namespace MeasureModule
 {
