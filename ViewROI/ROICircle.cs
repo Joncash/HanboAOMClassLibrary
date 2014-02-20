@@ -22,8 +22,6 @@ namespace ViewROI
 			activeHandleIdx = 1;
 		}
 
-
-
 		/// <summary>Creates a new ROI instance at the mouse position</summary>
 		public override void createROI(double midX, double midY)
 		{

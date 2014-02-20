@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ViewROI</RootNamespace>
     <AssemblyName>ViewROI</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -31,6 +31,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,6 +59,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -83,6 +85,7 @@
   <ItemGroup>
     <Compile Include="FunctionPlot.cs" />
     <Compile Include="MeasureParameter.cs" />
+    <Compile Include="Model\PositionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <!--<Compile Include="obj\FunctionPlot.cs" />-->
     <Compile Include="GraphicsContext.cs" />
@@ -95,9 +98,12 @@
     <Compile Include="ROICircularArc.cs" />
     <Compile Include="ROIController.cs" />
     <Compile Include="ROILine.cs" />
+    <Compile Include="ROIProgAngle.cs" />
     <Compile Include="ROIProgCircle.cs" />
     <Compile Include="ROIProgDistance.cs" />
     <Compile Include="Model\ProgGraphicModel.cs" />
+    <Compile Include="ROIProgPoint.cs" />
+    <Compile Include="ROIProgSymmetryLine.cs" />
     <Compile Include="ROIRectangle1.cs" />
     <Compile Include="ROIRectangle2.cs" />
     <Compile Include="ROIViewModel.cs" />

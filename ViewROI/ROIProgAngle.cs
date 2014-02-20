@@ -1,33 +1,38 @@
 ﻿using HalconDotNet;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ViewROI.Model;
-using System.Data.Linq;
-using System.Linq;
+
 namespace ViewROI
 {
 	/// <summary>
-	/// 描述工程圖形距離的 ROI
+	/// Angle 工程圖
 	/// </summary>
-	public class ROIProgDistance : ROI
+	public class ROIProgAngle : ROI
 	{
+		#region 建構子
+		public ROIProgAngle(ProgGraphicModel model)
+		{
+			_model = model;
+			init();
+		}
+		#endregion
+
 		#region private variables
 		private ProgGraphicModel _model;
-		private double _rawCenterRow;	//中點 y 的座標
+		private double _rawCenterRow;	//中點 y 的座標，畫角度的起始端點
 		private double _rawCenterCol;	//中點 x 的座標
 
-		private double _halfDistance;
-		private double _phi;
+		private double _lineACenterRow;
+		private double _lineACenterCol;
+		private double _lineBCenterRow;
+		private double _lineBCenterCol;
+
 		private List<PositionModel> _lines;	//
-		private List<PositionModel> _modelPoints = new List<PositionModel>();
-
-		private double _arrowLineRowBegin;
-		private double _arrowLineColBegin;
-		private double _arrowLineRowEnd;
-		private double _arrowLineColEnd;
-
 		#endregion
+
 		#region Public variables
 		/// <summary>
 		/// 修改 or 移動後的標示位置 y 座標
@@ -40,37 +45,17 @@ namespace ViewROI
 		public double NewCenterCol;
 		#endregion
 
-		#region 建構子
-		public ROIProgDistance(ProgGraphicModel model)
-		{
-			_model = model;
-			init();
-		}
-		#endregion
 		#region private methods
 		private void init()
 		{
-			this.NumHandles = 2;//移動用的 Handle, 1 middle point, 整條線
+			this.NumHandles = 1;//移動用的 Handle, 1 middle point
 			_lines = new List<PositionModel>();
+			_rawCenterRow = _rawCenterCol = -1;
+			_lineACenterRow = _lineACenterRow = _lineBCenterRow = _lineBCenterRow = -1;
 			if (_model != null)
 			{
-				//原始值
-				_rawCenterRow = (_model.RowBegin + _model.RowEnd) / 2.0;
-				_rawCenterCol = (_model.ColBegin + _model.ColEnd) / 2.0;
-				_halfDistance = _model.Distance / 2.0;
-
-				_phi = HMisc.AngleLx(_model.RowBegin, _model.ColBegin, _model.RowEnd, _model.ColEnd);
-				this.NewCenterRow = (!_model.UserDefineCenterRow.HasValue) ? _rawCenterRow : _model.UserDefineCenterRow.Value;
-				this.NewCenterCol = (!_model.UserDefineCenterCol.HasValue) ? _rawCenterCol : _model.UserDefineCenterCol.Value;
-
 				this.ID = _model.ID;
-				Name = _model.Name;
-
-				_modelPoints = new List<PositionModel>() { 
-					new PositionModel(){ RowBegin =_model.RowBegin, ColBegin = _model.ColBegin },
-					new PositionModel(){ RowBegin =_model.RowEnd, ColBegin = _model.ColEnd },
-				};
-				_modelPoints = _modelPoints.OrderBy(x => x.ColBegin).ThenBy(y => y.RowBegin).ToList();
+				this.Name = _model.Name;
 
 				if (_model.ROIs != null)
 				{
@@ -91,7 +76,18 @@ namespace ViewROI
 						};
 						_lines.Add(dto);
 					}
+
+					if (_lines.Count > 1)
+					{
+						_lineACenterRow = _rawCenterRow = (_lines[0].RowBegin + _lines[0].RowEnd) / 2.0;
+						_lineACenterCol = _rawCenterCol = (_lines[0].ColBegin + _lines[0].ColEnd) / 2.0;
+
+						_lineBCenterRow = (_lines[1].RowBegin + _lines[1].RowEnd) / 2.0;
+						_lineBCenterCol = (_lines[1].ColBegin + _lines[1].ColEnd) / 2.0;
+					}
 				}
+				this.NewCenterRow = (!_model.UserDefineCenterRow.HasValue) ? _rawCenterRow : _model.UserDefineCenterRow.Value;
+				this.NewCenterCol = (!_model.UserDefineCenterCol.HasValue) ? _rawCenterCol : _model.UserDefineCenterCol.Value;
 			}
 		}
 		private bool isLine(PositionModel line)
@@ -128,64 +124,59 @@ namespace ViewROI
 			//寫字
 			if (!String.IsNullOrEmpty(Name))
 			{
-				HOperatorSet.SetTposition(window, this.NewCenterRow, this.NewCenterCol);
 				if (!this.IsActive)
 					HOperatorSet.SetColor(window, "red");
+
+				HOperatorSet.SetTposition(window, this.NewCenterRow, this.NewCenterCol);
 				window.WriteString(Name);
 			}
 
-			// 畫箭頭, 由線段的中心點向兩端畫箭頭			
+
+			//畫線段，水平 + 30 度角
+			var lineLength = 50;
+			var angle = Math.PI / 6.0;
+			var hLineRow = this.NewCenterRow + Math.Sin(Math.PI) * lineLength;
+			var hLineCol = this.NewCenterCol - Math.Cos(Math.PI) * lineLength;
+			var degLineRow = this.NewCenterRow - Math.Sin(angle) * lineLength;
+			var degLineCol = this.NewCenterCol + Math.Cos(angle) * lineLength;
+			HOperatorSet.DispLine(window, this.NewCenterRow, this.NewCenterCol, hLineRow, hLineCol);
+			HOperatorSet.DispLine(window, this.NewCenterRow, this.NewCenterCol, degLineRow, degLineCol);
+
+			//畫 arc
+			// angle 為正時，會順時針畫，
+			// angle 為負時，會逆時針畫，
+			// 因此要注意兩線段夾角的開口方向來選擇
+			var arcBeginRow = this.NewCenterRow - Math.Sin(angle) * (lineLength / 2.0);
+			var arcBeginCol = this.NewCenterCol + Math.Cos(angle) * (lineLength / 2.0);
+
+			window.DispArc(this.NewCenterRow, this.NewCenterCol, angle, arcBeginRow, arcBeginCol);
+
+			// 畫箭頭, 
 			window.SetLineWidth(1);
+			HOperatorSet.SetLineStyle(window, dotLineStyle);
 
-			//計算兩箭頭端點位置
-			var arrowPointRowBegin = _arrowLineRowBegin = this.NewCenterRow + (Math.Sin(_phi) * _halfDistance);
-			var arrowPointColBegin = _arrowLineColBegin = this.NewCenterCol + (Math.Cos(_phi) * _halfDistance);
+			window.DispArrow(this.NewCenterRow, this.NewCenterCol, _lineACenterRow, _lineACenterCol, arrowSize);
+			window.DispArrow(this.NewCenterRow, this.NewCenterCol, _lineBCenterRow, _lineBCenterCol, arrowSize);
 
-			var arrowPointRowEnd = _arrowLineRowEnd = this.NewCenterRow + (Math.Sin(_phi - Math.PI) * _halfDistance);
-			var arrowPointColEnd = _arrowLineColEnd = this.NewCenterCol + (Math.Cos(_phi - Math.PI) * _halfDistance);
-
-			window.DispArrow(this.NewCenterRow, this.NewCenterCol, arrowPointRowBegin, arrowPointColBegin, arrowSize);
-			window.DispArrow(this.NewCenterRow, this.NewCenterCol, arrowPointRowEnd, arrowPointColEnd, arrowSize);
-
-			//畫虛線，如果使用者改變了原始中心點的位置
-			//由兩箭頭端點連結原始的起始兩端點
-			if (_rawCenterRow != this.NewCenterRow || _rawCenterCol != this.NewCenterCol)
-			{
-				HOperatorSet.SetLineStyle(window, dotLineStyle);
-				//決定兩個端點的連結，將座標點 以左上排序
-				var arrowPoints = new List<PositionModel>() { 
-					new PositionModel(){ RowBegin =arrowPointRowBegin, ColBegin = arrowPointColBegin },
-					new PositionModel(){ RowBegin =arrowPointRowEnd, ColBegin = arrowPointColEnd },
-				};
-
-				arrowPoints = arrowPoints.OrderBy(x => x.ColBegin).ThenBy(y => y.RowBegin).ToList();
-
-				for (int i = 0; i < _modelPoints.Count; i++)
-					window.DispLine(arrowPoints[i].RowBegin, arrowPoints[i].ColBegin, _modelPoints[i].RowBegin, _modelPoints[i].ColBegin);
-			}
+			//Reset line Style
+			HOperatorSet.SetLineStyle(window, null);
 
 			//畫ROI
 			window.SetLineWidth(2);
 			if (!this.IsActive)
 				HOperatorSet.SetColor(window, "magenta");
+
 			for (var i = 0; i < _lines.Count; i++)
 			{
 				var line = _lines[i];
 				if (isLine(line))
 				{
-					//draw line，ROI 的線				
+					//draw line，ROI 的線
 					window.DispLine(line.RowBegin, line.ColBegin, line.RowEnd, line.ColEnd);
 				}
-				else
-				{
-					//draw point，ROI 的點					
-					window.DispCross(line.RowBegin, line.ColBegin, crossSize, crossAngle);
-				}
 			}
-			//reset Style
-			HOperatorSet.SetLineStyle(window, null);
-		}
 
+		}
 
 		/// <summary>
 		/// 計算滑鼠位置接近控制點 (Handle) 的距離
@@ -199,7 +190,7 @@ namespace ViewROI
 			double[] val = new double[NumHandles];
 
 			val[0] = HMisc.DistancePp(y, x, this.NewCenterRow, this.NewCenterCol); // midpoint 
-			val[1] = HMisc.DistancePl(y, x, this._arrowLineRowBegin, this._arrowLineColBegin, this._arrowLineRowEnd, this._arrowLineColEnd);
+
 			for (int i = 0; i < NumHandles; i++)
 			{
 				if (val[i] < max)
@@ -221,7 +212,6 @@ namespace ViewROI
 			switch (activeHandleIdx)
 			{
 				case 0:
-				case 1:
 					window.DispRectangle2(this.NewCenterRow, this.NewCenterCol, 0, rectangleSize, rectangleSize);
 					break;
 			}
@@ -244,14 +234,12 @@ namespace ViewROI
 		{
 			switch (activeHandleIdx)
 			{
-				case 0: // center Point
-				case 1: // whole line
+				case 0: // center Point 	
 					_model.UserDefineCenterCol = NewCenterCol = newX;
 					_model.UserDefineCenterRow = NewCenterRow = newY;
 					break;
 			}
 		}
 		#endregion
-
 	}
 }

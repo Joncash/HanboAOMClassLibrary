@@ -1,64 +1,67 @@
 ﻿using HalconDotNet;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ViewROI.Model;
 
 namespace ViewROI
 {
 	/// <summary>
-	/// 描述工程圖-圓形的 ROI
+	/// 工程圖 - 對稱中線
 	/// </summary>
-	public class ROIProgCircle : ROI
+	public class ROIProgSymmetryLine : ROI
 	{
-		#region private variables
-		private ProgGraphicModel _model;
-		/// <summary>
-		/// 圓心位置 y
-		/// </summary>
-		private double _rawCenterRow;
-
-		/// <summary>
-		/// 圓心位置 x
-		/// </summary>
-		private double _rawCenterCol;
-		#endregion
-
-		#region public variables
-		/// <summary>
-		/// 修改 or 移動後的標示位置 y 座標
-		/// </summary>
-		public double NewCenterRow;
-
-		/// <summary>
-		/// 修改 or 移動後的標示位置 x 座標
-		/// </summary>
-		public double NewCenterCol;
-		#endregion
-
 		#region 建構子
-		public ROIProgCircle(ProgGraphicModel model)
+		public ROIProgSymmetryLine(ProgGraphicModel model)
 		{
 			_model = model;
 			init();
 		}
 		#endregion
 
+		#region private variables
+		private ProgGraphicModel _model;
+		private double _rawCenterRow;	//中點 y 的座標
+		private double _rawCenterCol;	//中點 x 的座標
+
+		private List<PositionModel> _lines;	//
+		#endregion
+
 		#region private methods
 		private void init()
 		{
-			this.NumHandles = 1;//1 middle point, 1 rotation point
+			_lines = new List<PositionModel>();
 			if (_model != null)
 			{
-				//原始值
+				this.NumHandles = 1; //整個線段
 				this.ID = _model.ID;
 				this.Name = _model.Name;
 
-				_rawCenterRow = (_model.RowBegin);
-				_rawCenterCol = (_model.ColBegin);
+				//原始值
+				_rawCenterRow = (_model.RowBegin + _model.RowEnd) / 2.0;
+				_rawCenterCol = (_model.ColBegin + _model.ColEnd) / 2.0;
 
-				this.NewCenterRow = _rawCenterRow;
-				this.NewCenterCol = _rawCenterCol;
+				if (_model.ROIs != null)
+				{
+					for (var i = 0; i < _model.ROIs.Length; i++)
+					{
+						var roiModel = _model.ROIs[i];
+						if (roiModel.RowBegin < 0
+							&& roiModel.ColBegin < 0
+							&& roiModel.RowEnd < 0
+							&& roiModel.ColEnd < 0) continue;
+
+						var dto = new PositionModel()
+						{
+							RowBegin = roiModel.RowBegin,
+							ColBegin = roiModel.ColBegin,
+							RowEnd = roiModel.RowEnd,
+							ColEnd = roiModel.ColEnd,
+						};
+						_lines.Add(dto);
+					}
+				}
 			}
 		}
 		private bool isLine(PositionModel line)
@@ -84,44 +87,35 @@ namespace ViewROI
 		/// <param name="window">Halcon Window</param>
 		public override void draw(HalconDotNet.HWindow window)
 		{
-			double crossSize = 12;
-			double crossAngle = 0.785398;
+			//虛線
+			HTuple dotLineStyle = new HTuple(new int[4] { 20, 7, 3, 7 });
+
 			//寫字
 			if (!String.IsNullOrEmpty(Name))
 			{
 				if (!this.IsActive)
 					window.SetColor("red");
-				HOperatorSet.SetTposition(window, _model.RowBegin, _model.ColBegin);
+
+				HOperatorSet.SetTposition(window, _rawCenterRow, _rawCenterCol);
 				window.WriteString(Name);
 			}
 
-			//畫圓
-			if (!this.IsActive)
-				window.SetColor("magenta");
-
-			window.SetLineWidth(2);
-			window.DispCross(_model.RowBegin, _model.ColBegin, crossSize, crossAngle);
-			window.DispCircle(_model.RowBegin, _model.ColBegin, _model.Distance);
-
-			//畫圓內虛線
-			/**/
-			window.SetLineWidth(1);
-			HTuple dotLineStyle = new HTuple(new int[4] { 20, 7, 3, 7 });
+			//Draw 中線
 			window.SetLineStyle(dotLineStyle);
-			var hLineRowBegin = _model.RowBegin;
-			var hLineColBegin = _model.ColBegin - _model.Distance;
-			var hLineRowEnd = _model.RowBegin;
-			var hLineColEnd = _model.ColBegin + _model.Distance;
-
-			var vLineRowBegin = _model.RowBegin - _model.Distance;
-			var vLineColBegin = _model.ColBegin;
-			var vLineRowEnd = _model.RowBegin + _model.Distance;
-			var vLineColEnd = _model.ColBegin;
-			window.DispLine(hLineRowBegin, hLineColBegin, hLineRowEnd, hLineColEnd);
-			window.DispLine(vLineRowBegin, vLineColBegin, vLineRowEnd, vLineColEnd);
+			window.DispLine(_model.RowBegin, _model.ColBegin, _model.RowEnd, _model.ColEnd);
 
 			//Reset line Style
 			HOperatorSet.SetLineStyle(window, null);
+
+			//畫相依的線元素 (ROI)
+			window.SetLineWidth(2);
+			if (!this.IsActive)
+				HOperatorSet.SetColor(window, "magenta");
+			for (var i = 0; i < _lines.Count; i++)
+			{
+				var line = _lines[i];
+				window.DispLine(line.RowBegin, line.ColBegin, line.RowEnd, line.ColEnd);
+			}
 		}
 
 		/// <summary>
@@ -135,7 +129,7 @@ namespace ViewROI
 			double max = 10000;
 			double[] val = new double[NumHandles];
 
-			val[0] = HMisc.DistancePp(y, x, this.NewCenterRow, this.NewCenterCol); // midpoint 
+			val[0] = HMisc.DistancePl(y, x, _model.RowBegin, _model.ColBegin, _model.RowEnd, _model.ColEnd);
 
 			for (int i = 0; i < NumHandles; i++)
 			{
@@ -158,9 +152,29 @@ namespace ViewROI
 			//switch (activeHandleIdx)
 			//{
 			//	case 0:
-			//		//window.DispRectangle2(this.NewCenterRow, this.NewCenterCol, 0, rectangleSize, rectangleSize);
+			//		window.SetLineWidth(2);
+			//		window.SetColor("green");
+			//		for (var i = 0; i < _lines.Count; i++)
+			//		{
+			//			var line = _lines[i];
+			//			if (isLine(line))
+			//			{
+			//				//draw line，ROI 的線				
+			//				window.DispLine(line.RowBegin, line.ColBegin, line.RowEnd, line.ColEnd);
+			//			}
+			//		}
+			//		//reset
+			//		window.SetLineWidth(1);
 			//		break;
 			//}
+		}
+		public override HRegion getRegion()
+		{
+			return null;
+		}
+		public override HTuple getModelData()
+		{
+			return null;
 		}
 
 		/// <summary>
@@ -177,15 +191,6 @@ namespace ViewROI
 			//		_model.UserDefineCenterRow = NewCenterRow = newY;
 			//		break;
 			//}
-		}
-
-		public override HRegion getRegion()
-		{
-			return null;
-		}
-		public override HTuple getModelData()
-		{
-			return null;
 		}
 		#endregion
 	}

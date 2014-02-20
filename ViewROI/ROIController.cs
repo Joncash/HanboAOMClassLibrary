@@ -350,7 +350,9 @@ namespace ViewROI
 				//畫所有的 ROI				
 				for (int i = 0; i < ROIList.Count; i++)
 				{
+					if (i == activeROIidx) continue;
 					var roi = (ROI)ROIList[i];
+					roi.IsActive = false;
 					if (roi.Visiable)
 					{
 						window.SetLineStyle(roi.flagLineStyle);
@@ -358,11 +360,12 @@ namespace ViewROI
 						roi.draw(window);
 					}
 				}
-				
+
 				//畫 Active ROI
 				if (activeROIidx != -1)
 				{
 					var activeROI = (ROI)ROIList[activeROIidx];
+					activeROI.IsActive = true;
 					if (activeROI.Visiable)
 					{
 						window.SetColor(activeCol);

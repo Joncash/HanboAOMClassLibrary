@@ -35,9 +35,19 @@ namespace ViewROI
 		public string ID { get; set; }
 
 		/// <summary>
-		/// 是否可見
+		/// 是否可見, 預設為可見
 		/// </summary>
 		public bool Visiable { get; set; }
+
+		/// <summary>
+		/// 名稱
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		/// 是否被點選
+		/// </summary>
+		public bool IsActive { get; set; }
 
 		/// <summary>
 		/// 量測類型
