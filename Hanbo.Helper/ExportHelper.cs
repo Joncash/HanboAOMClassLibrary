@@ -26,6 +26,7 @@ namespace Hanbo.Helper
 			}
 			catch (Exception ex)
 			{
+				Hanbo.Log.LogManager.Error(ex);
 				success = false;
 			}
 			return success;

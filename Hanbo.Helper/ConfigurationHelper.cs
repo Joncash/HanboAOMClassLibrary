@@ -341,5 +341,27 @@ namespace Hanbo.Helper
 			}
 			return model;
 		}
+
+		public static CameraSpecViewModel GetCameraSpec()
+		{
+			var model = new CameraSpecViewModel();
+			string settingFile = ConfigurationManager.AppSettings["CameraSpecFilepath"] ?? "";
+			if (File.Exists(settingFile))
+			{
+				//read
+				var xDoc = XDocument.Load(settingFile);
+				if (xDoc != null)
+				{
+					model = xDoc.Elements("CameraSpec").Select(p => new CameraSpecViewModel()
+					{
+						HorizontalPixelSize = Convert.ToDouble(p.Element("HorizontalPixelSize").Value),
+						VerticalPixelSize = Convert.ToDouble(p.Element("VerticalPixelSize").Value),
+						HorizontalResolution = Convert.ToInt32(p.Element("HorizontalResolution").Value),
+						VerticalResolution = Convert.ToInt32(p.Element("VerticalResolution").Value),
+					}).SingleOrDefault();
+				}
+			}
+			return model;
+		}
 	}
 }

@@ -66,5 +66,9 @@ namespace Hanbo.Models
 		public string CH3Switch { get; set; }
 
 		public string ExportUnit { get; set; }
+
+        public double LengthX { get; set; }
+
+        public double LengthY { get; set; }
 	}
 }

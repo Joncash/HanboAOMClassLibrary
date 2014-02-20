@@ -41,11 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Argument\AutoExportArgument.cs" />
+    <Compile Include="CameraSpecViewModel.cs" />
     <Compile Include="ExportMacroPlanViewModel.cs" />
     <Compile Include="LanguageViewModel.cs" />
     <Compile Include="LightDTO.cs" />
     <Compile Include="LightViewModel.cs" />
     <Compile Include="MacroViewModel.cs" />
+    <Compile Include="PEGMoveViewModel.cs" />
     <Compile Include="MeasureExportModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShapeViewModel.cs" />
