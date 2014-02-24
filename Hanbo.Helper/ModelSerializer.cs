@@ -5,13 +5,67 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Hanbo.Helper
 {
 	public class ModelSerializer
 	{
+		#region XmlSerializer
+
 		/// <summary>
-		/// 序列化 to File
+		/// 序列化到 XDocument
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public static XDocument DoSerializeToXDocument(object obj)
+		{
+			XDocument xDoc = new XDocument();
+			try
+			{
+				using (var writer = xDoc.CreateWriter())
+				{
+					XmlSerializer xser = new XmlSerializer(obj.GetType());
+					xser.Serialize(writer, obj);
+				}
+			}
+			catch (SerializationException ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			return xDoc;
+		}
+
+		/// <summary>
+		/// 反序列化 (XmlSerializer),序列化失敗回傳 null
+		/// </summary>
+		/// <param name="targetObject">必須先建立實體</param>
+		/// <param name="xDoc">XDocument</param>
+		/// <returns>object</returns>
+		public static object DeSerializeFromXDocument(object targetObject, XDocument xDoc)
+		{
+			try
+			{
+				using (var reader = xDoc.CreateReader())
+				{
+					XmlSerializer xser = new XmlSerializer(targetObject.GetType());
+					targetObject = xser.Deserialize(reader);
+				}
+			}
+			catch (SerializationException ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+				targetObject = null;
+			}
+			return targetObject;
+		}
+		#endregion
+
+		#region binaryFormatter
+
+		/// <summary>
+		/// 二進位序列器 (BinaryFormatter) to File
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <param name="filepath"></param>
@@ -28,7 +82,7 @@ namespace Hanbo.Helper
 		}
 
 		/// <summary>
-		/// 序列化取得二進位資料
+		/// 序列化取得二進位資料 (Binary Formatter)
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
@@ -48,7 +102,7 @@ namespace Hanbo.Helper
 		}
 
 		/// <summary>
-		/// 反序列化 From File
+		/// 反序列化 From File (BinaryFormatter)
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <returns></returns>
@@ -73,7 +127,7 @@ namespace Hanbo.Helper
 		}
 
 		/// <summary>
-		/// 反序列化 From Memory
+		/// 反序列化 From Memory (BinaryFormatter)
 		/// </summary>
 		/// <param name="binaryData"></param>
 		/// <returns></returns>
@@ -92,9 +146,10 @@ namespace Hanbo.Helper
 			}
 			catch (SerializationException ex)
 			{
-                Hanbo.Log.LogManager.Error("DeSerialize Fail: " + ex.Message);
+				Hanbo.Log.LogManager.Error("DeSerialize Fail: " + ex.Message);
 			}
 			return deObject;
 		}
+		#endregion
 	}
 }
