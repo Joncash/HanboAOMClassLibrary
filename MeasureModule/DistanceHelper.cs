@@ -24,7 +24,8 @@ namespace MeasureModule
 														, MeasureType.FitLine
 														, MeasureType.SymmetryLine};
 		private static MeasureType[] _resultTypes = new MeasureType[] { 
-			MeasureType.Circle, MeasureType.PointCircle
+			MeasureType.Circle
+			, MeasureType.PointCircle
 			, MeasureType.Distance
 			, MeasureType.DistanceX
 			, MeasureType.DistanceY

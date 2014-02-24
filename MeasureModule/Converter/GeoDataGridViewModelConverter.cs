@@ -13,18 +13,61 @@ namespace MeasureModule
 	/// </summary>
 	public class GeoDataGridViewModelConverter
 	{
+		/// <summary>
+		/// 轉換為 工程圖 ROI
+		/// </summary>
+		/// <param name="raw"></param>
+		/// <param name="dependROIs"></param>
+		/// <returns></returns>
+		public ROI ConvertToProgROI(GeoDataGridViewModel raw, GeoDataGridViewModel[] dependROIs)
+		{
+			var model = ConvertToProgGraphicModel(raw, dependROIs);
+			ROI progROI = null;
+			switch (model.GeoType)
+			{
+				case MeasureType.Angle:
+					progROI = new ROIProgAngle(model);
+					break;
+				case MeasureType.Circle:
+				case MeasureType.PointCircle:
+					progROI = new ROIProgCircle(model);
+					break;
+				case MeasureType.CrossPoint:
+					progROI = new ROIProgPoint(model);
+					break;
+				case MeasureType.Distance:
+				case MeasureType.DistanceX:
+				case MeasureType.DistanceY:
+					progROI = new ROIProgDistance(model);
+					break;
+				case MeasureType.SymmetryLine:
+					progROI = new ROIProgSymmetryLine(model);
+					break;
+			}
+			return progROI;
+		}
 		public ProgGraphicModel ConvertToProgGraphicModel(GeoDataGridViewModel raw, GeoDataGridViewModel[] dependROIs)
 		{
 			var model = assignValue(raw);
 
-			//有相依的ROI			
-			int dependROICount = dependROIs.Length;
+			/*var basicGeoType = new List<MeasureType>() { 
+				{MeasureType.FitLine},
+				{MeasureType.Line},
+				{MeasureType.Point},
+				{MeasureType.Circle}
+			};
+			 */
+			//有相依的ROI	
+			var basicROIs = dependROIs;//.Where(p => basicGeoType.Contains(p.GeoType)).ToArray();
+			int dependROICount = basicROIs.Length;
 			if (dependROICount > 0)
 			{
 				model.ROIs = new ProgGraphicModel[dependROICount];
 				for (int i = 0; i < dependROICount; i++)
 				{
-					var dependItem = assignValue(dependROIs[i]);
+					var dependROI = basicROIs[i];
+
+					var dependItem = assignValue(dependROI);
 					model.ROIs[i] = dependItem;
 				}
 			}

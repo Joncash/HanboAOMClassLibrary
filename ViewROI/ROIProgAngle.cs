@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ViewROI.Interface;
 using ViewROI.Model;
 
 namespace ViewROI
@@ -10,7 +11,7 @@ namespace ViewROI
 	/// <summary>
 	/// Angle 工程圖
 	/// </summary>
-	public class ROIProgAngle : ROI
+	public class ROIProgAngle : ROI, IProg
 	{
 		#region 建構子
 		public ROIProgAngle(ProgGraphicModel model)
@@ -241,5 +242,15 @@ namespace ViewROI
 			}
 		}
 		#endregion
+
+		public ProgGraphicModel GetProgGraphicModel()
+		{
+			return _model;
+		}
+		public void SetCustomPos(double userDefineX, double userDefineY)
+		{
+			this.NewCenterCol = userDefineX;
+			this.NewCenterRow = userDefineY;
+		}
 	}
 }

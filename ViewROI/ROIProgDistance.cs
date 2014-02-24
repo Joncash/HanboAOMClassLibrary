@@ -5,12 +5,13 @@ using System.Text;
 using ViewROI.Model;
 using System.Data.Linq;
 using System.Linq;
+using ViewROI.Interface;
 namespace ViewROI
 {
 	/// <summary>
 	/// 描述工程圖形距離的 ROI
 	/// </summary>
-	public class ROIProgDistance : ROI
+	public class ROIProgDistance : ROI, IProg
 	{
 		#region private variables
 		private ProgGraphicModel _model;
@@ -18,9 +19,10 @@ namespace ViewROI
 		private double _rawCenterCol;	//中點 x 的座標
 
 		private double _halfDistance;
-		private double _phi;
-		private List<PositionModel> _lines;	//
-		private List<PositionModel> _modelPoints = new List<PositionModel>();
+		private double _phiStart;
+		private double _phiEnd;
+		private List<PositionModel> _dependROIModels;	//
+		private List<PositionModel> _ROIModelPoints = new List<PositionModel>();
 
 		private double _arrowLineRowBegin;
 		private double _arrowLineColBegin;
@@ -47,11 +49,12 @@ namespace ViewROI
 			init();
 		}
 		#endregion
+
 		#region private methods
 		private void init()
 		{
 			this.NumHandles = 2;//移動用的 Handle, 1 middle point, 整條線
-			_lines = new List<PositionModel>();
+			_dependROIModels = new List<PositionModel>();
 			if (_model != null)
 			{
 				//原始值
@@ -59,40 +62,85 @@ namespace ViewROI
 				_rawCenterCol = (_model.ColBegin + _model.ColEnd) / 2.0;
 				_halfDistance = _model.Distance / 2.0;
 
-				_phi = HMisc.AngleLx(_model.RowBegin, _model.ColBegin, _model.RowEnd, _model.ColEnd);
+				var radStart = HMisc.AngleLx(_rawCenterRow, _rawCenterCol, _model.RowBegin, _model.ColBegin);
+				_phiStart = halconRadToNormalRad(radStart);
+
+				var radEnd = HMisc.AngleLx(_rawCenterRow, _rawCenterCol, _model.RowEnd, _model.ColEnd);
+				_phiEnd = halconRadToNormalRad(radEnd);
+
 				this.NewCenterRow = (!_model.UserDefineCenterRow.HasValue) ? _rawCenterRow : _model.UserDefineCenterRow.Value;
 				this.NewCenterCol = (!_model.UserDefineCenterCol.HasValue) ? _rawCenterCol : _model.UserDefineCenterCol.Value;
 
 				this.ID = _model.ID;
 				Name = _model.Name;
 
-				_modelPoints = new List<PositionModel>() { 
-					new PositionModel(){ RowBegin =_model.RowBegin, ColBegin = _model.ColBegin },
-					new PositionModel(){ RowBegin =_model.RowEnd, ColBegin = _model.ColEnd },
-				};
-				_modelPoints = _modelPoints.OrderBy(x => x.ColBegin).ThenBy(y => y.RowBegin).ToList();
+				//_modelPoints = new List<PositionModel>() { 
+				//	new PositionModel(){ RowBegin =_model.RowBegin, ColBegin = _model.ColBegin },
+				//	new PositionModel(){ RowBegin =_model.RowEnd, ColBegin = _model.ColEnd },
+				//};
 
 				if (_model.ROIs != null)
 				{
+					var basicGeoType = new List<MeasureType>() { 
+											{MeasureType.FitLine},
+											{MeasureType.Line},
+											{MeasureType.Point},
+											{MeasureType.Circle}
+										};
 					for (var i = 0; i < _model.ROIs.Length; i++)
 					{
 						var roiModel = _model.ROIs[i];
-						if (roiModel.RowBegin < 0
-							&& roiModel.ColBegin < 0
-							&& roiModel.RowEnd < 0
-							&& roiModel.ColEnd < 0) continue;
 
-						var dto = new PositionModel()
+						PositionModel dto;
+						if (roiModel.RowBegin > 0
+							&& roiModel.ColBegin > 0
+							&& roiModel.RowEnd > 0
+							&& roiModel.ColEnd > 0)
 						{
-							RowBegin = roiModel.RowBegin,
-							ColBegin = roiModel.ColBegin,
-							RowEnd = roiModel.RowEnd,
-							ColEnd = roiModel.ColEnd,
-						};
-						_lines.Add(dto);
+							dto = new PositionModel()
+							{
+								RowBegin = roiModel.RowBegin,
+								ColBegin = roiModel.ColBegin,
+								RowEnd = roiModel.RowEnd,
+								ColEnd = roiModel.ColEnd,
+							};
+							_ROIModelPoints.Add(new PositionModel()
+							{
+								RowBegin = (roiModel.RowBegin + roiModel.RowEnd) / 2.0,
+								ColBegin = (roiModel.ColBegin + roiModel.ColEnd) / 2.0
+							});
+						}
+						else
+						{
+							dto = new PositionModel()
+							{
+								RowBegin = roiModel.RowBegin,
+								ColBegin = roiModel.ColBegin,
+							};
+							_ROIModelPoints.Add(new PositionModel()
+							{
+								RowBegin = (roiModel.RowBegin),
+								ColBegin = (roiModel.ColBegin)
+							});
+						}
+						if (basicGeoType.Contains(roiModel.GeoType))
+							_dependROIModels.Add(dto);
 					}
+					_ROIModelPoints = _ROIModelPoints.OrderBy(x => x.ColBegin).OrderBy(y => y.RowBegin).ToList();
+
 				}
 			}
+		}
+		private double halconRadToNormalRad(double rad)
+		{
+			var oneRadDegree = (180.0 / Math.PI);
+			var oneDegreeRad = (Math.PI / 180.0);
+			var degree = 0.0;
+			if (rad < 0)
+				degree = Math.Abs(rad) * oneRadDegree;
+			else
+				degree = 360 - (rad * oneRadDegree);
+			return degree * oneDegreeRad;
 		}
 		private bool isLine(PositionModel line)
 		{
@@ -138,11 +186,11 @@ namespace ViewROI
 			window.SetLineWidth(1);
 
 			//計算兩箭頭端點位置
-			var arrowPointRowBegin = _arrowLineRowBegin = this.NewCenterRow + (Math.Sin(_phi) * _halfDistance);
-			var arrowPointColBegin = _arrowLineColBegin = this.NewCenterCol + (Math.Cos(_phi) * _halfDistance);
+			var arrowPointRowBegin = _arrowLineRowBegin = this.NewCenterRow + (Math.Sin(_phiStart) * _halfDistance);
+			var arrowPointColBegin = _arrowLineColBegin = this.NewCenterCol + (Math.Cos(_phiStart) * _halfDistance);
 
-			var arrowPointRowEnd = _arrowLineRowEnd = this.NewCenterRow + (Math.Sin(_phi - Math.PI) * _halfDistance);
-			var arrowPointColEnd = _arrowLineColEnd = this.NewCenterCol + (Math.Cos(_phi - Math.PI) * _halfDistance);
+			var arrowPointRowEnd = _arrowLineRowEnd = this.NewCenterRow + (Math.Sin(_phiEnd) * _halfDistance);
+			var arrowPointColEnd = _arrowLineColEnd = this.NewCenterCol + (Math.Cos(_phiEnd) * _halfDistance);
 
 			window.DispArrow(this.NewCenterRow, this.NewCenterCol, arrowPointRowBegin, arrowPointColBegin, arrowSize);
 			window.DispArrow(this.NewCenterRow, this.NewCenterCol, arrowPointRowEnd, arrowPointColEnd, arrowSize);
@@ -158,19 +206,22 @@ namespace ViewROI
 					new PositionModel(){ RowBegin =arrowPointRowEnd, ColBegin = arrowPointColEnd },
 				};
 
-				arrowPoints = arrowPoints.OrderBy(x => x.ColBegin).ThenBy(y => y.RowBegin).ToList();
+				arrowPoints = arrowPoints.OrderBy(x => x.ColBegin).OrderBy(y => y.RowBegin).ToList();
 
-				for (int i = 0; i < _modelPoints.Count; i++)
-					window.DispLine(arrowPoints[i].RowBegin, arrowPoints[i].ColBegin, _modelPoints[i].RowBegin, _modelPoints[i].ColBegin);
+				for (int i = 0; i < _ROIModelPoints.Count; i++)
+					window.DispLine(arrowPoints[i].RowBegin, arrowPoints[i].ColBegin, _ROIModelPoints[i].RowBegin, _ROIModelPoints[i].ColBegin);
 			}
 
+			//reset Style
+			HOperatorSet.SetLineStyle(window, null);
+
 			//畫ROI
-			window.SetLineWidth(2);
+			window.SetLineWidth(1);
 			if (!this.IsActive)
 				HOperatorSet.SetColor(window, "magenta");
-			for (var i = 0; i < _lines.Count; i++)
+			for (var i = 0; i < _dependROIModels.Count; i++)
 			{
-				var line = _lines[i];
+				var line = _dependROIModels[i];
 				if (isLine(line))
 				{
 					//draw line，ROI 的線				
@@ -178,12 +229,15 @@ namespace ViewROI
 				}
 				else
 				{
-					//draw point，ROI 的點					
-					window.DispCross(line.RowBegin, line.ColBegin, crossSize, crossAngle);
+					//draw point，ROI 的點
+					HXLDCont crossPoint = new HXLDCont();
+					crossPoint.GenEmptyObj();
+					crossPoint.GenCrossContourXld(line.RowBegin, line.ColBegin, crossSize, crossAngle);
+					crossPoint.DispObj(window);
+					//window.DispCross(line.RowBegin, line.ColBegin, crossSize, crossAngle);
 				}
 			}
-			//reset Style
-			HOperatorSet.SetLineStyle(window, null);
+
 		}
 
 
@@ -252,6 +306,20 @@ namespace ViewROI
 			}
 		}
 		#endregion
+
+		#region IProg Implement
+		public ProgGraphicModel GetProgGraphicModel()
+		{
+			return _model;
+		}
+		public void SetCustomPos(double userDefineX, double userDefineY)
+		{
+			_model.UserDefineCenterCol = this.NewCenterCol = userDefineX;
+			_model.UserDefineCenterRow = this.NewCenterRow = userDefineY;
+		}
+		#endregion
+
+
 
 	}
 }

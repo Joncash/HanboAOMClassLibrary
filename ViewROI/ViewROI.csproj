@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FunctionPlot.cs" />
+    <Compile Include="Interface\IProg.cs" />
     <Compile Include="MeasureParameter.cs" />
     <Compile Include="Model\PositionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
