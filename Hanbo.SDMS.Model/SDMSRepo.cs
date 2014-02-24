@@ -7,11 +7,15 @@ using System.Data.Linq;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Hanbo.SDMS.Model
 {
 	public class SDMSRepo
 	{
+		/// <summary>
+		/// timeout 為 60 分鐘
+		/// </summary>
 		private static SDMSDataContext _dc = new SDMSDataContext() { CommandTimeout = 10 * 60, };
 
 		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser
@@ -20,93 +24,76 @@ namespace Hanbo.SDMS.Model
 		{
 			return SaveMacroPlan(macroName, macroGuid, shapeModelFilepath, note, trainingImage, exportUnit, matchingParamData, measureBinaryData, measureAssistantParamData, upperLight, bottomLight, shapeView, loginUser
 				, trainingImageFilepath, null
-				, objectXLength, objectYLength);
+				, objectXLength, objectYLength, null);
 		}
 
 		/// <summary>
 		/// 儲存程式編輯
 		/// </summary>
-		/// <param name="macroName"></param>
-		/// <param name="macroGuid"></param>
-		/// <param name="shapeModelFilepath"></param>
-		/// <param name="note"></param>
-		/// <param name="trainingImage"></param>
-		/// <param name="exportUnit"></param>
-		/// <param name="matchingParamData"></param>
-		/// <param name="measureBinaryData"></param>
-		/// <param name="measureAssistantParamData"></param>
-		/// <param name="upperLight"></param>
-		/// <param name="bottomLight"></param>
-		/// <param name="shapeView"></param>
-		/// <param name="loginUser"></param>
-		/// <param name="trainingImageFilepath"></param>
-		/// <param name="snapshot"></param>
+		/// <param name="macroName">程式編輯名稱</param>
+		/// <param name="macroGuid">程式編輯 ID</param>
+		/// <param name="shapeModelFilepath">程式編輯模型檔案路徑</param>
+		/// <param name="note">程式編輯描述</param>
+		/// <param name="trainingImage">程式編輯訓練影像二元檔</param>
+		/// <param name="exportUnit">輸出單位</param>
+		/// <param name="matchingParamData">模型參數二元檔</param>
+		/// <param name="measureBinaryData">測量資料二元檔</param>
+		/// <param name="measureAssistantParamData">測量參數二元檔</param>
+		/// <param name="upperLight">上光源</param>
+		/// <param name="bottomLight">下光源</param>
+		/// <param name="findedShapeViewModel">Matching 模型資訊</param>
+		/// <param name="loginUser">登入者</param>
+		/// <param name="trainingImageFilepath">程式編輯訓練影像實體路徑</param>
+		/// <param name="snapshot">程式編輯縮圖二元檔</param>
+		/// <param name="objectXLength">物件大小 X</param>
+		/// <param name="objectYLength">物件大小 Y</param>
+		/// <param name="technicalDrawingModel">工程圖資訊</param>
 		/// <returns></returns>
-		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData, LightChannel upperLight, LightChannel bottomLight, ShapeViewModel shapeView, string loginUser
-			, string trainingImageFilepath, Binary snapshot
-			, double objectXLength, double objectYLength)
+		public static bool SaveMacroPlan(string macroName, string macroGuid, string shapeModelFilepath, string note, Binary trainingImage
+			, string exportUnit, Binary matchingParamData, Binary measureBinaryData, Binary measureAssistantParamData
+			, LightChannel upperLight, LightChannel bottomLight
+			, ShapeViewModel findedShapeViewModel, string loginUser
+			, string trainingImageFilepath
+			, Binary snapshot
+			, double objectXLength, double objectYLength
+			, XDocument technicalDrawingModel)
 		{
 			bool success = true;
 			try
 			{
 				MacroPlan plan = _dc.MacroPlan.SingleOrDefault(p => p.MacroGuid == macroGuid);
-				if (plan == null)
+				var isUpdate = (plan != null);
+				if (!isUpdate)
 				{
-					plan = new MacroPlan()
-					{
-						MacroName = macroName,
-						MacroGuid = macroGuid,
-						ShapeModelFilepath = shapeModelFilepath,
-						Note = note,
-						TrainingImage = trainingImage,
-						TrainingImageFilepath = trainingImageFilepath,
-						ExportUnit = exportUnit,
-						MatchingParamBinaryData = matchingParamData,
-						MeasureBinaryData = measureBinaryData,
-						UpperLightSwitch = upperLight.OnOff == LightControl.LightSwitch.On,
-						UpperLightValue = upperLight.Intensity.ToString("d3"),
-						BottomLightSiwtch = bottomLight.OnOff == LightControl.LightSwitch.On,
-						BottomLigthValue = bottomLight.Intensity.ToString("d3"),
-						CreateOn = DateTime.Now,
-						ModifiedOn = DateTime.Now,
-						CreateBy = loginUser,
-						ModifiedBy = loginUser,
-						MeasureAssistantBinaryData = measureAssistantParamData,
-						ModelRow = shapeView.Row,
-						ModelCol = shapeView.Col,
-						ModelAngle = shapeView.Angle,
-						IsDeleted = false,
-						Snapshot = snapshot,
-						ObjectXLength = objectXLength,
-						ObjectYLength = objectYLength,
-					};
-					_dc.MacroPlan.InsertOnSubmit(plan);
+					plan = new MacroPlan() { CreateBy = loginUser, CreateOn = DateTime.Now, MacroGuid = Guid.NewGuid().ToString() };
 				}
-				else
+				plan.MacroName = macroName;
+				plan.ShapeModelFilepath = shapeModelFilepath;
+				plan.Note = note;
+				plan.TrainingImage = trainingImage;
+				plan.TrainingImageFilepath = trainingImageFilepath;
+				plan.ExportUnit = exportUnit;
+				plan.MatchingParamBinaryData = matchingParamData;
+				plan.MeasureBinaryData = measureBinaryData;
+				plan.UpperLightSwitch = (upperLight.OnOff == LightControl.LightSwitch.On);
+				plan.UpperLightValue = upperLight.Intensity.ToString("d3");
+				plan.BottomLightSiwtch = (bottomLight.OnOff == LightControl.LightSwitch.On);
+				plan.BottomLigthValue = bottomLight.Intensity.ToString("d3");
+				plan.ModifiedOn = DateTime.Now;
+				plan.ModifiedBy = loginUser;
+				plan.MeasureAssistantBinaryData = measureAssistantParamData;
+				plan.ModelRow = findedShapeViewModel.Row;
+				plan.ModelCol = findedShapeViewModel.Col;
+				plan.ModelAngle = findedShapeViewModel.Angle;
+				plan.IsDeleted = false;
+				plan.Snapshot = snapshot;
+				plan.ObjectXLength = objectXLength;
+				plan.ObjectYLength = objectYLength;
+				plan.TechnicalDrawingModel = XElement.Load(technicalDrawingModel.CreateReader());
+
+				if (!isUpdate)
 				{
-					//Update
-					plan.MacroName = macroName;
-					plan.ShapeModelFilepath = shapeModelFilepath;
-					plan.Note = note;
-					plan.TrainingImage = trainingImage;
-					plan.TrainingImageFilepath = trainingImageFilepath;
-					plan.ExportUnit = exportUnit;
-					plan.MatchingParamBinaryData = matchingParamData;
-					plan.MeasureBinaryData = measureBinaryData;
-					plan.UpperLightSwitch = upperLight.OnOff == LightControl.LightSwitch.On;
-					plan.UpperLightValue = upperLight.Intensity.ToString("d3");
-					plan.BottomLightSiwtch = bottomLight.OnOff == LightControl.LightSwitch.On;
-					plan.BottomLigthValue = bottomLight.Intensity.ToString("d3");
-					plan.ModifiedOn = DateTime.Now;
-					plan.ModifiedBy = loginUser;
-					plan.MeasureAssistantBinaryData = measureAssistantParamData;
-					plan.ModelRow = shapeView.Row;
-					plan.ModelCol = shapeView.Col;
-					plan.ModelAngle = shapeView.Angle;
-					plan.IsDeleted = false;
-					plan.Snapshot = snapshot;
-					plan.ObjectXLength = objectXLength;
-					plan.ObjectYLength = objectYLength;
+					_dc.MacroPlan.InsertOnSubmit(plan);
 				}
 				_dc.SubmitChanges();
 			}
