@@ -356,6 +356,7 @@ namespace Hanbo.SDMS.Model
 				ExportUnit = p.ExportUnit,
 				LengthX = (p.ObjectXLength != null && p.ObjectXLength.HasValue) ? p.ObjectXLength.Value : 0.0,
 				LengthY = (p.ObjectYLength != null && p.ObjectYLength.HasValue) ? p.ObjectYLength.Value : 0.0,
+				Snapshot = p.Snapshot,
 			}).ToList();
 
 			return data;

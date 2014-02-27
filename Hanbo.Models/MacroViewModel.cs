@@ -67,8 +67,13 @@ namespace Hanbo.Models
 
 		public string ExportUnit { get; set; }
 
-        public double LengthX { get; set; }
+		public double LengthX { get; set; }
 
-        public double LengthY { get; set; }
+		public double LengthY { get; set; }
+
+		/// <summary>
+		/// 工程圖縮圖
+		/// </summary>
+		public Binary Snapshot { get; set; }
 	}
 }
