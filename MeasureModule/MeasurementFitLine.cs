@@ -1,8 +1,4 @@
 ﻿using HalconDotNet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ViewROI;
 
 namespace MeasureModule
@@ -11,6 +7,7 @@ namespace MeasureModule
 	{
 		private FitLineResult mResult;
 		private FitLineResult mResultWorld;
+		private HTuple _cameraOut;
 
 		#region Edge sub pixel 演算法參數
 		/*
@@ -55,12 +52,11 @@ namespace MeasureModule
 		private HTuple _clippingFactor = 2;
 		#endregion
 
-
-
 		public MeasurementFitLine(ROI roi, MeasureAssistant mAssist)
 			: base(roi, mAssist)
 		{
 			mResult = new FitLineResult();
+			_cameraOut = new HTuple();
 			UpdateMeasure();
 		}
 		/// <summary>
@@ -78,14 +74,10 @@ namespace MeasureModule
 				Col2 = new HTuple(),
 				Row2 = new HTuple(),
 			};
+			var image = mMeasAssist.getImage();
 
-			var image = mMeasAssist.mImage;
-
-			HObject rectangle, imageReduced, edges, contoursSplit;
-			HOperatorSet.GenEmptyObj(out rectangle);
+			HObject imageReduced;
 			HOperatorSet.GenEmptyObj(out imageReduced);
-			HOperatorSet.GenEmptyObj(out edges);
-			HOperatorSet.GenEmptyObj(out contoursSplit);
 
 			//建 ROI
 			var roiModel = mRoi.getModelData();
@@ -94,14 +86,64 @@ namespace MeasureModule
 			var phi = roiModel[2];
 			var length1 = roiModel[3];
 			var length2 = roiModel[4];
-			//{ midR, midC, phi, length1, length2 });
 
-			HOperatorSet.GenRectangle2(out rectangle, row, column, phi, length1, length2);
-			HOperatorSet.ReduceDomain(image, rectangle, out imageReduced);
+			HRegion region = new HRegion();
+			region.GenRectangle2(row.D, column.D, phi.D, length1.D, length2.D);
+			HOperatorSet.ReduceDomain(image, region, out imageReduced);
+			HObject edges, contoursSplit;
+			HOperatorSet.GenEmptyObj(out edges);
+			HOperatorSet.GenEmptyObj(out contoursSplit);
 
 			//Edgesubpix
 			HOperatorSet.EdgesSubPix(imageReduced, out edges, _filter, _alpha, _low, _high);
 			HOperatorSet.SegmentContoursXld(edges, out contoursSplit, _mode, _smoothCont, _maxLineDist1, _maxLineDist2);
+			try
+			{
+				if (mMeasAssist.ApplyCalibration && mMeasAssist.IsCalibrationValid)
+				{
+					if (_cameraOut.TupleLength() == 0)
+						HOperatorSet.ChangeRadialDistortionCamPar("adaptive", mMeasAssist.CameraIn, 0, out _cameraOut);
+
+					HObject calibrationContoursSplits;
+					HOperatorSet.GenEmptyObj(out calibrationContoursSplits);
+
+					//var imageRect = image.ChangeRadialDistortionImage(region, mMeasAssist.CameraIn, _cameraOut);
+					//mResult = fitline(imageRect, true);
+					HOperatorSet.ChangeRadialDistortionContoursXld(contoursSplit, out calibrationContoursSplits, mMeasAssist.CameraIn, _cameraOut);
+					mResult = fitline(calibrationContoursSplits);
+				}
+				else
+				{
+					mResult = fitline(contoursSplit);
+				}
+				mResultWorld = new FitLineResult(mResult);
+			}
+			catch (HOperatorException ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			UpdateXLD();
+		}
+		private FitLineResult fitline(HObject rectifyImage, bool isImage)
+		{
+			HObject edges, contoursSplit;
+			HOperatorSet.GenEmptyObj(out edges);
+			HOperatorSet.GenEmptyObj(out contoursSplit);
+
+			//Edgesubpix
+			HOperatorSet.EdgesSubPix(rectifyImage, out edges, _filter, _alpha, _low, _high);
+			HOperatorSet.SegmentContoursXld(edges, out contoursSplit, _mode, _smoothCont, _maxLineDist1, _maxLineDist2);
+			return fitline(contoursSplit);
+		}
+		private FitLineResult fitline(HObject contoursSplit)
+		{
+			FitLineResult result = new FitLineResult()
+			{
+				Col1 = new HTuple(),
+				Row1 = new HTuple(),
+				Col2 = new HTuple(),
+				Row2 = new HTuple(),
+			};
 
 			//fitLine
 			HTuple number, rowBegin, colBegin, rowEnd, colEnd, nr, nc, dist;
@@ -122,17 +164,16 @@ namespace MeasureModule
 				{
 					preDistance = new HTuple(distance);
 					//Answer
-					mResult = new FitLineResult()
+					result = new FitLineResult()
 					{
 						Row1 = new HTuple(rowBegin),
 						Col1 = new HTuple(colBegin),
 						Row2 = new HTuple(rowEnd),
 						Col2 = new HTuple(colEnd),
 					};
-					mResultWorld = new FitLineResult(mResult);
 				}
 			}
-			UpdateXLD();
+			return result;
 		}
 
 		/// <summary>
@@ -172,6 +213,5 @@ namespace MeasureModule
 				Col2 = mResult.Col2,
 			};
 		}
-
 	}
 }

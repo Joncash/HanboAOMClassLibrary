@@ -1,6 +1,5 @@
 using System;
 using HalconDotNet;
-using ViewROI;
 
 namespace MeasureModule
 {
@@ -131,7 +130,6 @@ namespace MeasureModule
 
 	}//end of class EdgeResult
 
-	
 
 	/****************************************************************/
 	/****************************************************************/

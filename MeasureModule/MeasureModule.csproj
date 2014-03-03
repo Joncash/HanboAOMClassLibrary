@@ -53,9 +53,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="halcondotnet, Version=9.0.1.0, Culture=neutral, PublicKeyToken=4973bed59ddbf2b8, processorArchitecture=MSIL">
+    <Reference Include="halcondotnet, Version=10.0.0.0, Culture=neutral, PublicKeyToken=4973bed59ddbf2b8, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(HALCONROOT)\bin\dotnet20\halcondotnet.dll</HintPath>
+      <HintPath>C:\Program Files\MVTec\HALCON-10.0\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

@@ -53,22 +53,30 @@ namespace MeasureModule
 
 			try
 			{
-				mHandle.MeasurePos(mMeasAssist.mImage,
-								   mMeasAssist.mSigma, mMeasAssist.mThresh,
-								   mMeasAssist.mTransition, mMeasAssist.mPosition,
-								   out mResult.rowEdge, out mResult.colEdge,
-								   out mResult.amplitude, out mResult.distance);
+				HObject imageReduced;
+				HOperatorSet.GenEmptyObj(out imageReduced);
+				//«Ø ROI
+				var roiModel = mRoi.getModelData();
+				var row = roiModel[0];
+				var column = roiModel[1];
+				var phi = roiModel[2];
+				var length1 = roiModel[3];
+				var length2 = roiModel[4];
+				HRegion region = new HRegion();
+				region.GenRectangle2(row.D, column.D, phi.D, length1.D, length2.D);
 
-				if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
+				if (mMeasAssist.ApplyCalibration && mMeasAssist.IsCalibrationValid)
 				{
-					Rectify(mResult.rowEdge, mResult.colEdge, out mResultWorld.rowEdge, out mResultWorld.colEdge);
-					mResultWorld.distance = Distance(mResult.rowEdge, mResult.colEdge, mResult.rowEdge, mResult.colEdge, 1);
-					mResultWorld.amplitude = mResult.amplitude;
+					HTuple cameraOut = HMisc.ChangeRadialDistortionCamPar("adaptive", mMeasAssist.CameraIn, 0.0);
+					var rectifyImage = mMeasAssist.mImage.ChangeRadialDistortionImage(region, mMeasAssist.CameraIn, cameraOut);
+					measurePos(rectifyImage);
 				}
 				else
 				{
-					mResultWorld = new EdgeResult(mResult);
+					HOperatorSet.ReduceDomain(mMeasAssist.mImage, region, out imageReduced);
+					measurePos(new HImage(imageReduced));
 				}
+				mResultWorld = new EdgeResult(mResult);
 			}
 			catch (HOperatorException e)
 			{
@@ -78,6 +86,15 @@ namespace MeasureModule
 				return;
 			}
 			UpdateXLD();
+		}
+
+		private void measurePos(HImage imageReduced)
+		{
+			mHandle.MeasurePos(imageReduced,
+										  mMeasAssist.mSigma, mMeasAssist.mThresh,
+										  mMeasAssist.mTransition, mMeasAssist.mPosition,
+										  out mResult.rowEdge, out mResult.colEdge,
+										  out mResult.amplitude, out mResult.distance);
 		}
 
 		/// <summary>Updates display object for measured edge results</summary>

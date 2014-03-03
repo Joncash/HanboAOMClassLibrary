@@ -17,6 +17,54 @@ namespace MeasureModule
 	/// </summary>
 	public class MeasureAssistant
 	{
+		#region Calibration
+		public HTuple CameraIn;
+		public HTuple CameraPose;
+		public bool IsCalibrationValid { get { return CameraIn != null && CameraPose != null; } }
+		public bool ApplyCalibration { get; set; }
+		public void SetApplyCalibration(bool value)
+		{
+			ApplyCalibration = value;
+			//if (IsCalibrationValid && ApplyCalibration)
+			UpdateExecute(ALL_ROI);
+		}
+		/// <summary>
+		/// 載入 校正後的 CameraParam
+		/// </summary>
+		/// <param name="file"></param>
+		public void ImportCameraInParam(string file)
+		{
+			CameraIn = HMisc.ReadCamPar(file);
+			mCamParameter = CameraIn;
+		}
+		/// <summary>
+		/// 載入校正後的 Camera Pose
+		/// </summary>
+		/// <param name="file"></param>
+		public void ImportCameraPose(string file)
+		{
+			HOperatorSet.ReadPose(new HTuple(file), out CameraPose);
+			mCamPose = CameraPose;
+		}
+		#endregion
+
+		#region 測試圓的演算法
+		public string FitCircleAlgo;
+		/// <summary>
+		/// atukey(代數), geotukey(幾何)
+		/// </summary>
+		/// <param name="algo"></param>
+		public void SetFitCircleAlgorithm(string algo)
+		{
+			if (algo != "")
+			{
+				FitCircleAlgo = algo;
+				UpdateExecute(ALL_ROI);
+			}
+		}
+		#endregion
+
+
 		private static bool _doFitLineAlgo = ConfigurationHelper.GetDoFitLineAlgo();
 		public int SubpixThreadhold = 128;
 		public void SetSubpixThreadhold(int val)

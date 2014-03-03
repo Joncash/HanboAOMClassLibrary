@@ -1,7 +1,5 @@
 ﻿using HalconDotNet;
-using Hanbo.Helper;
 using System;
-using System.IO;
 using ViewROI;
 
 namespace MeasureModule
@@ -10,12 +8,13 @@ namespace MeasureModule
 	{
 		private CircleResult mResult;
 		private CircleResult mResultWorld;
-
+		private HTuple _cameraOut;
 
 		#region Fit Circle 演算法參數
 		/// <summary>
 		/// Algorithm for the fitting of circles
 		/// List of values: 'algebraic', 'ahuber', 'atukey', 'geometric', 'geohuber', 'geotukey' 
+		/// In practice, the approach of Tukey is recommended. 
 		/// </summary>
 		private HTuple _Algorithm = new HTuple("atukey");
 
@@ -41,9 +40,16 @@ namespace MeasureModule
 
 		/// <summary>
 		/// Clipping factor for the elimination of outliers (typical: 1.0 for Huber and 2.0 for Tukey).
+		/// The smaller the value choosen for factor, the more outliers are detected.
 		/// </summary>
 		private HTuple _ClippingFactor = new HTuple(2.0);
 		#endregion
+
+		public void SetAlgorithm(string algo)
+		{
+			if (!String.IsNullOrEmpty(algo))
+				_Algorithm = new HTuple(algo);
+		}
 
 		/// <summary>
 		/// 建構子
@@ -54,6 +60,7 @@ namespace MeasureModule
 			: base(roi, mAssist)
 		{
 			mResult = new CircleResult();
+			_cameraOut = new HTuple();
 			UpdateMeasure();
 		}
 
@@ -64,6 +71,13 @@ namespace MeasureModule
 		/// </summary>
 		public override void UpdateResults()
 		{
+			if (mMeasAssist.mImage == null) return;
+
+
+			#region 初始化數值
+			if (!String.IsNullOrEmpty(mMeasAssist.FitCircleAlgo))
+				_Algorithm = new HTuple(mMeasAssist.FitCircleAlgo);
+
 			//init result
 			mResult = new CircleResult()
 			{
@@ -77,41 +91,89 @@ namespace MeasureModule
 
 			// Local iconic variables 
 			HObject ho_MeasureROI, ho_ImageReduced;
-			HObject ho_Border;
-
-
-			// Local control variables 
-			HTuple hv_Row, hv_Column, hv_Radius, hv_StartPhi;
-			HTuple hv_EndPhi, hv_PointOrder;
+			HObject ho_Border, tmp_Border;
 
 			// Initialize local and output iconic variables 
 			HOperatorSet.GenEmptyObj(out ho_MeasureROI);
 			HOperatorSet.GenEmptyObj(out ho_ImageReduced);
 			HOperatorSet.GenEmptyObj(out ho_Border);
+			HOperatorSet.GenEmptyObj(out tmp_Border);
+			#endregion
 
-			if (mMeasAssist.mImage == null)
-			{
-				return;
-			}
 			try
 			{
 				//******* Create ROI ********
 				ho_MeasureROI.Dispose();
 				HOperatorSet.GenCircle(out ho_MeasureROI, mROICoord[0], mROICoord[1], mROICoord[2]);
+				HRegion region = new HRegion();
+				region.GenCircle(mROICoord[0].D, mROICoord[1].D, mROICoord[2].D);
 
-				//****** Area Center ***********
+				//****** Area Center, 取得目標區域的 pixels 數 ***********
 				HTuple area, areaRow, areaColumn;
 				double areaPixels = 0.0;
-				HOperatorSet.AreaCenter(ho_MeasureROI, out area, out areaRow, out areaColumn);
+				HOperatorSet.AreaCenter(region, out area, out areaRow, out areaColumn);
 				areaPixels = area.D;
+
+				//****** 取得影像 ******
+				var himage = mMeasAssist.getImage();
 
 				//******* Extract ROI Image *****
 				ho_ImageReduced.Dispose();
-				HOperatorSet.ReduceDomain(mMeasAssist.getImage(), ho_MeasureROI, out ho_ImageReduced);
+				HOperatorSet.ReduceDomain(himage, ho_MeasureROI, out ho_ImageReduced);
 
 				//******* Filter ****************
-				ho_Border.Dispose();
+				HOperatorSet.GenEmptyObj(out ho_Border);
 				HOperatorSet.ThresholdSubPix(ho_ImageReduced, out ho_Border, mMeasAssist.SubpixThreadhold);
+
+				if (mMeasAssist.ApplyCalibration && mMeasAssist.IsCalibrationValid)
+				{
+					if (_cameraOut.TupleLength() == 0)
+					{
+						_cameraOut = HMisc.ChangeRadialDistortionCamPar("adaptive", mMeasAssist.CameraIn, 0.0);
+					}
+					//var rectifyImage = himage.ChangeRadialDistortionImage(region, mMeasAssist.CameraIn, cameraOut);
+					HObject calibrationBorder;
+					HOperatorSet.GenEmptyObj(out calibrationBorder);
+					HOperatorSet.ChangeRadialDistortionContoursXld(ho_Border, out calibrationBorder, mMeasAssist.CameraIn, _cameraOut);
+					mResult = fitCircle(calibrationBorder, areaPixels);
+				}
+				else
+				{
+					mResult = fitCircle(ho_Border, areaPixels);
+				}
+
+			}
+			catch (HOperatorException ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+				mResultWorld = new CircleResult();
+				mResult = new CircleResult();
+			}
+			finally
+			{
+				ho_MeasureROI.Dispose();
+				ho_ImageReduced.Dispose();
+				ho_Border.Dispose();
+			}
+			UpdateXLD();
+		}
+
+		private CircleResult fitCircle(HObject ho_Border, double areaPixels)
+		{
+			CircleResult result = new CircleResult()
+			{
+				Radius = new HTuple(),
+				Row = new HTuple(),
+				Col = new HTuple(),
+				StartPhi = new HTuple(),
+				EndPhi = new HTuple(),
+				PointOrder = new HTuple(),
+			};
+			try
+			{
+				// Local control variables 
+				HTuple hv_Row, hv_Column, hv_Radius, hv_StartPhi;
+				HTuple hv_EndPhi, hv_PointOrder;
 
 				//******* Choice Candidate Objects
 				HObject ho_SelectedContours;
@@ -144,7 +206,7 @@ namespace MeasureModule
 							//取最大的 Circle
 							if (resultRadius < hv_Radius.DArr[radiusIndex])
 							{
-								mResult = new CircleResult(new HTuple(hv_Row.DArr[radiusIndex])
+								result = new CircleResult(new HTuple(hv_Row.DArr[radiusIndex])
 															, new HTuple(hv_Column.DArr[radiusIndex])
 															, new HTuple(hv_Radius.DArr[radiusIndex])
 															, hv_StartPhi
@@ -152,37 +214,15 @@ namespace MeasureModule
 															, hv_PointOrder) { };
 								resultRadius = hv_Radius.DArr[radiusIndex];
 							}
-
-
 						}
 					}
 				}
-				if (mResult != null)
-				{
-					if (mMeasAssist.mIsCalibValid && mMeasAssist.mTransWorldCoord)
-					{
-						Rectify(mResult.Row, mResult.Col, out mResultWorld.Row, out mResultWorld.Col);
-					}
-					else
-					{
-						mResultWorld = new CircleResult(mResult);
-					}
-				}
-
 			}
 			catch (HOperatorException ex)
 			{
 				Hanbo.Log.LogManager.Error(ex);
-				mResultWorld = new CircleResult();
-				mResult = new CircleResult();
 			}
-			finally
-			{
-				ho_MeasureROI.Dispose();
-				ho_ImageReduced.Dispose();
-				ho_Border.Dispose();
-			}
-			UpdateXLD();
+			return result;
 		}
 		/// <summary>
 		/// 顯示 Measure 的幾何元素外觀

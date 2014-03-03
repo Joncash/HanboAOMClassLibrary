@@ -409,6 +409,7 @@ namespace MeasureModule
 				switch (mMeasAssist.mUnit)
 				{
 					case "µm":
+					case "um":
 						unitScale = 0.000001;
 						break;
 					case "mm":
@@ -579,7 +580,6 @@ namespace MeasureModule
 		{
 			return null;
 		}
-
 	}//end of class	
 }//end of namespace
 
