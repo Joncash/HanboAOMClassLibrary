@@ -313,13 +313,6 @@ namespace Hanbo.Helper
 			return Path.Combine(dir, name);
 		}
 
-		public static string GetCalibrationCameraFilepath()
-		{
-			string filename = ConfigurationManager.AppSettings["CalibratedCameraParam"] ?? "";
-			if (!File.Exists(filename)) filename = "";
-			return filename;
-		}
-
 		public static LightViewModel GetLightSettings(string settingName)
 		{
 			var model = new LightViewModel();
@@ -363,5 +356,36 @@ namespace Hanbo.Helper
 			}
 			return model;
 		}
+
+		#region 鏡頭校正
+		public static string GetCameraParamFilepath()
+		{
+			var settingFile = ConfigurationManager.AppSettings["CalibratedCameraParam"] ?? "";
+			if (File.Exists(settingFile))
+				return settingFile;
+			else
+				return Path.Combine(Environment.CurrentDirectory, settingFile);
+		}
+
+		public static string GetCamearPossFilepath()
+		{
+			string settingFile = ConfigurationManager.AppSettings["CalibratedCameraPose"] ?? "";
+			if (File.Exists(settingFile))
+				return settingFile;
+			else
+				return Path.Combine(Environment.CurrentDirectory, settingFile);
+		}
+
+		public static bool GetApplyCalibrationSetting()
+		{
+			string setting = ConfigurationManager.AppSettings["ApplyCalibration"] ?? "false";
+			bool value;
+			if (!Boolean.TryParse(setting, out value))
+			{
+				value = false;
+			}
+			return value;
+		}
+		#endregion
 	}
 }
