@@ -264,8 +264,9 @@ namespace Hanbo.Helper
 		/// Measure -> 手動測量
 		/// Macro -> 程式編輯
 		/// AutoMeasure -> 自動化量測
+		/// CustomResolutionMeasure -> 客製化 Resolution
 		/// </summary>
-		public enum GeoDataGridViewModuleType { Measure, Macro, AutoMeasure };
+		public enum GeoDataGridViewModuleType { Measure, Macro, AutoMeasure, CustomResolutionMeasure };
 
 		/// <summary>
 		/// 取得隱藏的欄位s
@@ -279,6 +280,9 @@ namespace Hanbo.Helper
 			{
 				case GeoDataGridViewModuleType.AutoMeasure:
 					inVisibleFields = new string[] { "Selected", "IsExportItem", "Name", "RecordID", "ROIID", "ROIModel", "GeoType", "Normal", "LowerBound", "UpperBound" };
+					break;
+				case GeoDataGridViewModuleType.CustomResolutionMeasure:
+					inVisibleFields = new string[] { "Selected", "StartPhi", "EndPhi", "PointOrder", "IsExportItem", "RecordID", "ROIID", "ROIModel", "GeoType", "WorldDistance", "LowerBound", "UpperBound" };
 					break;
 				case GeoDataGridViewModuleType.Macro:
 				case GeoDataGridViewModuleType.Measure:
@@ -360,32 +364,179 @@ namespace Hanbo.Helper
 		#region 鏡頭校正
 		public static string GetCameraParamFilepath()
 		{
-			var settingFile = ConfigurationManager.AppSettings["CalibratedCameraParam"] ?? "";
-			if (File.Exists(settingFile))
-				return settingFile;
-			else
-				return Path.Combine(Environment.CurrentDirectory, settingFile);
+			string settingFile = @"Configuration\Settings.xml";
+			string filepath = "";
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("CameraCalibration").Element("CalibratedCameraParam");
+				if (elem != null)
+				{
+					filepath = elem.Value;
+				}
+			}
+			return filepath;
 		}
 
 		public static string GetCamearPossFilepath()
 		{
-			string settingFile = ConfigurationManager.AppSettings["CalibratedCameraPose"] ?? "";
-			if (File.Exists(settingFile))
-				return settingFile;
-			else
-				return Path.Combine(Environment.CurrentDirectory, settingFile);
+			string settingFile = @"Configuration\Settings.xml";
+			string filepath = "";
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("CameraCalibration").Element("CalibratedCameraPose");
+				if (elem != null)
+				{
+					filepath = elem.Value;
+				}
+			}
+			return filepath;
 		}
 
 		public static bool GetApplyCalibrationSetting()
 		{
-			string setting = ConfigurationManager.AppSettings["ApplyCalibration"] ?? "false";
-			bool value;
-			if (!Boolean.TryParse(setting, out value))
+			string settingFile = @"Configuration\Settings.xml";
+			bool setting = false;
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
 			{
-				value = false;
+				var elem = xDoc.Root.Element("CameraCalibration").Element("ApplyCalibration");
+				if (elem != null)
+				{
+					Boolean.TryParse(elem.Value, out setting);
+				}
 			}
-			return value;
+			return setting;
+		}
+		private static XDocument getXDoc(string fpath)
+		{
+			XDocument xDoc = null;
+			if (File.Exists(fpath))
+			{
+				xDoc = XDocument.Load(fpath);
+			}
+			return xDoc;
+		}
+
+		/// <summary>
+		/// 圓的量測為半徑或直徑
+		/// <para>半徑傳回 1</para>
+		/// <para>直徑傳回 2</para>
+		/// </summary>
+		/// <returns></returns>
+		public static int GetCircleDistanceSetting()
+		{
+			string settingFile = @"Configuration\Settings.xml";
+			string setting = "radius";
+			//read
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("CircleDistanceSetting");
+				if (elem != null)
+				{
+					setting = elem.Value;
+				}
+			}
+			return (setting == "radius") ? 1 : 2;
 		}
 		#endregion
+
+		public static string GetCopyRightText()
+		{
+			string settingFile = @"Configuration\Settings.xml";
+			string copyrightText = "";
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("ProductInfo").Element("Copyright");
+				if (elem != null)
+				{
+					copyrightText = elem.Value;
+				}
+			}
+			return copyrightText;
+		}
+
+		public static string GetProductName()
+		{
+			string settingFile = @"Configuration\Settings.xml";
+			string productName = "";
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("ProductInfo").Element("ProductName");
+				if (elem != null)
+				{
+					productName = elem.Value;
+				}
+			}
+			return productName;
+		}
+
+		public static string GetLinkName()
+		{
+			string settingFile = @"Configuration\Settings.xml";
+			string setting = "";
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("ProductInfo").Element("LinkName");
+				if (elem != null)
+				{
+					setting = elem.Value;
+				}
+			}
+			return setting;
+		}
+
+		public static string GetLogoPicture()
+		{
+			string settingFile = @"Configuration\Settings.xml";
+			string setting = "";
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("ProductInfo").Element("LogoPicture");
+				if (elem != null)
+				{
+					setting = elem.Value;
+				}
+			}
+			return setting;
+		}
+
+		public static string GetIcon(string key)
+		{
+			string settingFile = @"Configuration\Settings.xml";
+			string setting = "";
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("ProductInfo").Element(key + "Icon");
+				if (elem != null)
+				{
+					setting = elem.Value;
+				}
+			}
+			return setting;
+		}
+
+		public static string GetCompanyLogo()
+		{
+			string settingFile = @"Configuration\Settings.xml";
+			string setting = "";
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("ProductInfo").Element("CompanyLogo");
+				if (elem != null)
+				{
+					setting = elem.Value;
+				}
+			}
+			return setting;
+		}
 	}
 }
