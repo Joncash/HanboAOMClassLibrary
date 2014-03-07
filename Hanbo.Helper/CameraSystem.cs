@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
@@ -27,6 +28,29 @@ namespace Hanbo.Helper
 				value = Convert.ToDouble(avgElement.Attribute("value").Value);
 			}
 			return value;
+		}
+
+		public static bool ApplyResolution(double value)
+		{
+			var success = false;
+			try
+			{
+				var fpath = @"Configuration\Mahr.xml";
+				var xDoc = XDocument.Load(fpath);
+				var avgElement = xDoc.Root.Elements("Avg").SingleOrDefault();
+				if (avgElement != null)
+				{
+					avgElement.Attribute("value").SetValue(value);
+					//value = Convert.ToDouble(avgElement.Attribute("value").Value);
+					xDoc.Save(fpath);
+					success = true;
+				}
+			}
+			catch (IOException ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			return success;
 		}
 
 		/// <summary>
