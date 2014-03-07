@@ -180,6 +180,7 @@ namespace MeasureModule
 					{
 						Row1 = rows[0],
 						Col1 = cols[0],
+						GeoType = MeasureType.Point,
 					};
 				}
 				else
@@ -195,6 +196,7 @@ namespace MeasureModule
 						Row2 = rows.TupleLength() > 1 ? rows[1] : null,
 						Col2 = cols.TupleLength() > 1 ? cols[1] : null,
 						Distance = mResult.distance,
+						GeoType = MeasureType.Line,
 					};
 				}
 			}

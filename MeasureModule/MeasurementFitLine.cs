@@ -207,6 +207,7 @@ namespace MeasureModule
 		{
 			return new MeasureViewModel()
 			{
+				GeoType = MeasureType.FitLine,
 				Row1 = mResult.Row1,
 				Col1 = mResult.Col1,
 				Row2 = mResult.Row2,

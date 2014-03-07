@@ -13,15 +13,9 @@ namespace MeasureModule
 	/// </summary>
 	public class GeoDataGridViewModelConverter
 	{
-		/// <summary>
-		/// 轉換為 工程圖 ROI
-		/// </summary>
-		/// <param name="raw"></param>
-		/// <param name="dependROIs"></param>
-		/// <returns></returns>
-		public ROI ConvertToProgROI(GeoDataGridViewModel raw, GeoDataGridViewModel[] dependROIs)
+		public ROI ConvertToProgROI(GeoDataGridViewModel raw, GeoDataGridViewModel[] dependROIs, int _circleDistanceSetting)
 		{
-			var model = ConvertToProgGraphicModel(raw, dependROIs);
+			var model = convertToProgGraphicModel(raw, dependROIs);
 			ROI progROI = null;
 			switch (model.GeoType)
 			{
@@ -30,7 +24,7 @@ namespace MeasureModule
 					break;
 				case MeasureType.Circle:
 				case MeasureType.PointCircle:
-					progROI = new ROIProgCircle(model);
+					progROI = new ROIProgCircle(model) { CircleDistanceSetting = _circleDistanceSetting };
 					break;
 				case MeasureType.CrossPoint:
 					progROI = new ROIProgPoint(model);
@@ -46,7 +40,19 @@ namespace MeasureModule
 			}
 			return progROI;
 		}
-		public ProgGraphicModel ConvertToProgGraphicModel(GeoDataGridViewModel raw, GeoDataGridViewModel[] dependROIs)
+
+		/// <summary>
+		/// 轉換為 工程圖 ROI
+		/// </summary>
+		/// <param name="raw"></param>
+		/// <param name="dependROIs"></param>
+		/// <returns></returns>
+		public ROI ConvertToProgROI(GeoDataGridViewModel raw, GeoDataGridViewModel[] dependROIs)
+		{
+			return ConvertToProgROI(raw, dependROIs, 1);
+		}
+		#region private methods
+		private ProgGraphicModel convertToProgGraphicModel(GeoDataGridViewModel raw, GeoDataGridViewModel[] dependROIs)
 		{
 			var model = assignValue(raw);
 
@@ -100,5 +106,7 @@ namespace MeasureModule
 			}
 			return model;
 		}
+		#endregion
+
 	}
 }

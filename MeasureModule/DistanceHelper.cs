@@ -9,9 +9,18 @@ using System.Linq;
 namespace MeasureModule
 {
 	/// <summary>
-	/// 量測輔助計算類型
+	/// 量測輔助計算類型 : 
+	/// <para>Nono (無)</para>
+	/// <para>Distance (距離)</para>
+	/// <para>Point3ToCircle (3 點成圓)</para>
+	/// <para>Angle (角度)</para>
+	/// <para>SymmetryLine (對稱中線)</para>
+	/// <para>CrossPoint (交點)</para>
+	/// <para>DistanceX (X 方向距離)</para>
+	/// <para>DistnaceY (Y 方向距離)</para>
+	/// <para>EvaluateResolution (解析度評估)</para>
 	/// </summary>
-	public enum CalcuteType { None, Distance, Point3ToCircle, Angle, SymmetryLine, CrossPoint, DistanceX, DistanceY };
+	public enum CalcuteType { None, Distance, Point3ToCircle, Angle, SymmetryLine, CrossPoint, DistanceX, DistanceY, EvaluateResolution };
 
 	public static class DistanceHelper
 	{

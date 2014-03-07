@@ -17,6 +17,15 @@ namespace MeasureModule
 		/// <returns></returns>
 		public static ResultDisplayViewModel CreateDisplayViewModel(GeoDataGridViewModel model, bool textOnly)
 		{
+			return CreateDisplayViewModel(model, textOnly, 1);
+		}
+
+		public static ResultDisplayViewModel CreateDisplayViewModel(GeoDataGridViewModel model)
+		{
+			return CreateDisplayViewModel(model, false);
+		}
+		public static ResultDisplayViewModel CreateDisplayViewModel(GeoDataGridViewModel model, bool textOnly, int circleDistanceSetting)
+		{
 			ResultDisplayViewModel viewModel = null;
 
 			try
@@ -36,7 +45,8 @@ namespace MeasureModule
 
 					case ViewROI.MeasureType.Circle:
 					case ViewROI.MeasureType.PointCircle:
-						dispXLD.GenCircleContourXld(model.Row1, model.Col1, model.Distance, 0.0, 6.28318, "positive", 1.0);
+						var radius = model.Distance / circleDistanceSetting;
+						dispXLD.GenCircleContourXld(model.Row1, model.Col1, radius, 0.0, 6.28318, "positive", 1.0);
 						viewModel = new ResultDisplayViewModel()
 						{
 							DisplayText = dispName,
@@ -67,9 +77,6 @@ namespace MeasureModule
 						posX = (model.Col1 + model.Col2) / 2.0;
 						posY = (model.Row1 + model.Row2) / 2.0;
 
-						//arrowModel.CenterY, arrowModel.CenterX, 
-						//arrowModel.FirstArrowY, arrowModel.FirstArrowX
-						//, arrowSize);
 						viewModel = new ResultDisplayViewModel()
 						{
 							DisplayText = dispName,
@@ -93,12 +100,6 @@ namespace MeasureModule
 			}
 
 			return viewModel;
-		}
-
-
-		public static ResultDisplayViewModel CreateDisplayViewModel(GeoDataGridViewModel model)
-		{
-			return CreateDisplayViewModel(model, false);
 		}
 	}
 }

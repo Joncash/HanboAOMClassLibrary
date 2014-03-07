@@ -259,7 +259,7 @@ namespace MeasureModule
 		}
 		public override MeasureResult getMeasureResultData()
 		{
-			return mResultWorld;
+			return mResult;
 		}
 		public override void ClearResultData()
 		{
@@ -274,6 +274,7 @@ namespace MeasureModule
 		{
 			return new MeasureViewModel()
 			{
+				GeoType = MeasureType.Circle,
 				Row1 = mResult.Row,
 				Col1 = mResult.Col,
 				Distance = mResult.Radius,

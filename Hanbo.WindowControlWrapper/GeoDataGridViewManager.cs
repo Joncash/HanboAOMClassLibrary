@@ -53,6 +53,20 @@ namespace Hanbo.WindowControlWrapper
 		#region Public APIs
 
 		/// <summary>
+		/// 設定欄位顯示名稱
+		/// </summary>
+		/// <param name="columnName"></param>
+		/// <param name="headerText"></param>
+		public void SetColumnHeaderText(string columnName, string headerText)
+		{
+			var column = _GridViewContainer.Columns[columnName];
+			if (column != null)
+			{
+				column.HeaderText = headerText;
+			}
+		}
+
+		/// <summary>
 		/// 載入資料
 		/// </summary>
 		/// <param name="bindingList"></param>
@@ -170,7 +184,7 @@ namespace Hanbo.WindowControlWrapper
 		public void SetCalcuteType(CalcuteType cType)
 		{
 			DoCalculate = cType;
-			_GridViewContainer.Columns[0].Visible = true;
+			_GridViewContainer.Columns[0].Visible = !(DoCalculate == CalcuteType.None);
 		}
 
 		public void Clear()
@@ -227,12 +241,13 @@ namespace Hanbo.WindowControlWrapper
 		private void updateRecord(string id, GeoDataGridViewModel tmpGeoDataViewModel)
 		{
 			var roiGeoOwner = _DataList.SingleOrDefault(p => p.RecordID == id);
+			var distance = tmpGeoDataViewModel.Distance;
 			if (roiGeoOwner != null)
 			{
 				roiGeoOwner.Col1 = tmpGeoDataViewModel.Col1;
 				roiGeoOwner.Row1 = tmpGeoDataViewModel.Row1;
-				roiGeoOwner.Distance = tmpGeoDataViewModel.Distance;
-				roiGeoOwner.WorldDistance = pixelToRealWorldValue(tmpGeoDataViewModel.Distance);
+				roiGeoOwner.Distance = distance;
+				roiGeoOwner.WorldDistance = pixelToRealWorldValue(distance);
 				roiGeoOwner.Col2 = tmpGeoDataViewModel.Col2;
 				roiGeoOwner.Row2 = tmpGeoDataViewModel.Row2;
 				roiGeoOwner.ROIModel = tmpGeoDataViewModel.ROIModel;
@@ -262,6 +277,11 @@ namespace Hanbo.WindowControlWrapper
 		/// <param name="model"></param>
 		private void addMeasuredViewModel(GeoDataGridViewModel model)
 		{
+			if (model.GeoType == MeasureType.PointCircle || model.GeoType == MeasureType.Circle)
+			{
+				model.Distance = model.Distance * _circleDistanceSetting;
+				model.WorldDistance = model.WorldDistance * _circleDistanceSetting;
+			}
 			_DataList.Add(model);
 			addMeasuredTreeNode(model);
 		}
@@ -340,6 +360,12 @@ namespace Hanbo.WindowControlWrapper
 			var measureName = number.ToString("d2") + " " + roi.ROIMeasureType;
 			var exportUnit = roi.ROIMeasureType == MeasureType.Angle ? "Angle" :
 							roi.ROIMeasureType == MeasureType.Point ? "" : _ExportUnit;
+
+			var distance = (viewModel.Distance != null && viewModel.Distance.TupleLength() > 0) ?
+						viewModel.Distance.D : 0.0;
+			var isCircleType = (viewModel.GeoType == MeasureType.PointCircle || viewModel.GeoType == MeasureType.Circle);
+			distance = (isCircleType) ? distance * _circleDistanceSetting : distance;
+
 			GeoDataGridViewModel geoModel = new GeoDataGridViewModel()
 			{
 				Icon = getGeoViewModelIcon(roi),
@@ -352,11 +378,8 @@ namespace Hanbo.WindowControlWrapper
 				Row1 = (viewModel.Row1 != null && viewModel.Row1.TupleLength() > 0) ?
 						viewModel.Row1.D : -1.0,
 
-				Distance = (viewModel.Distance != null && viewModel.Distance.TupleLength() > 0) ?
-						viewModel.Distance.D : 0.0,
-
-				WorldDistance = (viewModel.Distance != null && viewModel.Distance.TupleLength() > 0) ?
-						pixelToRealWorldValue(viewModel.Distance.D) : 0.0,
+				Distance = distance,
+				WorldDistance = pixelToRealWorldValue(distance),
 
 				Col2 = (viewModel.Col2 != null && viewModel.Col2.TupleLength() > 0) ?
 						viewModel.Col2.D : -1.0,
@@ -445,8 +468,12 @@ namespace Hanbo.WindowControlWrapper
 
 		private void reAssignModelValue(GeoDataGridViewModel item, GeoDataGridViewModel newModel)
 		{
-			var lineTypes = new MeasureType[] { MeasureType.Distance, MeasureType.DistanceX, MeasureType.DistanceY, MeasureType.SymmetryLine };
+			var lineTypes = new MeasureType[] { MeasureType.Distance, 
+												MeasureType.DistanceX, 
+												MeasureType.DistanceY, 
+												MeasureType.SymmetryLine };
 			var isCrossPoint = (item.GeoType == MeasureType.CrossPoint);
+			var isCircleType = (item.GeoType == MeasureType.Circle || item.GeoType == MeasureType.PointCircle);
 			if (newModel == null)
 			{
 				item.Row1 = -1;
@@ -467,8 +494,8 @@ namespace Hanbo.WindowControlWrapper
 						item.Row2 = newModel.Row2;
 						item.Col2 = newModel.Col2;
 					}
-					item.Distance = newModel.Distance;
-					item.WorldDistance = newModel.WorldDistance;
+					item.Distance = (isCircleType) ? newModel.Distance * _circleDistanceSetting : newModel.Distance;
+					item.WorldDistance = (isCircleType) ? newModel.WorldDistance * _circleDistanceSetting : newModel.WorldDistance;
 				}
 			}
 			if (isCrossPoint)
@@ -506,12 +533,15 @@ namespace Hanbo.WindowControlWrapper
 			if (DoCalculate == CalcuteType.None && _TreeViewContainer != null)
 			{
 				var gridView = sender as DataGridView;
-				DataGridViewRow row = gridView.Rows[e.RowIndex];
-				var rowCell = row.Cells["RecordID"];//.Value as ROIViewModel;
-				if (rowCell != null)
+				if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
 				{
-					var recordID = rowCell.Value.ToString();
-					setTreeNodeFocus(recordID, true);
+					DataGridViewRow row = gridView.Rows[e.RowIndex];
+					var rowCell = row.Cells["RecordID"];//.Value as ROIViewModel;
+					if (rowCell != null)
+					{
+						var recordID = rowCell.Value.ToString();
+						setTreeNodeFocus(recordID, true);
+					}
 				}
 			}
 		}
@@ -699,6 +729,7 @@ namespace Hanbo.WindowControlWrapper
 				var doCrossPoint = (DoCalculate == CalcuteType.CrossPoint && checkRows.Count() == 2);
 				var doDistanceX = (DoCalculate == CalcuteType.DistanceX && checkRows.Count() == 2);
 				var doDistanceY = (DoCalculate == CalcuteType.DistanceY && checkRows.Count() == 2);
+				var doEvaluateResolution = (DoCalculate == CalcuteType.EvaluateResolution);
 
 				if (doDistance)
 				{
@@ -728,6 +759,10 @@ namespace Hanbo.WindowControlWrapper
 				{
 					measureDistanceY(checkRows);
 				}
+				else if (doEvaluateResolution)
+				{
+					evaluateResolution(checkRows);
+				}
 
 				//打完收工
 				if (doDistance || doPoint3ToCircle || doAngle || doSymetryLine || doCrossPoint || doDistanceX || doDistanceY)
@@ -736,6 +771,36 @@ namespace Hanbo.WindowControlWrapper
 					restoreGridviewState(columnIndex, gridView, checkRows);
 					notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, null);
 				}
+			}
+		}
+
+		private void evaluateResolution(DataGridViewRow[] checkRows)
+		{
+			double sum = 0.0;
+			double count = 0.0;
+			foreach (DataGridViewRow row in checkRows)
+			{
+				var pixelCell = row.Cells["Distance"];
+				var realCell = row.Cells["Normal"];
+				if (pixelCell != null && realCell != null && pixelCell.Value != null && realCell.Value != null)
+				{
+					Double pixelValue, realValue;
+
+					var pixelValid = Double.TryParse(pixelCell.Value.ToString(), out pixelValue);
+					var realValid = Double.TryParse(realCell.Value.ToString(), out realValue);
+					if (pixelValid && realValid)
+					{
+						//計算實際值
+						var resolution = realValue / pixelValue;
+						sum += resolution;
+						count++;
+					}
+				}
+			}
+			if (count > 0)
+			{
+				var avg = Math.Round(sum / count, _RoundDigit);
+				notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, avg);
 			}
 		}
 
@@ -1046,6 +1111,7 @@ namespace Hanbo.WindowControlWrapper
 			return result;
 		}
 
+		private int _circleDistanceSetting = ConfigurationHelper.GetCircleDistanceSetting();
 		/// <summary>
 		/// 3點成圓計算
 		/// </summary>

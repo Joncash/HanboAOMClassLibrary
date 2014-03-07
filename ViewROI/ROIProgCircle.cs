@@ -12,6 +12,7 @@ namespace ViewROI
 	public class ROIProgCircle : ROI
 	{
 		#region private variables
+		public int CircleDistanceSetting = 1;
 		private ProgGraphicModel _model;
 		/// <summary>
 		/// 圓心位置 y
@@ -100,8 +101,9 @@ namespace ViewROI
 				window.SetColor("magenta");
 
 			window.SetLineWidth(2);
+			var radius = _model.Distance / CircleDistanceSetting;
 			window.DispCross(_model.RowBegin, _model.ColBegin, crossSize, crossAngle);
-			window.DispCircle(_model.RowBegin, _model.ColBegin, _model.Distance);
+			window.DispCircle(_model.RowBegin, _model.ColBegin, radius);
 
 			//畫圓內虛線
 			/**/
@@ -109,13 +111,13 @@ namespace ViewROI
 			HTuple dotLineStyle = new HTuple(new int[4] { 20, 7, 3, 7 });
 			window.SetLineStyle(dotLineStyle);
 			var hLineRowBegin = _model.RowBegin;
-			var hLineColBegin = _model.ColBegin - _model.Distance;
+			var hLineColBegin = _model.ColBegin - radius;
 			var hLineRowEnd = _model.RowBegin;
-			var hLineColEnd = _model.ColBegin + _model.Distance;
+			var hLineColEnd = _model.ColBegin + radius;
 
-			var vLineRowBegin = _model.RowBegin - _model.Distance;
+			var vLineRowBegin = _model.RowBegin - radius;
 			var vLineColBegin = _model.ColBegin;
-			var vLineRowEnd = _model.RowBegin + _model.Distance;
+			var vLineRowEnd = _model.RowBegin + radius;
 			var vLineColEnd = _model.ColBegin;
 			window.DispLine(hLineRowBegin, hLineColBegin, hLineRowEnd, hLineColEnd);
 			window.DispLine(vLineRowBegin, vLineColBegin, vLineRowEnd, vLineColEnd);
