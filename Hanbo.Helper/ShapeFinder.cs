@@ -67,13 +67,13 @@ namespace Hanbo.Helper
 			{
 				try
 				{
-                    Hanbo.Log.LogManager.Trace("ShapeFinder @Find() => readShapeModel()");
+					Hanbo.Log.LogManager.Trace("ShapeFinder @Find() => readShapeModel()");
 					HTuple hv_A1LModelId = ReadShapeModel(trainingModelfilepath);
 					shapeModel = findShapeModel(hImage, hv_A1LModelId);
 				}
 				catch (Exception ex)
 				{
-                    Hanbo.Log.LogManager.Error("ShapeFinder exception:" + ex.Message);
+					Hanbo.Log.LogManager.Error("ShapeFinder exception:" + ex.Message);
 				}
 			}
 			return shapeModel;
@@ -94,7 +94,7 @@ namespace Hanbo.Helper
 			}
 			catch (Exception ex)
 			{
-                Hanbo.Log.LogManager.Error("ShapeFinder exception:" + ex.Message);
+				Hanbo.Log.LogManager.Error("ShapeFinder exception:" + ex.Message);
 			}
 			return shapeModel;
 		}
@@ -106,7 +106,7 @@ namespace Hanbo.Helper
 			HTuple hv_ModelRow, hv_ModelColumn, hv_ModelAngle, hv_ModelScore;
 
 			//find
-            Hanbo.Log.LogManager.Trace("ShapeFinder @Find() => FindShapeModel()");
+			Hanbo.Log.LogManager.Trace("ShapeFinder @Find() => FindShapeModel()");
 			HOperatorSet.FindShapeModel(hImage, hv_A1LModelId, (new HTuple(0)).TupleRad()
 				, (new HTuple(360)).TupleRad(),
 				_minScore,
@@ -129,7 +129,35 @@ namespace Hanbo.Helper
 					Score = hv_ModelScore
 				};
 			}
-			return shapeModel;
+			return GetOrderdShapeModel(shapeModel);
+		}
+		public ShapeModel GetOrderdShapeModel(ShapeModel raw)
+		{
+			ShapeModel orderedModel = null;
+			if (raw != null)
+			{
+				List<ShapeModelDataTransferObject> aList = new List<ShapeModelDataTransferObject>();
+				for (int i = 0; i < raw.Score.TupleLength(); i++)
+				{
+					aList.Add(new ShapeModelDataTransferObject()
+					{
+						Row = raw.Row[i].D,
+						Col = raw.Col[i].D,
+						Angle = raw.Angle[i].D,
+						Score = raw.Score[i].D,
+					});
+				}
+				var orderedList = aList.OrderBy(p => p.Col).ThenBy(p => p.Row).ToList();
+				orderedModel = new ShapeModel()
+				{
+					ModelId = raw.ModelId,
+					Row = orderedList.Select(p => p.Row).ToArray(),
+					Col = orderedList.Select(p => p.Col).ToArray(),
+					Angle = orderedList.Select(p => p.Angle).ToArray(),
+					Score = orderedList.Select(p => p.Score).ToArray(),
+				};
+			}
+			return orderedModel;
 		}
 		/// <summary>
 		/// ReadShapeModel
@@ -147,9 +175,16 @@ namespace Hanbo.Helper
 			catch (Exception ex)
 			{
 
-                Hanbo.Log.LogManager.Error("ReadShapeModel Exception: " + ex.Message);
+				Hanbo.Log.LogManager.Error("ReadShapeModel Exception: " + ex.Message);
 			}
 			return hv_A1LModelId;
+		}
+		class ShapeModelDataTransferObject
+		{
+			public double Row { get; set; }
+			public double Col { get; set; }
+			public double Angle { get; set; }
+			public double Score { get; set; }
 		}
 	}
 }
