@@ -516,5 +516,21 @@ namespace Hanbo.SDMS.Model
 			}
 			return success;
 		}
+
+		public static bool UpdateMacroPlanTechnicalDrawing(string macroID, Binary snapshot, XDocument technicalDrawingModel)
+		{
+			bool success = false;
+			MacroPlan plan = _dc.MacroPlan.SingleOrDefault(p => p.MacroGuid == macroID);
+			var isUpdate = (plan != null);
+			if (isUpdate)
+			{
+				plan.Snapshot = snapshot;
+				plan.TechnicalDrawingModel = XElement.Load(technicalDrawingModel.CreateReader());
+				_dc.SubmitChanges();
+			}
+
+
+			return success;
+		}
 	}
 }
