@@ -59,6 +59,7 @@
     <Compile Include="HanboSecurityHelper.cs" />
     <Compile Include="ImageAssociate.cs" />
     <Compile Include="ImageConventer.cs" />
+    <Compile Include="ImageHelper.cs" />
     <Compile Include="LicenseChecker.cs" />
     <Compile Include="ModelSerializer.cs" />
     <Compile Include="ProcessChecker.cs" />
