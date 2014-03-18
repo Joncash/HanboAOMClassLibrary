@@ -22,7 +22,7 @@ namespace Hanbo.Helper
 				var header = GetMahrExportHeader();
 				var footer = GetMahrExportFooter();
 				var content = header + GetMahrExportContent(data) + footer;
-				File.WriteAllText(outputFilepath, content, Encoding.UTF8);
+				File.WriteAllText(outputFilepath, content, Encoding.GetEncoding("Big5"));
 			}
 			catch (Exception ex)
 			{
@@ -35,6 +35,9 @@ namespace Hanbo.Helper
 		public static string GetMahrExportContent(List<MeasureExportModel> data)
 		{
 			string tab = "	";
+			char space = ' ';
+			//string rowTemplate = @"{0}             {1}       {2}     {3}      {4}     {5}     {6}          {7}";
+			string rowTemplate = @"{0}{1}{2}{3}{4}{5}{6}{7}";
 			StringBuilder sb = new StringBuilder();
 			foreach (var model in data)
 			{
@@ -62,15 +65,16 @@ namespace Hanbo.Helper
 					standardText = String.Format("{0:f3}", standard);
 				}
 
-				var text = String.Format("{0}{1}{2}{3}{4}{5}{6}{7}"
-										, model.MeasureName + tab + tab
-										, model.Symbol + tab
-										, model.MeasureValue.PadRight(11, ' ')
-										, standardText.PadRight(12, ' ')
-										, maxText.PadRight(10, ' ')
-										, minText.PadRight(11, ' ')
-										, deviationText + tab
+				var text = String.Format(rowTemplate,
+										 model.MeasureName.PadRight(16, space)
+										, model.Symbol.PadRight(4, space)
+										, model.MeasureValue.PadLeft(10, space)
+										, standardText.PadLeft(11, space)
+										, maxText.PadLeft(11, space)
+										, minText.PadLeft(11, space)
+										, deviationText.PadLeft(11, space)
 										, GetEvaluation(model));
+
 				sb.AppendLine(text);
 				sb.AppendLine("");
 			}
@@ -85,6 +89,7 @@ namespace Hanbo.Helper
 		public static string GetEvaluation(MeasureExportModel data)
 		{
 			var evaluation = "";
+			char space = ' ';
 			double min, max, measure, standard;
 			if (Double.TryParse(data.Standard, out standard)
 				&& Double.TryParse(data.MeasureValue, out measure)
@@ -104,7 +109,7 @@ namespace Hanbo.Helper
 				for (var i = 0; i < count; i++)
 					evaluation += symbol;
 			}
-			return evaluation.PadLeft(5, ' ');
+			return evaluation.PadLeft(11, space);
 		}
 		public static string GetMahrExportHeader()
 		{
