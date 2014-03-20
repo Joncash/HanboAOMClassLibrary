@@ -538,5 +538,21 @@ namespace Hanbo.Helper
 			}
 			return setting;
 		}
+
+		public static string GetExportEncoding()
+		{
+			string settingFile = @"Configuration\Settings.xml";
+			string setting = "utf-8";//預設
+			var xDoc = getXDoc(settingFile);
+			if (xDoc != null)
+			{
+				var elem = xDoc.Root.Element("Export").Element("Encoding");
+				if (elem != null)
+				{
+					setting = elem.Value;
+				}
+			}
+			return setting;
+		}
 	}
 }

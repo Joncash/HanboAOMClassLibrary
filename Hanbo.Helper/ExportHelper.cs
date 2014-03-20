@@ -9,12 +9,24 @@ namespace Hanbo.Helper
 	public class ExportHelper
 	{
 		/// <summary>
-		/// Mahr 格式輸出
+		/// Mahr 格式輸出, Encoding 為 utf8
 		/// </summary>
 		/// <param name="data">資料</param>
 		/// <param name="outputFilepath">輸出檔案路徑</param>
 		/// <returns>Success</returns>
 		public static bool MahrExport(List<MeasureExportModel> data, string outputFilepath)
+		{
+			return MahrExport(data, outputFilepath, Encoding.GetEncoding("UTF-8"));
+		}
+
+		/// <summary>
+		/// Mahr 格式輸出
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="outputFilepath"></param>
+		/// <param name="encoding"></param>
+		/// <returns></returns>
+		public static bool MahrExport(List<MeasureExportModel> data, string outputFilepath, Encoding encoding)
 		{
 			bool success = true;
 			try
@@ -22,7 +34,7 @@ namespace Hanbo.Helper
 				var header = GetMahrExportHeader();
 				var footer = GetMahrExportFooter();
 				var content = header + GetMahrExportContent(data) + footer;
-				File.WriteAllText(outputFilepath, content, Encoding.GetEncoding("Big5"));
+				File.WriteAllText(outputFilepath, content, encoding);
 			}
 			catch (Exception ex)
 			{
