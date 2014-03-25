@@ -65,7 +65,7 @@ namespace Hanbo.SDMS.Model
 				var isUpdate = (plan != null);
 				if (!isUpdate)
 				{
-					plan = new MacroPlan() { CreateBy = loginUser, CreateOn = DateTime.Now, MacroGuid = Guid.NewGuid().ToString() };
+					plan = new MacroPlan() { CreateBy = loginUser, CreateOn = DateTime.Now, MacroGuid = macroGuid };
 				}
 				plan.MacroName = macroName;
 				plan.ShapeModelFilepath = shapeModelFilepath;
