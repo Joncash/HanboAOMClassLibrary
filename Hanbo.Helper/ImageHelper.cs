@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HalconDotNet;
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Drawing;
@@ -10,6 +11,29 @@ namespace Hanbo.Helper
 {
 	public class ImageHelper
 	{
+		/// <summary>
+		/// 二進位資料轉換為 HImage
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
+		public static HImage BinaryToHImage(Binary data)
+		{
+			HImage img = null;
+			try
+			{
+				var bmp = BinaryToImage(data);
+				var fpath = ConfigurationHelper.GetTmpFilepath();
+				bmp.Save(fpath);
+				img = new HImage(fpath);
+				File.Delete(fpath);
+			}
+			catch (Exception ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			return img;
+		}
+
 		/// <summary>
 		/// 將二進位資料轉換為 Bitmap
 		/// </summary>
