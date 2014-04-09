@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace Hanbo.Helper
 {
@@ -15,6 +16,25 @@ namespace Hanbo.Helper
 	/// </summary>
 	public static class ConfigurationHelper
 	{
+		private static string _systemSettingsRootName = "SystemSettings";
+		private static string _systemSettingFile = @"Configuration\Settings.xml";
+		private static XDocument _systemSettingsDoc;
+		static ConfigurationHelper()
+		{
+			_systemSettingsDoc = null;
+			if (File.Exists(_systemSettingFile))
+			{
+				try
+				{
+					_systemSettingsDoc = XDocument.Load(_systemSettingFile);
+				}
+				catch (Exception ex)
+				{
+					Hanbo.Log.LogManager.Error(ex);
+				}
+			}
+		}
+
 		/// <summary>
 		/// 取得工作目錄
 		/// 若指定的目錄不存在，則會建立
@@ -361,51 +381,74 @@ namespace Hanbo.Helper
 			return model;
 		}
 
+		/// <summary>
+		/// getXElementWithXPath
+		/// </summary>
+		/// <param name="xDoc">XDocument</param>
+		/// <param name="xpath">XPath, ex:Root/MyTag</param>
+		/// <returns></returns>
+		private static XElement getXElementWithXPath(XDocument xDoc, string xpath)
+		{
+			XElement xElem = null;
+			if (xDoc != null)
+			{
+				xElem = xDoc.XPathSelectElement(xpath);
+			}
+			return xElem;
+		}
+
+		/// <summary>
+		/// getXElementWithXPath, Use Default SystemXDoc
+		/// </summary>
+		/// <param name="xpath"></param>
+		/// <returns></returns>
+		private static XElement getXElementWithXPath(string xpath)
+		{
+			XElement xElem = null;
+			if (_systemSettingsDoc != null)
+			{
+				xElem = _systemSettingsDoc.XPathSelectElement(xpath);
+			}
+			return xElem;
+		}
+
 		#region 鏡頭校正
 		public static string GetCameraParamFilepath()
 		{
-			string settingFile = @"Configuration\Settings.xml";
-			string filepath = "";
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			string filepath = "";//default
+			var xpath = String.Format("{0}/CameraCalibration/CalibratedCameraParam", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("CameraCalibration").Element("CalibratedCameraParam");
-				if (elem != null)
-				{
-					filepath = elem.Value;
-				}
+				filepath = elem.Value;
 			}
 			return filepath;
 		}
 
 		public static string GetCamearPossFilepath()
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			string filepath = "";
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/CameraCalibration/CalibratedCameraPose", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("CameraCalibration").Element("CalibratedCameraPose");
-				if (elem != null)
-				{
-					filepath = elem.Value;
-				}
+				filepath = elem.Value;
 			}
 			return filepath;
 		}
 
+		/// <summary>
+		/// GetApplyCalibrationSetting ( Apply Radial Distorion or not)
+		/// </summary>
+		/// <returns></returns>
 		public static bool GetApplyCalibrationSetting()
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			bool setting = false;
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/CameraCalibration/ApplyCalibration", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("CameraCalibration").Element("ApplyCalibration");
-				if (elem != null)
-				{
-					Boolean.TryParse(elem.Value, out setting);
-				}
+				Boolean.TryParse(elem.Value, out setting);
 			}
 			return setting;
 		}
@@ -420,137 +463,129 @@ namespace Hanbo.Helper
 		}
 
 		/// <summary>
-		/// 圓的量測為半徑或直徑
+		/// 圓的量測為半徑或直徑 (預設為半徑)
 		/// <para>半徑傳回 1</para>
 		/// <para>直徑傳回 2</para>
 		/// </summary>
 		/// <returns></returns>
 		public static int GetCircleDistanceSetting()
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			string setting = "radius";
-			//read
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/CircleDistanceSetting", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("CircleDistanceSetting");
-				if (elem != null)
-				{
-					setting = elem.Value;
-				}
+				setting = elem.Value;
 			}
 			return (setting == "radius") ? 1 : 2;
 		}
 		#endregion
 
+		/// <summary>
+		/// GetCopyRightText (版權宣告)，預設為 台灣瀚博  版權所有 © 2014 Hanbo Taiwan All Rights Reserved.
+		/// </summary>
+		/// <returns></returns>
 		public static string GetCopyRightText()
 		{
-			string settingFile = @"Configuration\Settings.xml";
-			string copyrightText = "";
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			string copyrightText = "台灣瀚博  版權所有 © 2014 Hanbo Taiwan All Rights Reserved.";
+			var xpath = String.Format("{0}/ProductInfo/Copyright", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("ProductInfo").Element("Copyright");
-				if (elem != null)
-				{
-					copyrightText = elem.Value;
-				}
+				copyrightText = elem.Value;
 			}
 			return copyrightText;
 		}
 
+		/// <summary>
+		/// GetProductName
+		/// </summary>
+		/// <returns></returns>
 		public static string GetProductName()
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			string productName = "";
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/ProductInfo/ProductName", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("ProductInfo").Element("ProductName");
-				if (elem != null)
-				{
-					productName = elem.Value;
-				}
+				productName = elem.Value;
 			}
 			return productName;
 		}
 
+		/// <summary>
+		/// GetLinkName
+		/// </summary>
+		/// <returns></returns>
 		public static string GetLinkName()
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			string setting = "";
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/ProductInfo/LinkName", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("ProductInfo").Element("LinkName");
-				if (elem != null)
-				{
-					setting = elem.Value;
-				}
+				setting = elem.Value;
 			}
 			return setting;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public static string GetLogoPicture()
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			string setting = "";
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/ProductInfo/LogoPicture", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("ProductInfo").Element("LogoPicture");
-				if (elem != null)
-				{
-					setting = elem.Value;
-				}
+				setting = elem.Value;
 			}
 			return setting;
 		}
 
+		/// <summary>
+		/// GetIcon
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		public static string GetIcon(string key)
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			string setting = "";
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/ProductInfo/{1}Icon", _systemSettingsRootName, key);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("ProductInfo").Element(key + "Icon");
-				if (elem != null)
-				{
-					setting = elem.Value;
-				}
+				setting = elem.Value;
 			}
 			return setting;
 		}
 
 		public static string GetCompanyLogo()
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			string setting = "";
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/ProductInfo/CompanyLogo", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("ProductInfo").Element("CompanyLogo");
-				if (elem != null)
-				{
-					setting = elem.Value;
-				}
+				setting = elem.Value;
 			}
 			return setting;
 		}
 
+		/// <summary>
+		/// 輸出編碼, 預設為 UTF-8
+		/// </summary>
+		/// <returns></returns>
 		public static string GetExportEncoding()
 		{
-			string settingFile = @"Configuration\Settings.xml";
 			string setting = "utf-8";//預設
-			var xDoc = getXDoc(settingFile);
-			if (xDoc != null)
+			var xpath = String.Format("{0}/Export/Encoding", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
 			{
-				var elem = xDoc.Root.Element("Export").Element("Encoding");
-				if (elem != null)
-				{
-					setting = elem.Value;
-				}
+				setting = elem.Value;
 			}
 			return setting;
 		}
