@@ -134,8 +134,11 @@
   <data name="stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ConnectionStatus" xml:space="preserve">
-    <value>Status</value>
+  <data name="YAxis" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="_3pointCircle_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\3pointCircle_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="save" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -147,11 +150,11 @@
     <value>系統訊息 ( Message )</value>
     <comment>系統訊息</comment>
   </data>
+  <data name="Message_InputPlanNameAndDescriptionNotice" xml:space="preserve">
+    <value>請輸入程式名稱及描述 ( Please input plan name and description )</value>
+  </data>
   <data name="Connection" xml:space="preserve">
     <value>Connection</value>
-  </data>
-  <data name="_3pointCircle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\3pointCircle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="crossPoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\crossPoint.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -165,9 +168,9 @@ Account / Password uncorrect or Accout disabled.</value>
     <value>檢查結果 ( Result )</value>
     <comment>檢查結果</comment>
   </data>
-  <data name="Message_PlanOpendAndReloadNotice" xml:space="preserve">
-    <value>已開啟程式編輯，是否要關閉目前程式並載入？
-( Plan is opend, do you want to close the current plan, and reload the new one ? )</value>
+  <data name="Message_DeleteSelectedItemNotice" xml:space="preserve">
+    <value>將會刪除所選擇的資料，是否刪除？
+( Are you sure to delete the selected items ? )</value>
   </data>
   <data name="SuccessMessage" xml:space="preserve">
     <value>成功 ( Success )</value>
@@ -186,6 +189,10 @@ Account / Password uncorrect or Accout disabled.</value>
     <value>訓練影像為空，請重新載入訓練影像
 ( Training image is empty, reload it )</value>
   </data>
+  <data name="Message_PlanSaveAsSuccessedReloadItNotice" xml:space="preserve">
+    <value>已另存程式，是否開啟該程式？
+(  Planning saved. Re-open it ? )</value>
+  </data>
   <data name="draw_circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\draw_circle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -193,15 +200,11 @@ Account / Password uncorrect or Accout disabled.</value>
     <value>程式已存在，是否覆蓋？
 ( Plan exists , overwrite ? )</value>
   </data>
-  <data name="SuccessCode" xml:space="preserve">
-    <value>OK</value>
-    <comment>OK</comment>
+  <data name="distanceX_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\distanceX_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Disconnected" xml:space="preserve">
-    <value>Disconnected</value>
-  </data>
-  <data name="Message_MeasurementError" xml:space="preserve">
-    <value>測量時發生錯誤 ( Measurement Error ! )</value>
+  <data name="Message_SymmetryLineWarning" xml:space="preserve">
+    <value>兩線段才可以計算對稱中線 (Only two line can calculate the symmetry line)</value>
   </data>
   <data name="draw_point_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\draw_point_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -213,18 +216,8 @@ Account / Password uncorrect or Accout disabled.</value>
   <data name="Model_YwayDistance" xml:space="preserve">
     <value>Y 方向距離</value>
   </data>
-  <data name="Model_Angle" xml:space="preserve">
-    <value>角度</value>
-  </data>
-  <data name="Message_CameraIsOccupied" xml:space="preserve">
-    <value>影像裝置資源被其他應用程式佔用，無法開啟
-( Camera is used by other program)</value>
-  </data>
   <data name="Model_XwayDistance" xml:space="preserve">
     <value>X 方向距離</value>
-  </data>
-  <data name="distance_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\distance_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Message_EmptyMatchingObjects" xml:space="preserve">
     <value>找不到匹配的物件 ( No matching objects )</value>
@@ -238,8 +231,8 @@ Account / Password uncorrect or Accout disabled.</value>
 Warning !
 Some other measurement are depend on this item, if remove it will lose the dependent measurement.</value>
   </data>
-  <data name="Message_DistanceXWarning" xml:space="preserve">
-    <value>無法計算 X 方向距離！(Can not calculate the x distance)</value>
+  <data name="Model_CrossPoint" xml:space="preserve">
+    <value>交點</value>
   </data>
   <data name="clearList_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\clearList_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -247,12 +240,8 @@ Some other measurement are depend on this item, if remove it will lose the depen
   <data name="Model_UppderLimit" xml:space="preserve">
     <value>公差上限 (Upper limit)</value>
   </data>
-  <data name="Message_SymmetryLineError" xml:space="preserve">
-    <value>無法計算兩線之對稱線 (Symmetry line calculate error)</value>
-  </data>
-  <data name="Message_PlanDoesNotExistsNotice" xml:space="preserve">
-    <value>程式不存在，是否匯入？
-( Plan does not exist, import ? )</value>
+  <data name="ConnectionStatus" xml:space="preserve">
+    <value>Status</value>
   </data>
   <data name="draw_line_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\draw_line_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -297,6 +286,9 @@ Some other measurement are depend on this item, if remove it will lose the depen
 請按下一步繼續
 ( Model created, press next step button to continue)</value>
   </data>
+  <data name="ImageZoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
   <data name="draw_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\draw_line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -310,11 +302,8 @@ Some other measurement are depend on this item, if remove it will lose the depen
     <value>影像仍在擷取中. 確定停止?
 ( Stop the image acquition ? )</value>
   </data>
-  <data name="ImageMove" xml:space="preserve">
-    <value>Move</value>
-  </data>
-  <data name="Message_ImportFail" xml:space="preserve">
-    <value>匯入失敗 ( Import Fail )</value>
+  <data name="Disconnected" xml:space="preserve">
+    <value>Disconnected</value>
   </data>
   <data name="Message_MatchingModelNotFound" xml:space="preserve">
     <value>找不到匹配模型 ( Can't find the matching model )</value>
@@ -323,11 +312,11 @@ Some other measurement are depend on this item, if remove it will lose the depen
     <value>裝置名稱 ( Device)</value>
     <comment>裝置名稱</comment>
   </data>
-  <data name="camera" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\camera.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="zoom_fit_best3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\zoom_fit_best3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Message_ImportFail" xml:space="preserve">
+    <value>匯入失敗 ( Import Fail )</value>
   </data>
   <data name="Load" xml:space="preserve">
     <value>載入 ( Load )</value>
@@ -335,36 +324,35 @@ Some other measurement are depend on this item, if remove it will lose the depen
   <data name="Model_Normal" xml:space="preserve">
     <value>標準值 (Normal value)</value>
   </data>
-  <data name="ImageZoom" xml:space="preserve">
-    <value>Zoom</value>
+  <data name="camera" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\camera.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Message_PlanSaveAsSuccessedReloadItNotice" xml:space="preserve">
-    <value>已另存程式，是否開啟該程式？
-(  Planning saved. Re-open it ? )</value>
+  <data name="Message_CameraIsOccupied" xml:space="preserve">
+    <value>影像裝置資源被其他應用程式佔用，無法開啟
+( Camera is used by other program)</value>
   </data>
-  <data name="Message_DeleteSelectedItemNotice" xml:space="preserve">
-    <value>將會刪除所選擇的資料，是否刪除？
-( Are you sure to delete the selected items ? )</value>
+  <data name="Message_DistanceXWarning" xml:space="preserve">
+    <value>無法計算 X 方向距離！(Can not calculate the x distance)</value>
   </data>
   <data name="Message_DeleteNotice" xml:space="preserve">
     <value>將會刪除所有資料，是否刪除？
 (Are you sure to delete it ? )</value>
   </data>
+  <data name="Message_3PointCircleWarning" xml:space="preserve">
+    <value>此 3 點無法在目前選擇的區域中擬合最佳圓！( Can not fit the circle)</value>
+  </data>
   <data name="symmetryLine_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\symmetryLine_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Message_SymmetryLineError" xml:space="preserve">
+    <value>無法計算兩線之對稱線 (Symmetry line calculate error)</value>
   </data>
   <data name="Message_DistanceCalculationError" xml:space="preserve">
     <value>計算距離發生錯誤
 ( Distance Calculation Error )</value>
   </data>
-  <data name="angle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\angle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="crossPoint_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\crossPoint_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="TimeConsumed" xml:space="preserve">
-    <value>耗時 ( Time consumed )</value>
   </data>
   <data name="FailMessage" xml:space="preserve">
     <value>失敗 ( Fail )</value>
@@ -374,8 +362,8 @@ Some other measurement are depend on this item, if remove it will lose the depen
     <value>NG</value>
     <comment>NG</comment>
   </data>
-  <data name="distanceX_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\distanceX_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="_3pointCircle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\3pointCircle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Message_CameraUsed" xml:space="preserve">
     <value>Camera 使用中，請關閉其他使用 Camera 的視窗，再重新開啟！
@@ -384,11 +372,15 @@ Some other measurement are depend on this item, if remove it will lose the depen
   <data name="Message_EmptyPlanningNameNotice" xml:space="preserve">
     <value>請輸入程式名稱 ( Input the planning name )</value>
   </data>
-  <data name="Message_3PointCircleWarning" xml:space="preserve">
-    <value>此 3 點無法在目前選擇的區域中擬合最佳圓！( Can not fit the circle)</value>
+  <data name="SuccessCode" xml:space="preserve">
+    <value>OK</value>
+    <comment>OK</comment>
   </data>
-  <data name="Message_PlanSaved" xml:space="preserve">
-    <value>程式儲存成功 ( Planning Saved)</value>
+  <data name="ImageMove" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="distanceY_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\distanceY_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Message_DistanceYWarning" xml:space="preserve">
     <value>無法計算 Y 方向距離！(Can not calculate the y distance)</value>
@@ -396,11 +388,12 @@ Some other measurement are depend on this item, if remove it will lose the depen
   <data name="folder_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\folder_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Message_EmptyPlanningDescNotice" xml:space="preserve">
-    <value>請輸入程式描述 ( Input the planning description )</value>
+  <data name="Message_MeasurementError" xml:space="preserve">
+    <value>測量時發生錯誤 ( Measurement Error ! )</value>
   </data>
-  <data name="distanceY_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\distanceY_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Message_PlanOpendAndReloadNotice" xml:space="preserve">
+    <value>已開啟程式編輯，是否要關閉目前程式並載入？
+( Plan is opend, do you want to close the current plan, and reload the new one ? )</value>
   </data>
   <data name="Message_EmptyExportItemNotice" xml:space="preserve">
     <value>沒有任何量測輸出項目，確定要儲存此程式？
@@ -416,19 +409,20 @@ Some other measurement are depend on this item, if remove it will lose the depen
     <value>無資料
 (No data)</value>
   </data>
-  <data name="Message_SymmetryLineWarning" xml:space="preserve">
-    <value>兩線段才可以計算對稱中線 (Only two line can calculate the symmetry line)</value>
+  <data name="draw_circle_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\draw_circle_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Model_Angle" xml:space="preserve">
+    <value>角度</value>
+  </data>
+  <data name="lens" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\lens.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Message_ExportSuccess" xml:space="preserve">
     <value>匯出檔案成功 ( Export success )</value>
   </data>
-  <data name="InitSystemDeviceForm_TroubleShootingMessage" xml:space="preserve">
-    <value>系統裝置檢查若發生失敗，請依以下步驟進行故障排除
-If device checking result fail, follow the troubleshooting instructions to fix problem
-
-1。關閉程式 ( Close the program )
-2。重啟光源控制器/CCD 電源 ( Reset power of the light contorller /  CCD )
-3。重新啟動程式 ( Reopen the program )</value>
+  <data name="distanceY" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\distanceY.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CameraNotReadyMessage" xml:space="preserve">
     <value>影像裝置尚未準備完成 ( Camera is not ready)</value>
@@ -436,15 +430,15 @@ If device checking result fail, follow the troubleshooting instructions to fix p
   <data name="move" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\move.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="angle_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\angle_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Message_PlanSaved" xml:space="preserve">
+    <value>程式儲存成功 ( Planning Saved)</value>
   </data>
   <data name="Message_LightControllerDisconnectedNotice" xml:space="preserve">
     <value>光源控制器尚未連線，請確認電源及連接網路介面是否正確！
 ( Light Controller disconnected, check the power and network interface to fix the problem )</value>
   </data>
-  <data name="draw_circle_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\draw_circle_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="distance_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\distance_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="distanceX" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\distanceX.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -455,8 +449,13 @@ If device checking result fail, follow the troubleshooting instructions to fix p
   <data name="Button_Cancel" xml:space="preserve">
     <value>取消自動 (Cancel)</value>
   </data>
-  <data name="Model_CrossPoint" xml:space="preserve">
-    <value>交點</value>
+  <data name="InitSystemDeviceForm_TroubleShootingMessage" xml:space="preserve">
+    <value>系統裝置檢查若發生失敗，請依以下步驟進行故障排除
+If device checking result fail, follow the troubleshooting instructions to fix problem
+
+1。關閉程式 ( Close the program )
+2。重啟光源控制器/CCD 電源 ( Reset power of the light contorller /  CCD )
+3。重新啟動程式 ( Reopen the program )</value>
   </data>
   <data name="Message_ImportSuccess" xml:space="preserve">
     <value>匯入成功 ( Import Success )</value>
@@ -464,8 +463,8 @@ If device checking result fail, follow the troubleshooting instructions to fix p
   <data name="zoom_in" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\zoom_in.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Message_InputPlanNameAndDescriptionNotice" xml:space="preserve">
-    <value>請輸入程式名稱及描述 ( Please input plan name and description )</value>
+  <data name="angle_blue32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\angle_blue32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Message_UnCreateModelNotice" xml:space="preserve">
     <value>尚未建立模型，請回到 Step1 建立模型
@@ -480,28 +479,38 @@ If device checking result fail, follow the troubleshooting instructions to fix p
   <data name="Connected" xml:space="preserve">
     <value>Connected</value>
   </data>
+  <data name="grident_22" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\grident_22.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Message_Confirm" xml:space="preserve">
     <value>確認 (Confirm)</value>
   </data>
-  <data name="YAxis" xml:space="preserve">
-    <value>Y</value>
+  <data name="TimeConsumed" xml:space="preserve">
+    <value>耗時 ( Time consumed )</value>
   </data>
   <data name="Export" xml:space="preserve">
     <value>匯出 ( Export )</value>
   </data>
-  <data name="_3pointCircle_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\3pointCircle_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="angle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\angle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="distanceY" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\distanceY.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Message_EmptyPlanningDescNotice" xml:space="preserve">
+    <value>請輸入程式描述 ( Input the planning description )</value>
   </data>
-  <data name="lens" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\lens.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Message_PlanDoesNotExistsNotice" xml:space="preserve">
+    <value>程式不存在，是否匯入？
+( Plan does not exist, import ? )</value>
   </data>
   <data name="Message_AngleError" xml:space="preserve">
     <value>無法計算角度 (Angle calculate error)</value>
   </data>
-  <data name="grident_22" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\grident_22.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="coordinateXY_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\coordinateXY_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="workspace_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\workspace_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="zoomLayer_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\zoomLayer_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -177,6 +177,16 @@ namespace Hanbo.Resources {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap coordinateXY_24 {
+            get {
+                object obj = ResourceManager.GetObject("coordinateXY_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap crossPoint {
             get {
                 object obj = ResourceManager.GetObject("crossPoint", resourceCulture);
@@ -1119,6 +1129,16 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap workspace_32 {
+            get {
+                object obj = ResourceManager.GetObject("workspace_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to X.
         /// </summary>
         public static string XAxis {
@@ -1152,6 +1172,16 @@ namespace Hanbo.Resources {
         public static System.Drawing.Bitmap zoom_in {
             get {
                 object obj = ResourceManager.GetObject("zoom_in", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap zoomLayer_24 {
+            get {
+                object obj = ResourceManager.GetObject("zoomLayer_24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

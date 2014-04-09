@@ -159,6 +159,15 @@
   <ItemGroup>
     <None Include="Resources\grident_22.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\coordinateXY_24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\workspace_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoomLayer_24.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
