@@ -3,6 +3,7 @@ using HalconDotNet;
 using System.Collections;
 using ViewROI;
 using Hanbo.Helper;
+using System.IO;
 
 
 
@@ -34,6 +35,11 @@ namespace MeasureModule
 		/// <param name="file"></param>
 		public void ImportCameraInParam(string file)
 		{
+			if (!File.Exists(file))
+			{
+				Hanbo.Log.LogManager.Error("CameraInParam file does not exists");
+				return;
+			}
 			CameraIn = HMisc.ReadCamPar(file);
 			mCamParameter = CameraIn;
 		}
@@ -43,6 +49,11 @@ namespace MeasureModule
 		/// <param name="file"></param>
 		public void ImportCameraPose(string file)
 		{
+			if (!File.Exists(file))
+			{
+				Hanbo.Log.LogManager.Error("CameraPose file does not exists");
+				return;
+			}
 			HOperatorSet.ReadPose(new HTuple(file), out CameraPose);
 			mCamPose = CameraPose;
 		}
