@@ -30,6 +30,7 @@ namespace Hanbo.Helper
 				}
 				catch (Exception ex)
 				{
+					Hanbo.Log.LogManager.Error("Error, 載入系統設定檔錯誤！");
 					Hanbo.Log.LogManager.Error(ex);
 				}
 			}
