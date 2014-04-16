@@ -148,6 +148,16 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap connect {
+            get {
+                object obj = ResourceManager.GetObject("connect", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connected.
         /// </summary>
         public static string Connected {
@@ -200,6 +210,16 @@ namespace Hanbo.Resources {
         public static System.Drawing.Bitmap crossPoint_blue32 {
             get {
                 object obj = ResourceManager.GetObject("crossPoint_blue32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap disconnect {
+            get {
+                object obj = ResourceManager.GetObject("disconnect", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -419,6 +439,15 @@ namespace Hanbo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string ImageNone {
+            get {
+                return ResourceManager.GetString("ImageNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zoom.
         /// </summary>
         public static string ImageZoom {
@@ -484,6 +513,16 @@ namespace Hanbo.Resources {
         public static string Message_AngleWarning {
             get {
                 return ResourceManager.GetString("Message_AngleWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap message_attention {
+            get {
+                object obj = ResourceManager.GetObject("message_attention", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
