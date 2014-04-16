@@ -78,6 +78,10 @@
       <Project>{997bcb46-e343-45e3-ba64-b054381499cd}</Project>
       <Name>Hanbo.Resources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ViewROI\ViewROI.csproj">
+      <Project>{c4f5c5de-7ea8-47fe-8218-48138f48965f}</Project>
+      <Name>ViewROI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
