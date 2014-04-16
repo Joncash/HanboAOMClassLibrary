@@ -121,6 +121,16 @@ namespace ViewROI
 		public void setViewController(HWndCtrl view)
 		{
 			viewController = view;
+			if (viewController != null)
+			{
+				viewController.OnZoomChanged -= viewController_OnZoomChanged;
+				viewController.OnZoomChanged += viewController_OnZoomChanged;
+			}
+		}
+
+		void viewController_OnZoomChanged(double zoomFactor)
+		{
+			this.SetZoomFactor(zoomFactor);
 		}
 
 		/// <summary>Gets the ModelROI object</summary>
