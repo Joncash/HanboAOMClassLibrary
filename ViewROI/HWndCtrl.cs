@@ -34,6 +34,8 @@ namespace ViewROI
 	/// <param name="zoomFactor"></param>
 	public delegate void ZoomEventHandler(double zoomFactor);
 
+	public delegate void OperationModeChangeEventHandler(string mode);
+
 	/// <summary>
 	/// This class works as a wrapper class for the HALCON window
 	/// HWindow. HWndCtrl is in charge of the visualization.
@@ -54,6 +56,8 @@ namespace ViewROI
 		/// 縮放事件
 		/// </summary>
 		public event ZoomEventHandler OnZoomChanged;
+
+		public event OperationModeChangeEventHandler On_OperationModeChanged;
 
 		/// <summary>No action is performed on mouse events</summary>
 		public const int MODE_VIEW_NONE = 10;
@@ -181,6 +185,7 @@ namespace ViewROI
 		/// </summary>
 		private GraphicsContext mGC;
 
+		private HImage _lastImage;
 
 		/// <summary> 
 		/// Initializes the image dimension, mouse delegation, and the 
@@ -280,9 +285,32 @@ namespace ViewROI
 		public void setViewState(int mode)
 		{
 			_stateView = mode;
-
 			if (_roiManager != null)
+			{
 				_roiManager.resetROI();
+			}
+			if (On_OperationModeChanged != null)
+			{
+				var modeText = "";
+				switch (mode)
+				{
+					case HWndCtrl.MODE_VIEW_NONE:
+						modeText = "ImageNone";
+						break;
+					case HWndCtrl.MODE_VIEW_MOVE:
+						modeText = "ImageMove";
+						break;
+					case HWndCtrl.MODE_VIEW_ZOOM:
+						modeText = "ImageZoom";
+						break;
+					case HWndCtrl.MODE_VIEW_ZOOMWINDOW:
+						modeText = "ImageManigify";
+						break;
+				}
+				On_OperationModeChanged(modeText);
+			}
+
+
 		}
 
 		/********************************************************************/
@@ -808,6 +836,8 @@ namespace ViewROI
 				int h, w, area;
 				string s;
 
+				_lastImage = (HImage)obj;
+
 				area = ((HImage)obj).GetDomain().AreaCenter(out r, out c);
 				((HImage)obj).GetImagePointer1(out s, out w, out h);
 
@@ -831,6 +861,15 @@ namespace ViewROI
 
 			if (HObjList.Count > MAXNUMOBJLIST)
 				HObjList.RemoveAt(1);
+		}
+
+		/// <summary>
+		/// 取得最後加入的 HImage
+		/// </summary>
+		/// <returns></returns>
+		public HImage GetLastHImage()
+		{
+			return _lastImage;
 		}
 
 
