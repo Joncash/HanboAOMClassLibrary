@@ -11,6 +11,7 @@ using System.Reflection;
 using App.Common.Views;
 using ViewROI;
 using HalconDotNet;
+using Hanbo.Image.Grab;
 
 namespace Hanbo.WindowsFormsControlLibrary
 {
@@ -42,13 +43,42 @@ namespace Hanbo.WindowsFormsControlLibrary
 		/// </summary>
 		/// <param name="viewPort"></param>
 		/// <param name="viewController"></param>
-		public void Init(HWindowControl viewPort, HWndCtrl viewController)
+		public void Init(HWindowControl viewPort, HWndCtrl viewController, GrabImageWorkingMan camera)
 		{
 			setMessageStore();
 			setWatchCoordinate(viewPort);
 			setWachtZoomChanged(viewController);
 			setWatchOperationModeChange(viewController);
 			setWatchGrayLevel(viewPort, viewController);
+			setWatchCameraStatus(camera);
+		}
+		private void setWatchCameraStatus(GrabImageWorkingMan camera)
+		{
+			if (camera != null)
+			{
+				camera.GrabImageStopped += (sender, e) =>
+				{
+					if (e.Cancelled)
+					{
+						SetStatus(SystemStatusType.ConnectionStatus, Hanbo.Resources.Resource.Disconnected);
+					}
+				};
+				camera.On_GrabImageStatusChanged += (sender, e) =>
+				{
+					var cameraConnStatus = Hanbo.Resources.Resource.Disconnected;
+					var status = e.Status;
+					switch (status.Stage)
+					{
+						case GrabStage.Connected:
+						case GrabStage.ContinuouslyGrabbing:
+						case GrabStage.Grabbed:
+						case GrabStage.Grabbing:
+							cameraConnStatus = Hanbo.Resources.Resource.Connected;
+							break;
+					}
+					SetStatus(SystemStatusType.ConnectionStatus, cameraConnStatus);
+				};
+			}
 		}
 
 		/// <summary>
@@ -168,8 +198,7 @@ namespace Hanbo.WindowsFormsControlLibrary
 						}
 						catch (Exception ex)
 						{
-							//ToDo
-							//addSystemMessage("Mouse Move Errors: " + ex.Message + " row: " + row + " col: " + col, ex);
+							AddMessage(ex.Message);
 						}
 					}
 
