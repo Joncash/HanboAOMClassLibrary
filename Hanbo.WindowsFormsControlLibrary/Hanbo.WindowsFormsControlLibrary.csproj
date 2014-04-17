@@ -52,6 +52,18 @@
       <DependentUpon>DemoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Enum\SystemStatusType.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CustomHalconControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\CustomHalconControl.Designer.cs">
+      <DependentUpon>CustomHalconControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CustomHalconControlDesigner.cs" />
     <Compile Include="UserControls\HalconStatusStrip.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -65,6 +77,13 @@
     <EmbeddedResource Include="DemoForm.resx">
       <DependentUpon>DemoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CustomHalconControl.resx">
+      <DependentUpon>CustomHalconControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\HalconStatusStrip.resx">
       <DependentUpon>HalconStatusStrip.cs</DependentUpon>
     </EmbeddedResource>
@@ -74,14 +93,53 @@
       <Project>{1efa8159-1cc6-4367-8a15-46f85eb869e0}</Project>
       <Name>App.Common.Views</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Device.SingleInstance\Hanbo.Device.SingleInstance.csproj">
+      <Project>{af11882b-41bd-423f-be54-262554ecc943}</Project>
+      <Name>Hanbo.Device.SingleInstance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Image.Grab\Hanbo.Image.Grab.csproj">
+      <Project>{11ee3837-fcab-4492-b7c8-333429ea6d1c}</Project>
+      <Name>Hanbo.Image.Grab</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Resources\Hanbo.Resources.csproj">
       <Project>{997bcb46-e343-45e3-ba64-b054381499cd}</Project>
       <Name>Hanbo.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MeasureModule\MeasureModule.csproj">
+      <Project>{a5b3b77c-7f30-4109-8ef6-8ce30dd1317e}</Project>
+      <Name>MeasureModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViewROI\ViewROI.csproj">
       <Project>{c4f5c5de-7ea8-47fe-8218-48138f48965f}</Project>
       <Name>ViewROI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\camera.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lens.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\move.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\saveDraw.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_fit_best3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_in.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
