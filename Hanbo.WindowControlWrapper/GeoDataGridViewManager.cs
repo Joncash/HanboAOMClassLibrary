@@ -672,10 +672,36 @@ namespace Hanbo.WindowControlWrapper
 			_GridViewContainer.CellContentClick += DataGridView_CellContentClick;
 			_GridViewContainer.CellDoubleClick += DataGridView_CellDoubleClick;
 			_GridViewContainer.UserDeletingRow += DataGridView_UserDeletingRow;
+			_GridViewContainer.MouseDown += _GridViewContainer_MouseDown;
 
 			//Default value
 			_ExportUnit = "mm";
 
+		}
+
+		/// <summary>
+		/// <para>*******</para>
+		/// 設定右鍵點擊, 選取整列
+		/// <para>*******</para>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void _GridViewContainer_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				var dgv = sender as DataGridView;
+				DataGridView.HitTestInfo hit = dgv.HitTest(e.X, e.Y);
+				if (hit.Type == DataGridViewHitTestType.Cell)
+				{
+					if (!dgv.Rows[hit.RowIndex].Selected)
+					{
+						dgv.ClearSelection();
+						dgv.CurrentCell = dgv[hit.ColumnIndex, hit.RowIndex];//.Rows[hit.RowIndex].Cells[hit.ColumnIndex];//配合滑鼠點下所選擇該列
+						dgv.Rows[hit.RowIndex].Selected = true;
+					}
+				}
+			}
 		}
 
 		void _GridViewContainer_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -702,55 +728,49 @@ namespace Hanbo.WindowControlWrapper
 			if (_TreeViewContainer != null)
 			{
 				var gridview = sender as DataGridView;
-				if (gridview != null)
+				try
 				{
 					var columnName = gridview.Columns[e.ColumnIndex].Name;
-
-					try
+					if (columnName == "Name")
 					{
-						if (columnName == "Name")
+						DataGridViewRow row = gridview.Rows[e.RowIndex];
+						var recordID = (string)row.Cells["RecordID"].Value;
+
+						var newCellValue = (string)gridview[e.ColumnIndex, e.RowIndex].Value;
+						//相依的 ROI 資料列
+						var dependsRecordIDs = _DataList.Where(p => p.RecordID == recordID)
+												.Select(p => p.DependGeoRowNames).FirstOrDefault();
+
+						var parentID = _DataList.Where(p => p.RecordID == recordID).SingleOrDefault();
+						if (parentID != null)
 						{
-							DataGridViewRow row = gridview.Rows[e.RowIndex];
-							var recordID = (string)row.Cells["RecordID"].Value;
-
-							var newCellValue = (string)gridview[e.ColumnIndex, e.RowIndex].Value;
-							//相依的 ROI 資料列
-							var dependsRecordIDs = _DataList.Where(p => p.RecordID == recordID)
-													.Select(p => p.DependGeoRowNames).FirstOrDefault();
-
-							var parentID = _DataList.Where(p => p.RecordID == recordID).SingleOrDefault();
-							if (parentID != null)
+							var nodes = _TreeViewContainer.Nodes.Cast<TreeNode>().Where(p => p.Name == parentID.RecordID);
+							foreach (TreeNode parentNode in nodes)
 							{
-								var nodes = _TreeViewContainer.Nodes.Cast<TreeNode>().Where(p => p.Name == parentID.RecordID);
-								foreach (TreeNode parentNode in nodes)
-								{
-									parentNode.ToolTipText = parentNode.Text = newCellValue;
-								}
-
+								parentNode.ToolTipText = parentNode.Text = newCellValue;
 							}
-
-							//找到樹狀結構中相對應的 ROI 節點
-							if (dependsRecordIDs != null)
-							{
-								var nodes = _TreeViewContainer.Nodes.Cast<TreeNode>().Where(p => dependsRecordIDs.Contains(p.Name));
-								foreach (TreeNode parentNode in nodes)
-								{
-									var node = parentNode.Nodes.Cast<TreeNode>().SingleOrDefault(p => p.Name == recordID);
-									if (node != null)
-									{
-										node.ToolTipText = node.Text = newCellValue;
-									}
-								}
-							}
-							if (dependsRecordIDs != null || parentID != null)
-								notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, null);
 						}
-					}
-					catch (Exception ex)
-					{
-						Hanbo.Log.LogManager.Error(ex);
-					}
 
+						//找到樹狀結構中相對應的 ROI 節點
+						if (dependsRecordIDs != null)
+						{
+							var nodes = _TreeViewContainer.Nodes.Cast<TreeNode>().Where(p => dependsRecordIDs.Contains(p.Name));
+							foreach (TreeNode parentNode in nodes)
+							{
+								var node = parentNode.Nodes.Cast<TreeNode>().SingleOrDefault(p => p.Name == recordID);
+								if (node != null)
+								{
+									node.ToolTipText = node.Text = newCellValue;
+								}
+							}
+						}
+						if (dependsRecordIDs != null || parentID != null)
+							notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, null);
+					}
+				}
+				catch (Exception ex)
+				{
+					Hanbo.Log.LogManager.Error(ex);
 				}
 			}
 		}
