@@ -31,6 +31,10 @@ namespace Hanbo.WindowControlWrapper
 		private MeasureAssistant mAssistant;
 		private TreeView _TreeViewContainer;
 
+		//參考座標
+		private List<RefCoordinate> _refCoordinate;
+		private string _currentCoordinate;
+
 		//
 		public event GeoDataGridViewRecordChangeNotify On_RecordChanged;
 
@@ -47,10 +51,73 @@ namespace Hanbo.WindowControlWrapper
 			_Resolution = resolution;
 			_RoundDigit = roundDigit;
 			mAssistant = assistant;
+			_refCoordinate = new List<RefCoordinate>();
 			initialize();
 		}
 
 		#region Public APIs
+		#region 參考座標 ******************
+		public void AddRefCoordinate(GeoDataGridViewModel model)
+		{
+			var exists = _refCoordinate.Any(p => p.ID == model.RecordID);
+			if (!exists)
+			{
+				_refCoordinate.Add(new RefCoordinate()
+				{
+					ID = model.RecordID,
+					Name = model.Name,
+					Desc = "",
+				});
+			}
+			else
+			{
+				MessageBox.Show("參考座標已存在！");
+			}
+		}
+		public void AddRefCoordinate(string modelRecordID)
+		{
+			var model = _DataList.SingleOrDefault(p => p.RecordID == modelRecordID);
+			if (model != null)
+			{
+				AddRefCoordinate(model);
+			}
+			else
+			{
+				MessageBox.Show("找不到參考模型！");
+			}
+		}
+		public bool RemoveRefCoordinate(string modelRecordID)
+		{
+			bool removed = false;
+			var model = _refCoordinate.SingleOrDefault(p => p.ID == modelRecordID);
+			if (model != null)
+			{
+				removed = _refCoordinate.Remove(model);
+				if (removed)
+				{
+					//更新相依的 model
+					foreach (var refModel in _DataList.Where(item => item.CoordinateID == model.ID))
+					{
+						//Clear
+						refModel.CoordinateID = "";
+						refModel.CoordinateCol = refModel.Col1;
+						refModel.CoordinateRow = refModel.Row1;
+					}
+				}
+			}
+			return removed;
+		}
+		public bool RemoveRefCoordinate(GeoDataGridViewModel model)
+		{
+			return RemoveRefCoordinate(model.RecordID);
+		}
+		public void SetRefCoordinate(string modelRecordID)
+		{
+			var exists = _refCoordinate.Any(p => p.ID == modelRecordID);
+			if (exists)
+				_currentCoordinate = modelRecordID;
+		}
+		#endregion 參考座標 ***************
 
 		/// <summary>
 		/// 設定欄位顯示名稱
@@ -100,6 +167,11 @@ namespace Hanbo.WindowControlWrapper
 			this.Refresh();
 		}
 
+		/// <summary>
+		/// 設定 TreeView
+		/// </summary>
+		/// <param name="treeView"></param>
+		/// <param name="treeViewImageList"></param>
 		public void SetTreeViewControl(TreeView treeView, ImageList treeViewImageList)
 		{
 			initializeTreeView(treeView, treeViewImageList);
@@ -131,28 +203,29 @@ namespace Hanbo.WindowControlWrapper
 		/// <param name="roi"></param>
 		public void UpdateViewModel(MeasureViewModel model, ROI roi)
 		{
-			GeoDataGridViewModel tmpGeoDataViewModel = measureMapToGeoDataViewModel(model, roi);
-			if (tmpGeoDataViewModel == null) return;
-
-			var roiGeoOwner = GetViewModel(roi.ID);
-			var isAddNew = (roiGeoOwner == null);
-			var updateTreeNodeID = isAddNew ? tmpGeoDataViewModel.RecordID : roiGeoOwner.RecordID;
-			if (isAddNew)
+			GeoDataGridViewModel tmpROIRecord = transferROIToGeoDataViewModel(model, roi);
+			if (tmpROIRecord != null)
 			{
-				_DataList.Add(tmpGeoDataViewModel);
-				addTreeNode(roi, tmpGeoDataViewModel);
+				var roiRecord = GetViewModel(roi.ID);
+				var isAddNew = (roiRecord == null);
+				var updateTreeNodeID = isAddNew ? tmpROIRecord.RecordID : roiRecord.RecordID;
+				if (isAddNew)
+				{
+					addROIRecord(roi, tmpROIRecord);
+				}
+				else
+				{
+					updateROIRecord(roiRecord.RecordID, tmpROIRecord);
+				}
+				this.Refresh();
+				setTreeNodeFocus(updateTreeNodeID);
+				notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, tmpROIRecord);
 			}
-			else
-			{
-				updateRecord(roiGeoOwner.RecordID, tmpGeoDataViewModel);
-			}
-			this.Refresh();
-			setTreeNodeFocus(updateTreeNodeID);
-			notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, tmpGeoDataViewModel);
 		}
 
 		/// <summary>
 		/// 更新 GridView
+		/// <para>檢查資料並標記顏色</para>
 		/// </summary>
 		public void Refresh()
 		{
@@ -181,12 +254,19 @@ namespace Hanbo.WindowControlWrapper
 			_GridViewContainer.Refresh();
 		}
 
+		/// <summary>
+		/// 設定計算類型
+		/// </summary>
+		/// <param name="cType"></param>
 		public void SetCalcuteType(CalcuteType cType)
 		{
 			DoCalculate = cType;
 			_GridViewContainer.Columns[0].Visible = !(DoCalculate == CalcuteType.None);
 		}
 
+		/// <summary>
+		/// 清除所有結果
+		/// </summary>
 		public void Clear()
 		{
 			_DataList.Clear();
@@ -196,6 +276,10 @@ namespace Hanbo.WindowControlWrapper
 			}
 		}
 
+		/// <summary>
+		/// 取得資料筆數
+		/// </summary>
+		/// <returns></returns>
 		public int GetRecordCount()
 		{
 			return _DataList.Count;
@@ -210,6 +294,10 @@ namespace Hanbo.WindowControlWrapper
 			return _DataList;
 		}
 
+		/// <summary>
+		/// 設定量測單位 (um, mm, mil, inch)
+		/// </summary>
+		/// <param name="unit"></param>
 		public void SetUnit(string unit)
 		{
 			_ExportUnit = unit;
@@ -227,6 +315,11 @@ namespace Hanbo.WindowControlWrapper
 			}
 			Refresh();
 		}
+
+		/// <summary>
+		/// 取得量測單位
+		/// </summary>
+		/// <returns></returns>
 		public string GetUnit()
 		{
 			return _ExportUnit;
@@ -234,36 +327,55 @@ namespace Hanbo.WindowControlWrapper
 		#endregion
 
 		/// <summary>
-		/// 更新 ViewModel
+		/// 新增有 ROI model 的資料列
 		/// </summary>
-		/// <param name="id">RecordID</param>
+		/// <param name="roi"></param>
 		/// <param name="tmpGeoDataViewModel"></param>
-		private void updateRecord(string id, GeoDataGridViewModel tmpGeoDataViewModel)
+		private void addROIRecord(ROI roi, GeoDataGridViewModel tmpGeoDataViewModel)
 		{
-			var roiGeoOwner = _DataList.SingleOrDefault(p => p.RecordID == id);
-			var distance = tmpGeoDataViewModel.Distance;
-			if (roiGeoOwner != null)
+			_DataList.Add(tmpGeoDataViewModel);
+			addTreeNode(roi, tmpGeoDataViewModel);
+		}
+
+		/// <summary>
+		/// 更新 ViewModel
+		/// <para>有 ROI model 的資料列更新</para>
+		/// </summary>
+		/// <param name="recordID">RecordID</param>
+		/// <param name="tmpGeoDataViewModel"></param>
+		private void updateROIRecord(string recordID, GeoDataGridViewModel tmpGeoDataViewModel)
+		{
+			var rowModel = _DataList.SingleOrDefault(p => p.RecordID == recordID);
+			var newDistance = tmpGeoDataViewModel.Distance;
+			if (rowModel != null)
 			{
-				roiGeoOwner.Col1 = tmpGeoDataViewModel.Col1;
-				roiGeoOwner.Row1 = tmpGeoDataViewModel.Row1;
-				roiGeoOwner.Distance = distance;
-				roiGeoOwner.WorldDistance = pixelToRealWorldValue(distance);
-				roiGeoOwner.Col2 = tmpGeoDataViewModel.Col2;
-				roiGeoOwner.Row2 = tmpGeoDataViewModel.Row2;
-				roiGeoOwner.ROIModel = tmpGeoDataViewModel.ROIModel;
+				rowModel.Col1 = tmpGeoDataViewModel.Col1;
+				rowModel.Row1 = tmpGeoDataViewModel.Row1;
+				rowModel.Distance = newDistance;
+				rowModel.WorldDistance = pixelToRealWorldValue(newDistance);
+				rowModel.Col2 = tmpGeoDataViewModel.Col2;
+				rowModel.Row2 = tmpGeoDataViewModel.Row2;
+				rowModel.ROIModel = tmpGeoDataViewModel.ROIModel;
 				//更新與此Geo 相關的 Geo Objects
-				updateDependGeoObject(roiGeoOwner);
+				updateDependGeoObject(rowModel);
 			}
 		}
 
+		/// <summary>
+		/// 設定 TreeNode Focus
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="searchChild">搜尋子節點</param>
 		private void setTreeNodeFocus(string id, bool searchChild)
 		{
-			if (_TreeViewContainer == null) return;
-			var nodes = _TreeViewContainer.Nodes.Find(id, searchChild);
-			if (nodes.Length > 0)
+			if (_TreeViewContainer != null)
 			{
-				_TreeViewContainer.Focus();
-				_TreeViewContainer.SelectedNode = nodes[0];
+				var nodes = _TreeViewContainer.Nodes.Find(id, searchChild);
+				if (nodes.Length > 0)
+				{
+					_TreeViewContainer.Focus();
+					_TreeViewContainer.SelectedNode = nodes[0];
+				}
 			}
 		}
 		private void setTreeNodeFocus(string id)
@@ -286,6 +398,11 @@ namespace Hanbo.WindowControlWrapper
 			addMeasuredTreeNode(model);
 		}
 
+		/// <summary>
+		/// 新增量測記錄 (distance, symmetrylin, angle, 3pointCircle) 
+		/// <para>Tree View</para>
+		/// </summary>
+		/// <param name="geoModel"></param>
 		private void addMeasuredTreeNode(GeoDataGridViewModel geoModel)
 		{
 			if (_TreeViewContainer != null)
@@ -315,7 +432,13 @@ namespace Hanbo.WindowControlWrapper
 			var number = _DataList.Count;
 			var geoNodeDisplayName = (String.IsNullOrEmpty(geoModel.Name)) ? String.Format("{0} {1}", number.ToString("d2"), geoModel.GeoType) : geoModel.Name;
 			var geoImageKey = geoModel.GeoType.ToString();
-			TreeNode geoNode = new TreeNode() { Name = geoModel.RecordID, Text = geoNodeDisplayName, ImageKey = geoImageKey, SelectedImageKey = geoImageKey };
+			TreeNode geoNode = new TreeNode()
+			{
+				Name = geoModel.RecordID,
+				Text = geoNodeDisplayName,
+				ImageKey = geoImageKey,
+				SelectedImageKey = geoImageKey
+			};
 			return geoNode;
 		}
 
@@ -327,8 +450,15 @@ namespace Hanbo.WindowControlWrapper
 				var roiNodeName = String.IsNullOrEmpty(geoModel.Name) ? String.Format("{0} {1}", number.ToString("d2"), activeROI.ROIMeasureType) : geoModel.Name;
 				var roiImageKey = activeROI.ROIMeasureType.ToString();
 				var index = _TreeViewContainer.Nodes.Count;
-				TreeNode roiNode = new TreeNode() { Name = geoModel.RecordID, Text = roiNodeName, ImageKey = roiImageKey, SelectedImageKey = roiImageKey, Checked = activeROI.Visiable };
-				roiNode.Tag = activeROI;
+				TreeNode roiNode = new TreeNode()
+				{
+					Name = geoModel.RecordID,
+					Text = roiNodeName,
+					ImageKey = roiImageKey,
+					SelectedImageKey = roiImageKey,
+					Checked = activeROI.Visiable,
+					Tag = activeROI,
+				};
 
 				_TreeViewContainer.Nodes.Add(roiNode);
 				_TreeViewContainer.Focus();
@@ -337,24 +467,32 @@ namespace Hanbo.WindowControlWrapper
 
 		}
 
-		private GeoDataGridViewModel getModel(string id)
+		/// <summary>
+		/// 取得 Model
+		/// <para>先比對 RecordID，若沒有再比對 ROIID</para>
+		/// </summary>
+		/// <param name="recordOrROIID"></param>
+		/// <returns></returns>
+		private GeoDataGridViewModel getModel(string recordOrROIID)
 		{
-			var model = _DataList.SingleOrDefault(p => p.RecordID == id);
+			var model = _DataList.SingleOrDefault(p => p.RecordID == recordOrROIID);
 			if (model == null)
-				model = _DataList.SingleOrDefault(p => p.ROIID == id);
+				model = _DataList.SingleOrDefault(p => p.ROIID == recordOrROIID);
 			return model;
 		}
 
 		/// <summary>
 		/// 組成 GeoDataViewModel
+		/// <para>把 ROI 轉成GeoDataViewModel</para>
 		/// </summary>
 		/// <param name="roiIndex">active ROI index</param>
 		/// <param name="viewModel">MeasureViewModel</param>
 		/// <param name="roi">ROI</param>
 		/// <returns></returns>
-		private GeoDataGridViewModel measureMapToGeoDataViewModel(MeasureViewModel viewModel, ROI roi)
+		private GeoDataGridViewModel transferROIToGeoDataViewModel(MeasureViewModel viewModel, ROI roi)
 		{
 			if (roi == null) return null;
+			if (viewModel == null) return null;
 
 			var number = _DataList.Count + 1;
 			var measureName = number.ToString("d2") + " " + roi.ROIMeasureType;
@@ -363,6 +501,8 @@ namespace Hanbo.WindowControlWrapper
 
 			var distance = (viewModel.Distance != null && viewModel.Distance.TupleLength() > 0) ?
 						viewModel.Distance.D : 0.0;
+
+			//圓類型, 距離為半徑 or 直徑
 			var isCircleType = (viewModel.GeoType == MeasureType.PointCircle || viewModel.GeoType == MeasureType.Circle);
 			distance = (isCircleType) ? distance * _circleDistanceSetting : distance;
 
@@ -374,10 +514,8 @@ namespace Hanbo.WindowControlWrapper
 				ROIModel = roi.ToROIViewModel(),
 				Col1 = (viewModel.Col1 != null && viewModel.Col1.TupleLength() > 0) ?
 						viewModel.Col1.D : -1.0,
-
 				Row1 = (viewModel.Row1 != null && viewModel.Row1.TupleLength() > 0) ?
 						viewModel.Row1.D : -1.0,
-
 				Distance = distance,
 				WorldDistance = pixelToRealWorldValue(distance),
 
@@ -389,7 +527,20 @@ namespace Hanbo.WindowControlWrapper
 				Selected = false,
 				Unit = exportUnit,
 				GeoType = roi.ROIMeasureType,
+				CoordinateID = _currentCoordinate,
 			};
+			//參考座標
+			var refCoordinateModel = _DataList.SingleOrDefault(p => p.RecordID == geoModel.CoordinateID);
+			if (refCoordinateModel != null)
+			{
+				geoModel.CoordinateCol = refCoordinateModel.Col1 - geoModel.Col1;
+				geoModel.CoordinateRow = refCoordinateModel.Row1 - geoModel.Row1;
+			}
+			else
+			{
+				geoModel.CoordinateCol = geoModel.Col1;
+				geoModel.CoordinateRow = geoModel.Row1;
+			}
 			return geoModel;
 		}
 		/// <summary>
@@ -1040,6 +1191,7 @@ namespace Hanbo.WindowControlWrapper
 
 		/// <summary>
 		/// 回復 GridView 的狀態
+		/// <para>取消 Checkbox</para>
 		/// </summary>
 		/// <param name="columnIndex"></param>
 		/// <param name="gridView"></param>

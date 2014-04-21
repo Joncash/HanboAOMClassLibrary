@@ -49,6 +49,7 @@
     <Compile Include="GeoDataGridViewManager.cs" />
     <Compile Include="MessageDisplayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RefCoordinate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hanbo.Helper\Hanbo.Helper.csproj">
