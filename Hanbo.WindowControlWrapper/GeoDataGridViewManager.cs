@@ -704,6 +704,13 @@ namespace Hanbo.WindowControlWrapper
 			}
 		}
 
+		/// <summary>
+		/// <para>********</para>
+		/// 點擊 DataGridView Cell, 同步選取 TreeView Node
+		/// <para>********</para>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		void _GridViewContainer_CellClick(object sender, DataGridViewCellEventArgs e)
 		{
 			// GridViewCell 與 TreeView 互動
@@ -723,6 +730,13 @@ namespace Hanbo.WindowControlWrapper
 			}
 		}
 
+		/// <summary>
+		/// <para>*******</para>
+		/// 編輯結束，變更 TreeNode 顯示名稱
+		/// <para>*******</para>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		void _GridViewContainer_CellEndEdit(object sender, DataGridViewCellEventArgs e)
 		{
 			if (_TreeViewContainer != null)
