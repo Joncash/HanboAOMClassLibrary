@@ -32,7 +32,7 @@ namespace Hanbo.WindowControlWrapper
 		private TreeView _TreeViewContainer;
 
 		//參考座標
-		private List<RefCoordinate> _refCoordinate;
+		private BindingList<RefCoordinate> _refCoordinate;
 		private string _currentCoordinate;
 
 		//
@@ -41,8 +41,34 @@ namespace Hanbo.WindowControlWrapper
 		//
 		public CalcuteType DoCalculate = CalcuteType.None;
 
+		private ContextMenuStrip _geoContextMenuStrip;
+		public GeoDataGridViewManager(DataGridView container,
+										ContextMenuStrip menuStrip,
+										BindingList<RefCoordinate> refCoordinate,
+										string[] invisiableColumnNames,
+										Dictionary<string, Bitmap> iconImageList,
+										double resolution,
+										int roundDigit, MeasureAssistant assistant)
+		{
+			_GridViewContainer = container;
+			_geoContextMenuStrip = menuStrip;
+			_refCoordinate = refCoordinate;
+			_DataList = new BindingList<GeoDataGridViewModel>();
+			_InvisiableColumnNames = invisiableColumnNames;
+			_ImageList = iconImageList;
+			_Resolution = resolution;
+			_RoundDigit = roundDigit;
+			mAssistant = assistant;
+			//_refCoordinate = new List<RefCoordinate>();
+			initialize();
+		}
 		//
-		public GeoDataGridViewManager(DataGridView container, BindingList<GeoDataGridViewModel> bindingList, string[] invisiableColumnNames, Dictionary<string, Bitmap> iconImageList, double resolution, int roundDigit, MeasureAssistant assistant)
+		public GeoDataGridViewManager(DataGridView container,
+										BindingList<GeoDataGridViewModel> bindingList,
+										string[] invisiableColumnNames,
+										Dictionary<string, Bitmap> iconImageList,
+										double resolution,
+										int roundDigit, MeasureAssistant assistant)
 		{
 			_GridViewContainer = container;
 			_DataList = bindingList;
@@ -51,41 +77,12 @@ namespace Hanbo.WindowControlWrapper
 			_Resolution = resolution;
 			_RoundDigit = roundDigit;
 			mAssistant = assistant;
-			_refCoordinate = new List<RefCoordinate>();
+			_refCoordinate = new BindingList<RefCoordinate>();
 			initialize();
 		}
 
 		#region Public APIs
 		#region 參考座標 ******************
-		public void AddRefCoordinate(GeoDataGridViewModel model)
-		{
-			var exists = _refCoordinate.Any(p => p.ID == model.RecordID);
-			if (!exists)
-			{
-				_refCoordinate.Add(new RefCoordinate()
-				{
-					ID = model.RecordID,
-					Name = model.Name,
-					Desc = "",
-				});
-			}
-			else
-			{
-				MessageBox.Show("參考座標已存在！");
-			}
-		}
-		public void AddRefCoordinate(string modelRecordID)
-		{
-			var model = _DataList.SingleOrDefault(p => p.RecordID == modelRecordID);
-			if (model != null)
-			{
-				AddRefCoordinate(model);
-			}
-			else
-			{
-				MessageBox.Show("找不到參考模型！");
-			}
-		}
 		public bool RemoveRefCoordinate(string modelRecordID)
 		{
 			bool removed = false;
@@ -107,16 +104,19 @@ namespace Hanbo.WindowControlWrapper
 			}
 			return removed;
 		}
-		public bool RemoveRefCoordinate(GeoDataGridViewModel model)
-		{
-			return RemoveRefCoordinate(model.RecordID);
-		}
+		/// <summary>
+		/// <para>**********************</para>
+		/// 設定目前參考座標
+		/// <para>**********************</para>
+		/// </summary>
+		/// <param name="modelRecordID"></param>
 		public void SetRefCoordinate(string modelRecordID)
 		{
 			var exists = _refCoordinate.Any(p => p.ID == modelRecordID);
 			if (exists)
 				_currentCoordinate = modelRecordID;
 		}
+
 		#endregion 參考座標 ***************
 
 		/// <summary>
@@ -203,24 +203,23 @@ namespace Hanbo.WindowControlWrapper
 		/// <param name="roi"></param>
 		public void UpdateViewModel(MeasureViewModel model, ROI roi)
 		{
-			GeoDataGridViewModel tmpROIRecord = transferROIToGeoDataViewModel(model, roi);
-			if (tmpROIRecord != null)
+			if (model == null || roi == null) return;
+
+			var roiRecord = GetViewModel(roi.ID);
+			var isAddNew = (roiRecord == null);
+			GeoDataGridViewModel tmpROIRecord = transferROIToGeoDataViewModel(model, roi, isAddNew);
+			var updateTreeNodeID = isAddNew ? tmpROIRecord.RecordID : roiRecord.RecordID;
+			if (isAddNew)
 			{
-				var roiRecord = GetViewModel(roi.ID);
-				var isAddNew = (roiRecord == null);
-				var updateTreeNodeID = isAddNew ? tmpROIRecord.RecordID : roiRecord.RecordID;
-				if (isAddNew)
-				{
-					addROIRecord(roi, tmpROIRecord);
-				}
-				else
-				{
-					updateROIRecord(roiRecord.RecordID, tmpROIRecord);
-				}
-				this.Refresh();
-				setTreeNodeFocus(updateTreeNodeID);
-				notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, tmpROIRecord);
+				addROIRecord(roi, tmpROIRecord);
 			}
+			else
+			{
+				updateROIRecord(roiRecord.RecordID, tmpROIRecord);
+			}
+			this.Refresh();
+			setTreeNodeFocus(updateTreeNodeID);
+			notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, tmpROIRecord);
 		}
 
 		/// <summary>
@@ -346,9 +345,15 @@ namespace Hanbo.WindowControlWrapper
 		private void updateROIRecord(string recordID, GeoDataGridViewModel tmpGeoDataViewModel)
 		{
 			var rowModel = _DataList.SingleOrDefault(p => p.RecordID == recordID);
-			var newDistance = tmpGeoDataViewModel.Distance;
 			if (rowModel != null)
 			{
+				var newDistance = tmpGeoDataViewModel.Distance;
+				double coordinateCol, coordinateRow;
+				getRefCoordinate(rowModel, out coordinateCol, out coordinateRow);
+
+				rowModel.CoordinateRow = coordinateRow;
+				rowModel.CoordinateCol = coordinateCol;
+
 				rowModel.Col1 = tmpGeoDataViewModel.Col1;
 				rowModel.Row1 = tmpGeoDataViewModel.Row1;
 				rowModel.Distance = newDistance;
@@ -459,6 +464,10 @@ namespace Hanbo.WindowControlWrapper
 					Checked = activeROI.Visiable,
 					Tag = activeROI,
 				};
+				if (_geoContextMenuStrip != null)
+				{
+					roiNode.ContextMenuStrip = _geoContextMenuStrip;
+				}
 
 				_TreeViewContainer.Nodes.Add(roiNode);
 				_TreeViewContainer.Focus();
@@ -489,11 +498,8 @@ namespace Hanbo.WindowControlWrapper
 		/// <param name="viewModel">MeasureViewModel</param>
 		/// <param name="roi">ROI</param>
 		/// <returns></returns>
-		private GeoDataGridViewModel transferROIToGeoDataViewModel(MeasureViewModel viewModel, ROI roi)
+		private GeoDataGridViewModel transferROIToGeoDataViewModel(MeasureViewModel viewModel, ROI roi, bool isAddNew)
 		{
-			if (roi == null) return null;
-			if (viewModel == null) return null;
-
 			var number = _DataList.Count + 1;
 			var measureName = number.ToString("d2") + " " + roi.ROIMeasureType;
 			var exportUnit = roi.ROIMeasureType == MeasureType.Angle ? "Angle" :
@@ -527,21 +533,29 @@ namespace Hanbo.WindowControlWrapper
 				Selected = false,
 				Unit = exportUnit,
 				GeoType = roi.ROIMeasureType,
-				CoordinateID = _currentCoordinate,
 			};
+			if (isAddNew)
+			{
+				geoModel.CoordinateID = _currentCoordinate;
+			}
 			//參考座標
+			double refCoordinateCol, refCoordinateRow;
+			getRefCoordinate(geoModel, out refCoordinateCol, out refCoordinateRow);
+			geoModel.CoordinateCol = refCoordinateCol;
+			geoModel.CoordinateRow = refCoordinateRow;
+			return geoModel;
+		}
+		private void getRefCoordinate(GeoDataGridViewModel geoModel, out double coordinateCol, out double coordinateRow)
+		{
+			coordinateCol = geoModel.Col1;
+			coordinateRow = geoModel.Row1;
 			var refCoordinateModel = _DataList.SingleOrDefault(p => p.RecordID == geoModel.CoordinateID);
 			if (refCoordinateModel != null)
 			{
-				geoModel.CoordinateCol = refCoordinateModel.Col1 - geoModel.Col1;
-				geoModel.CoordinateRow = refCoordinateModel.Row1 - geoModel.Row1;
+				//影像座標 - 參考座標
+				coordinateCol = geoModel.Col1 - refCoordinateModel.Col1;
+				coordinateRow = geoModel.Row1 - refCoordinateModel.Row1;
 			}
-			else
-			{
-				geoModel.CoordinateCol = geoModel.Col1;
-				geoModel.CoordinateRow = geoModel.Row1;
-			}
-			return geoModel;
 		}
 		/// <summary>
 		/// 取得 幾何物件 Image
@@ -674,9 +688,29 @@ namespace Hanbo.WindowControlWrapper
 			_GridViewContainer.UserDeletingRow += DataGridView_UserDeletingRow;
 			_GridViewContainer.MouseDown += _GridViewContainer_MouseDown;
 
+			//設定 Row 的 ContextMenu
+			_GridViewContainer.RowsAdded += _GridViewContainer_RowsAdded;
+
 			//Default value
 			_ExportUnit = "mm";
 
+		}
+
+		/// <summary>
+		/// <para>************</para>
+		/// 新增資料列時，設定該列的 ContextMenuStrip
+		/// <para>************</para>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void _GridViewContainer_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+		{
+			var dgv = sender as DataGridView;
+			var row = dgv.Rows[e.RowIndex];
+			if (row != null)
+			{
+				row.ContextMenuStrip = _geoContextMenuStrip;
+			}
 		}
 
 		/// <summary>
@@ -1379,6 +1413,21 @@ namespace Hanbo.WindowControlWrapper
 			_TreeViewContainer.AfterSelect += _TreeViewContainer_AfterSelect;//按下節點			
 			_TreeViewContainer.KeyDown += _TreeViewContainer_KeyDown; //;//偵測按下 Delete
 			_TreeViewContainer.AfterCheck += _TreeViewContainer_AfterCheck; //按下CheckBox 後
+			_TreeViewContainer.NodeMouseClick += _TreeViewContainer_NodeMouseClick;
+		}
+
+		/// <summary>
+		/// <para>****************</para>
+		/// 設定按下滑鼠右鍵時，變換選取的節點
+		/// <para>(點 Checkbox 不會觸發此事件)</para>
+		/// <para>****************</para>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void _TreeViewContainer_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+			var tv = sender as TreeView;
+			tv.SelectedNode = e.Node;
 		}
 
 		void _TreeViewContainer_AfterCheck(object sender, TreeViewEventArgs e)
