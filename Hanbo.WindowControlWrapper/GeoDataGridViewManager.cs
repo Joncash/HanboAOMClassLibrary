@@ -431,24 +431,35 @@ namespace Hanbo.WindowControlWrapper
 		{
 			if (_TreeViewContainer != null)
 			{
-				//目前 Focus 的節點
-				var selectedNode = _TreeViewContainer.SelectedNode;
-
-				//相依的 ROI 資料列
-				var dependsRecordIDs = _DataList.Where(p => geoModel.DependGeoRowNames.Contains(p.RecordID) && p.ROIID != null).Select(p => p.RecordID);
-
-				//找到樹狀結構中相對應的 ROI 節點
-				var nodes = _TreeViewContainer.Nodes.Cast<TreeNode>().Where(p => dependsRecordIDs.Contains(p.Name));
-				foreach (TreeNode pNode in nodes)
-				{
-					//add subNode
-					var geoNode = getGeoTreeNode(geoModel);
-					pNode.Nodes.Add(geoNode);
-					HideCheckBox(_TreeViewContainer, geoNode);
-				}
-				_TreeViewContainer.Focus();
-				_TreeViewContainer.SelectedNode = selectedNode;
+				addSubNodeBaseOnROIMeasureElement(geoModel);
 			}
+		}
+
+		/// <summary>
+		/// 以ROI 元素為主的呈現結構 (量測元素會加入在 ROI 元素下)
+		/// </summary>
+		/// <param name="geoModel"></param>
+		private void addSubNodeBaseOnROIMeasureElement(GeoDataGridViewModel geoModel)
+		{
+			///* // 
+			//目前 Focus 的節點
+			var selectedNode = _TreeViewContainer.SelectedNode;
+
+			//相依的 ROI 資料列
+			var dependsRecordIDs = _DataList.Where(p => geoModel.DependGeoRowNames.Contains(p.RecordID) && p.ROIID != null).Select(p => p.RecordID);
+
+			//找到樹狀結構中相對應的 ROI 節點
+			var nodes = _TreeViewContainer.Nodes.Cast<TreeNode>().Where(p => dependsRecordIDs.Contains(p.Name));
+			foreach (TreeNode pNode in nodes)
+			{
+				//add subNode
+				var geoNode = getGeoTreeNode(geoModel);
+				pNode.Nodes.Add(geoNode);
+				HideCheckBox(_TreeViewContainer, geoNode);
+			}
+			_TreeViewContainer.Focus();
+			_TreeViewContainer.SelectedNode = selectedNode;
+			// */
 		}
 
 		private TreeNode getGeoTreeNode(GeoDataGridViewModel geoModel)
