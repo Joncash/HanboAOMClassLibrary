@@ -431,7 +431,24 @@ namespace Hanbo.WindowControlWrapper
 		{
 			if (_TreeViewContainer != null)
 			{
-				addSubNodeBaseOnROIMeasureElement(geoModel);
+				//addSubNodeBaseOnROIMeasureElement(geoModel);
+				var parentNode = getGeoTreeNode(geoModel);
+				_TreeViewContainer.Nodes.Add(parentNode);
+				//Depend models as child node
+				foreach (var recordID in geoModel.DependGeoRowNames)
+				{
+					//depend model
+					var model = _DataList.SingleOrDefault(p => p.RecordID == recordID);
+					if (model != null)
+					{
+						var childNode = getGeoTreeNode(model);
+						parentNode.Nodes.Add(childNode);
+						//childNode.
+						HideCheckBox(_TreeViewContainer, childNode);
+					}
+				}
+				_TreeViewContainer.Focus();
+				_TreeViewContainer.SelectedNode = parentNode;
 			}
 		}
 
@@ -462,18 +479,25 @@ namespace Hanbo.WindowControlWrapper
 			// */
 		}
 
+		private string _treeNodeDispNamePattern = "{0:d2} {1}";
 		private TreeNode getGeoTreeNode(GeoDataGridViewModel geoModel)
 		{
 			var number = _DataList.Count;
-			var geoNodeDisplayName = (String.IsNullOrEmpty(geoModel.Name)) ? String.Format("{0} {1}", number.ToString("d2"), geoModel.GeoType) : geoModel.Name;
+			var geoNodeDisplayName = (String.IsNullOrEmpty(geoModel.Name)) ?
+									String.Format(_treeNodeDispNamePattern, number, geoModel.GeoType) : geoModel.Name;
 			var geoImageKey = geoModel.GeoType.ToString();
 			TreeNode geoNode = new TreeNode()
 			{
 				Name = geoModel.RecordID,
 				Text = geoNodeDisplayName,
 				ImageKey = geoImageKey,
-				SelectedImageKey = geoImageKey
+				SelectedImageKey = geoImageKey,
+				Tag = geoModel.ROIID,
 			};
+			if (_geoContextMenuStrip != null)
+			{
+				geoNode.ContextMenuStrip = _geoContextMenuStrip;
+			}
 			return geoNode;
 		}
 
@@ -1495,8 +1519,11 @@ namespace Hanbo.WindowControlWrapper
 		void _TreeViewContainer_AfterCheck(object sender, TreeViewEventArgs e)
 		{
 			var roi = e.Node.Tag as ROI;
-			roi.Visiable = e.Node.Checked;
-			notifyRecordChanged(GeoDataGridViewNotifyType.TreeView_AfterCheck, e);
+			if (roi != null)
+			{
+				roi.Visiable = e.Node.Checked;
+				notifyRecordChanged(GeoDataGridViewNotifyType.TreeView_AfterCheck, e);
+			}
 		}
 
 		void _TreeViewContainer_KeyDown(object sender, KeyEventArgs e)
@@ -1595,11 +1622,21 @@ namespace Hanbo.WindowControlWrapper
 		private void HideCheckBox(TreeView tvw, TreeNode node)
 		{
 			TVITEM tvi = new TVITEM();
-			tvi.hItem = node.Handle;
-			tvi.mask = TVIF_STATE;
-			tvi.stateMask = TVIS_STATEIMAGEMASK;
-			tvi.state = 0;
-			SendMessage(tvw.Handle, TVM_SETITEM, IntPtr.Zero, ref tvi);
+			if (node.Handle != null)
+			{
+				try
+				{
+					tvi.hItem = node.Handle;
+					tvi.mask = TVIF_STATE;
+					tvi.stateMask = TVIS_STATEIMAGEMASK;
+					tvi.state = 0;
+					SendMessage(tvw.Handle, TVM_SETITEM, IntPtr.Zero, ref tvi);
+				}
+				catch (Exception ex)
+				{
+					Hanbo.Log.LogManager.Error(ex);
+				}
+			}
 		}
 		#endregion
 		#endregion
