@@ -898,6 +898,19 @@ namespace Hanbo.WindowControlWrapper
 								}
 							}
 						}
+						//變更座標系統名稱
+						//recordID
+						var coordinate = _refCoordinate.SingleOrDefault(p => p.ID == recordID);
+						if (coordinate != null)
+						{
+							coordinate.Name = newCellValue;
+							foreach (var item in _DataList.Where(p => p.CoordinateID == coordinate.ID))
+							{
+								item.CoordinateName = coordinate.Name;
+							}
+							this.Refresh();
+						}
+
 						if (dependsRecordIDs != null || parentID != null)
 							notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, null);
 					}
