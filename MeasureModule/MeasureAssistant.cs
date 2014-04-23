@@ -266,6 +266,23 @@ namespace MeasureModule
 			this.mInitThresh = 40.0;
 			this.mInitSigma = 1.0;
 			this.mInitRoiWidth = 10;
+
+			/*
+			mAssistant.mThresh = 40.0;
+			mAssistant.mSigma = 1.0;
+			mAssistant.mRoiWidth = 10;
+			mAssistant.mInterpolation = "nearest_neighbor";
+			mAssistant.mSelPair = false;
+			mAssistant.mTransition = "all";
+			mAssistant.mPosition = "all";
+			mAssistant.mDispEdgeLength = 30;
+			mAssistant.mDispROIWidth = true;
+			mAssistant.setUnit("cm");
+
+			mAssistant.mInitThresh = 40.0;
+			mAssistant.mInitSigma = 1.0;
+			mAssistant.mInitRoiWidth = 10;
+			*/
 		}
 
 		/// <summary>

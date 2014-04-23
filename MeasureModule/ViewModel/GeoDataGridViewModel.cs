@@ -193,10 +193,13 @@ namespace MeasureModule.ViewModel
 			}
 		}
 
-		/// <summary>
-		/// 相依的資料列們, 記錄的是 RecordID
-		/// </summary>
 		private string[] _DependGeoRowNames;
+		/// <summary>
+		/// <para>*************************</para>
+		/// 相依的資料列們, 記錄的是 RecordID
+		/// <para> 記錄的是父親們</para>
+		/// <para>**************************</para>
+		/// </summary>
 		public string[] DependGeoRowNames
 		{
 			get { return _DependGeoRowNames; }
@@ -417,5 +420,72 @@ namespace MeasureModule.ViewModel
 				OnPropertyChanged("Unit");
 			}
 		}
+
+		//===================  參考座標系 (歸零) ========================
+		private string _CoordinateID;
+		/// <summary>
+		/// 參考座標 ID, as RecordID
+		/// </summary>
+		public string CoordinateID
+		{
+			get { return _CoordinateID; }
+			set
+			{
+				if (value == _CoordinateID)
+					return;
+
+				_CoordinateID = value;
+				OnPropertyChanged("CoordinateID");
+			}
+		}
+		private string _CoordinateName;
+		/// <summary>
+		/// 參考座標名稱
+		/// </summary>
+		[LocalizedDisplayNameAttribute("", "參考座標")]
+		public string CoordinateName
+		{
+			get { return _CoordinateName; }
+			set
+			{
+				if (value == _CoordinateName)
+					return;
+
+				_CoordinateName = value;
+				OnPropertyChanged("CoordinateName");
+			}
+		}
+
+		private double _CoordinateCol;
+		[LocalizedDisplayNameAttribute("", "參考座標 X")]
+		public double CoordinateCol
+		{
+			get { return _CoordinateCol; }
+			set
+			{
+				if (value == _CoordinateCol)
+					return;
+
+				_CoordinateCol = value;
+				OnPropertyChanged("CoordinateCol");
+			}
+		}
+
+		private double _CoordinateRow;
+		[LocalizedDisplayNameAttribute("", "參考座標 Y")]
+		public double CoordinateRow
+		{
+			get { return _CoordinateRow; }
+			set
+			{
+				if (value == _CoordinateRow)
+					return;
+
+				_CoordinateRow = value;
+				OnPropertyChanged("CoordinateRow");
+			}
+		}
+
+
 	}
 }
