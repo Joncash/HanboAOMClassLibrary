@@ -33,7 +33,7 @@ namespace Hanbo.WindowControlWrapper
 
 		//參考座標
 		private BindingList<RefCoordinate> _refCoordinate;
-		private string _currentCoordinate;
+		private string _currentCoordinateID;
 
 		//
 		public event GeoDataGridViewRecordChangeNotify On_RecordChanged;
@@ -114,7 +114,7 @@ namespace Hanbo.WindowControlWrapper
 		{
 			var exists = _refCoordinate.Any(p => p.ID == modelRecordID);
 			if (exists)
-				_currentCoordinate = modelRecordID;
+				_currentCoordinateID = modelRecordID;
 		}
 
 		#endregion 參考座標 ***************
@@ -351,6 +351,7 @@ namespace Hanbo.WindowControlWrapper
 				double coordinateCol, coordinateRow;
 				getRefCoordinate(rowModel, out coordinateCol, out coordinateRow);
 
+				//參考座標異動
 				rowModel.CoordinateRow = coordinateRow;
 				rowModel.CoordinateCol = coordinateCol;
 
@@ -361,8 +362,26 @@ namespace Hanbo.WindowControlWrapper
 				rowModel.Col2 = tmpGeoDataViewModel.Col2;
 				rowModel.Row2 = tmpGeoDataViewModel.Row2;
 				rowModel.ROIModel = tmpGeoDataViewModel.ROIModel;
+
+				//更新參考我的座標的物件
+				updateDependOnCoordinateObjects(rowModel);
+
 				//更新與此Geo 相關的 Geo Objects
 				updateDependGeoObject(rowModel);
+
+				//Update 參考座標
+			}
+		}
+		/// <summary>
+		/// 更新參考我的座標的物件
+		/// </summary>
+		/// <param name="coordinateModel"></param>
+		private void updateDependOnCoordinateObjects(GeoDataGridViewModel coordinateModel)
+		{
+			foreach (var model in _DataList.Where(p => p.CoordinateID == coordinateModel.RecordID))
+			{
+				model.CoordinateRow = model.Row1 - coordinateModel.Row1;
+				model.CoordinateCol = model.Col1 - coordinateModel.Col1;
 			}
 		}
 
@@ -512,6 +531,7 @@ namespace Hanbo.WindowControlWrapper
 			var isCircleType = (viewModel.GeoType == MeasureType.PointCircle || viewModel.GeoType == MeasureType.Circle);
 			distance = (isCircleType) ? distance * _circleDistanceSetting : distance;
 
+			var curCoordinate = _refCoordinate.SingleOrDefault(p => p.ID == _currentCoordinateID);
 			GeoDataGridViewModel geoModel = new GeoDataGridViewModel()
 			{
 				Icon = getGeoViewModelIcon(roi),
@@ -536,7 +556,11 @@ namespace Hanbo.WindowControlWrapper
 			};
 			if (isAddNew)
 			{
-				geoModel.CoordinateID = _currentCoordinate;
+				if (curCoordinate != null)
+				{
+					geoModel.CoordinateID = curCoordinate.ID;
+					geoModel.CoordinateName = curCoordinate.Name;
+				}
 			}
 			//參考座標
 			double refCoordinateCol, refCoordinateRow;
@@ -545,6 +569,12 @@ namespace Hanbo.WindowControlWrapper
 			geoModel.CoordinateRow = refCoordinateRow;
 			return geoModel;
 		}
+		/// <summary>
+		/// 我的位置 - 我參考的座標的位置
+		/// </summary>
+		/// <param name="geoModel">我</param>
+		/// <param name="coordinateCol"></param>
+		/// <param name="coordinateRow"></param>
 		private void getRefCoordinate(GeoDataGridViewModel geoModel, out double coordinateCol, out double coordinateRow)
 		{
 			coordinateCol = geoModel.Col1;
@@ -628,45 +658,58 @@ namespace Hanbo.WindowControlWrapper
 						break;
 				}
 				reAssignModelValue(item, newModel);
+
+				//更新參考"我"座標的物件
+				updateDependOnCoordinateObjects(item);
 			}
 		}
 
-		private void reAssignModelValue(GeoDataGridViewModel item, GeoDataGridViewModel newModel)
+		private void reAssignModelValue(GeoDataGridViewModel oldModel, GeoDataGridViewModel newModel)
 		{
 			var lineTypes = new MeasureType[] { MeasureType.Distance, 
 												MeasureType.DistanceX, 
 												MeasureType.DistanceY, 
 												MeasureType.SymmetryLine };
-			var isCrossPoint = (item.GeoType == MeasureType.CrossPoint);
-			var isCircleType = (item.GeoType == MeasureType.Circle || item.GeoType == MeasureType.PointCircle);
+
+			var isCrossPoint = (oldModel.GeoType == MeasureType.CrossPoint);
+			var isCircleType = (oldModel.GeoType == MeasureType.Circle || oldModel.GeoType == MeasureType.PointCircle);
 			if (newModel == null)
 			{
-				item.Row1 = -1;
-				item.Col1 = -1;
-				item.Row2 = -1;
-				item.Col2 = -1;
-				item.Distance = -1;
-				item.WorldDistance = -1;
+				modelSetToDefault(oldModel);
 			}
 			else
 			{
-				item.Row1 = newModel.Row1;
-				item.Col1 = newModel.Col1;
+				oldModel.Row1 = newModel.Row1;
+				oldModel.Col1 = newModel.Col1;
 				if (!isCrossPoint)
 				{
-					if (lineTypes.Contains(item.GeoType))
+					if (lineTypes.Contains(oldModel.GeoType))
 					{
-						item.Row2 = newModel.Row2;
-						item.Col2 = newModel.Col2;
+						oldModel.Row2 = newModel.Row2;
+						oldModel.Col2 = newModel.Col2;
 					}
-					item.Distance = (isCircleType) ? newModel.Distance * _circleDistanceSetting : newModel.Distance;
-					item.WorldDistance = (isCircleType) ? newModel.WorldDistance * _circleDistanceSetting : newModel.WorldDistance;
+					oldModel.Distance = (isCircleType) ? newModel.Distance * _circleDistanceSetting : newModel.Distance;
+					oldModel.WorldDistance = (isCircleType) ? newModel.WorldDistance * _circleDistanceSetting : newModel.WorldDistance;
 				}
 			}
 			if (isCrossPoint)
 			{
-				updateDependGeoObject(item);
+				updateDependGeoObject(oldModel);
 			}
+		}
+
+		/// <summary>
+		/// <para>***************</para>
+		/// 位置及距離數值設為 -1
+		/// <para>***************</para>
+		/// </summary>
+		/// <param name="model"></param>
+		private static void modelSetToDefault(GeoDataGridViewModel model)
+		{
+			model.Row1 = model.Col1 = -1;
+			model.Row2 = model.Col2 = -1;
+			model.Distance = model.WorldDistance = -1;
+			model.CoordinateCol = model.CoordinateRow = -1;
 		}
 
 		private void initialize()
