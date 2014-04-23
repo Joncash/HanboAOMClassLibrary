@@ -612,9 +612,17 @@ namespace Hanbo.WindowControlWrapper
 		}
 
 		/// <summary>
-		/// 更新相依的物件
+		/// <para>*******************************</para>
+		/// 更新與「我」相依的物件
+		/// <para>Ex: 物件相依關系如下</para>
+		/// <para> A </para>
+		/// <para> B </para>
+		/// <para> C 由 A, B 構成 </para>
+		/// <para>--------------------------------------</para>
+		/// <para> 則 A 或 B 異動時, 其相依物件 C 需被更新 </para>
+		/// <para>*******************************</para>
 		/// </summary>
-		/// <param name="geoParent">傳入小孩的父親</param>
+		/// <param name="geoParent">傳入小孩的父親，即目前被異動的物件</param>
 		private void updateDependGeoObject(GeoDataGridViewModel geoParent)
 		{
 			//去除自已以外，其他有相依的資料列們
