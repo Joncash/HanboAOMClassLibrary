@@ -71,6 +71,11 @@ namespace ViewROI
 		/// <summary>Magnification is performed on mouse events</summary>
 		public const int MODE_VIEW_ZOOMWINDOW = 13;
 
+		/// <summary>
+		/// 連續放大鏡模式
+		/// </summary>
+		public const int MODE_VIEW_ZOOMCONTINUE = 14;
+
 		public const int MODE_INCLUDE_ROI = 1;
 
 		public const int MODE_EXCLUDE_ROI = 2;
@@ -290,6 +295,10 @@ namespace ViewROI
 		/// <param name="mode">One of the MODE_VIEW_* constants</param>
 		public void setViewState(int mode)
 		{
+			if (_stateView == HWndCtrl.MODE_VIEW_ZOOMCONTINUE)
+			{
+				if (ZoomWindow != null) ZoomWindow.Dispose();
+			}
 			_stateView = mode;
 			if (_roiManager != null)
 			{
@@ -548,6 +557,12 @@ namespace ViewROI
 					case MODE_VIEW_ZOOMWINDOW:
 						activateZoomWindow((int)e.X, (int)e.Y);
 						break;
+					case MODE_VIEW_ZOOMCONTINUE:
+						if (_roiManager != null && (_dispROI == MODE_INCLUDE_ROI))
+						{
+							activeROIidx = _roiManager.mouseDownAction(e.X, e.Y);
+						}
+						break;
 					default:
 						break;
 				}
@@ -603,7 +618,11 @@ namespace ViewROI
 			double motionX, motionY;
 			double posX, posY;
 			double zoomZone;
-
+			if (_stateView == MODE_VIEW_ZOOMCONTINUE)
+			{
+				doZoomContinueAction(e);
+				return;
+			}
 
 			if (!_mousePressed)
 				return;
@@ -1010,6 +1029,83 @@ namespace ViewROI
 			this.ArrowList.Clear();
 			this.repaint();
 		}
+
+		#region 連續放大模式
+		/// <summary>
+		/// 連續使用放大鏡 flag
+		/// </summary>
+		private bool _enableZoomContinue = false;
+
+		/// <summary>
+		/// 保留模式
+		/// <para>預設為 -1</para>
+		/// </summary>
+		private int _preservedStateView = -1;
+		/// <summary>
+		/// 連續放大鏡模式啟用
+		/// </summary>
+		/// <param name="flag"></param>
+		public void EnableZoomContinue()
+		{
+			_preservedStateView = _stateView;
+			this.setViewState(HWndCtrl.MODE_VIEW_ZOOMCONTINUE);
+			_enableZoomContinue = true;
+		}
+		/// <summary>
+		/// 停用連續放大鏡模式
+		/// </summary>
+		public void DisableZoomContinue()
+		{
+			if (_preservedStateView > -1)
+			{
+				this.setViewState(_preservedStateView);
+				_preservedStateView = -1;
+			}
+		}
+
+		/// <summary>
+		/// 連續放大鏡模式 Action
+		/// </summary>
+		/// <param name="e"></param>
+		private void doZoomContinueAction(HalconDotNet.HMouseEventArgs e)
+		{
+			if (_enableZoomContinue)
+			{
+				activateZoomWindow((int)e.X, (int)e.Y);
+				_enableZoomContinue = false;
+			}
+			if (ZoomWindow != null)
+			{
+				resetZoomWindow(e);
+				ZoomWindow.SetColor("red");
+				ZoomWindow.DispCross(e.Y, e.X, 16.0, 0.785398);
+				ZoomWindow.SetColor("black");
+			}
+		}
+		/// <summary>
+		/// 重置放大鏡視窗
+		/// </summary>
+		/// <param name="e"></param>
+		private void resetZoomWindow(HalconDotNet.HMouseEventArgs e)
+		{
+			HSystem.SetSystem("flush_graphic", "false");
+			ZoomWindow.ClearWindow();
+			double posX = ((e.X - ImgCol1) / (ImgCol2 - ImgCol1)) * _viewPort.Width;
+			double posY = ((e.Y - ImgRow1) / (ImgRow2 - ImgRow1)) * _viewPort.Height;
+			double zoomZone = (zoomWndSize / 2) * zoomWndFactor * zoomAddOn;
+
+			ZoomWindow.SetWindowExtents((int)posY - (zoomWndSize / 2),
+										(int)posX - (zoomWndSize / 2),
+										zoomWndSize, zoomWndSize);
+			ZoomWindow.SetPart((int)(e.Y - zoomZone), (int)(e.X - zoomZone),
+							   (int)(e.Y + zoomZone), (int)(e.X + zoomZone));
+
+			repaint(ZoomWindow);
+
+			HSystem.SetSystem("flush_graphic", "true");
+			ZoomWindow.DispLine(-100.0, -100.0, -100.0, -100.0);
+		}
+		#endregion
 
 	}//end of class
 }//end of namespace
