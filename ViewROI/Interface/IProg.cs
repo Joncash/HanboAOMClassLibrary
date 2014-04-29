@@ -6,6 +6,9 @@ using ViewROI.Model;
 
 namespace ViewROI.Interface
 {
+	/// <summary>
+	/// 具有工程圖模型
+	/// </summary>
 	public interface IProg
 	{
 		ProgGraphicModel GetProgGraphicModel();
