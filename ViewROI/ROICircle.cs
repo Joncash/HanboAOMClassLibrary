@@ -16,10 +16,14 @@ namespace ViewROI
 		private double row1, col1;  // first handle
 		private double midR, midC;  // second handle
 
+		/// <summary>
+		/// 預設量測類型為 "圓"
+		/// </summary>
 		public ROICircle()
 		{
 			NumHandles = 2; // one at corner of circle + midpoint
 			activeHandleIdx = 1;
+			this.ROIMeasureType = MeasureType.Circle;
 		}
 
 		/// <summary>Creates a new ROI instance at the mouse position</summary>

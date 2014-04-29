@@ -43,11 +43,14 @@ namespace ViewROI
 
 		HHomMat2D hom2D, tmp;
 
-		/// <summary>Constructor</summary>
+		/// <summary>
+		/// 預設量測類型為 "點"
+		/// </summary>
 		public ROIRectangle2()
 		{
 			NumHandles = 6; // 4 corners +  1 midpoint + 1 rotationpoint			
 			activeHandleIdx = 4;
+			this.ROIMeasureType = MeasureType.Point; // 預設量測類型
 		}
 
 		/// <summary>Creates a new ROI instance at the mouse position</summary>
