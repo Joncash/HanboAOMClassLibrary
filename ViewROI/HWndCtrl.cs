@@ -98,10 +98,16 @@ namespace ViewROI
 		/// </summary>
 		private const int MAXNUMOBJLIST = 50;
 
-
+		/// <summary>
+		/// 操作模式
+		/// <para>MODE_VIEW_NONE (無)</para>
+		/// <para>MODE_VIEW_ZOOM (放大/縮小)</para>
+		/// <para>MODE_VIEW_MOVE (移動)</para>
+		/// <para>MODE_VIEW_ZOOMWINDOW (放大鏡)</para>
+		/// </summary>
 		private int _stateView;
 		private bool _mousePressed = false;
-		private double _startX, _startY;
+		private double _moveStartX, _moveStartY;//影像移動模式, 移動起點
 
 		/// <summary>HALCON window</summary>
 		private HWindowControl _viewPort;
@@ -527,8 +533,8 @@ namespace ViewROI
 				switch (_stateView)
 				{
 					case MODE_VIEW_MOVE:
-						_startX = e.X;
-						_startY = e.Y;
+						_moveStartX = e.X;
+						_moveStartY = e.Y;
 						break;
 					case MODE_VIEW_ZOOM:
 						if (e.Button == System.Windows.Forms.MouseButtons.Left)
@@ -608,14 +614,14 @@ namespace ViewROI
 			}
 			else if (_stateView == MODE_VIEW_MOVE)
 			{
-				motionX = ((e.X - _startX));
-				motionY = ((e.Y - _startY));
+				motionX = ((e.X - _moveStartX));
+				motionY = ((e.Y - _moveStartY));
 
 				if (((int)motionX != 0) || ((int)motionY != 0))
 				{
 					moveImage(motionX, motionY);
-					_startX = e.X - motionX;
-					_startY = e.Y - motionY;
+					_moveStartX = e.X - motionX;
+					_moveStartY = e.Y - motionY;
 				}
 			}
 			else if (_stateView == MODE_VIEW_ZOOMWINDOW)
@@ -825,7 +831,7 @@ namespace ViewROI
 		/// <param name="obj">Iconic object</param>
 		public void addIconicVar(HObject obj)
 		{
-			HObjectEntry entry;
+			//HObjectEntry entry;
 
 			if (obj == null)
 				return;
@@ -855,7 +861,7 @@ namespace ViewROI
 				}//if
 			}//if
 
-			entry = new HObjectEntry(obj, mGC.copyContextList());
+			var entry = new HObjectEntry(obj, mGC.copyContextList());
 
 			HObjList.Add(entry);
 
