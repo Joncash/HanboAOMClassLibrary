@@ -2,6 +2,7 @@ using System;
 using HalconDotNet;
 using ViewROI;
 using System.Collections;
+using ViewROI.Interface;
 
 
 
@@ -402,16 +403,17 @@ namespace ViewROI
 			int idxROI = -1;
 			double max = 10000, dist = 0;
 
-
 			if (roiMode != null)			 //either a new ROI object is created
 			{
-				roiMode.createROI(imgX, imgY);
-				ROIList.Add(roiMode);
-				roiMode = null;
-				activeROIidx = ROIList.Count - 1;
-				viewController.repaint();
-
-				NotifyRCObserver(ROIController.EVENT_CREATED_ROI);
+				var smartROI = roiMode as IContinueZoom;
+				if (smartROI != null)
+				{
+					doContinueZoomROIAction(imgX, imgY, smartROI);
+				}
+				else
+				{
+					doNormalROIAction(imgX, imgY);
+				}
 			}
 			else if (ROIList.Count > 0)		// ... or an existing one is manipulated
 			{
@@ -441,6 +443,36 @@ namespace ViewROI
 				viewController.repaint();
 			}
 			return activeROIidx;
+		}
+
+		private void doNormalROIAction(double imgX, double imgY)
+		{
+			roiMode.createROI(imgX, imgY);
+			ROIList.Add(roiMode);
+			roiMode = null;
+			activeROIidx = ROIList.Count - 1;
+			viewController.repaint();
+
+			NotifyRCObserver(ROIController.EVENT_CREATED_ROI);
+		}
+
+		private void doContinueZoomROIAction(double imgX, double imgY, IContinueZoom smartROI)
+		{
+			var done = smartROI.WaitForClickPoints(imgX, imgY);
+			if (smartROI.ClickedPoints == 1)
+			{
+				ROIList.Add(smartROI);
+				activeROIidx = ROIList.Count - 1;
+			}
+			viewController.repaint();
+			if (done)
+			{
+				roiMode = null;
+				viewController.DisableZoomContinue();
+				activeROIidx = ROIList.Count - 1;
+				NotifyRCObserver(ROIController.EVENT_CREATED_ROI);
+			}
+
 		}
 
 		/// <summary>

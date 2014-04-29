@@ -1045,6 +1045,7 @@ namespace ViewROI
 			{
 				this.setViewState(_preservedStateView);
 				_preservedStateView = -1;
+				_mousePressed = false;
 			}
 		}
 
