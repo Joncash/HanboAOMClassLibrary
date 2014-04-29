@@ -616,8 +616,6 @@ namespace ViewROI
 		private void mouseMoved(object sender, HalconDotNet.HMouseEventArgs e)
 		{
 			double motionX, motionY;
-			double posX, posY;
-			double zoomZone;
 			if (_stateView == MODE_VIEW_ZOOMCONTINUE)
 			{
 				doZoomContinueAction(e);
@@ -645,23 +643,10 @@ namespace ViewROI
 			}
 			else if (_stateView == MODE_VIEW_ZOOMWINDOW)
 			{
-				HSystem.SetSystem("flush_graphic", "false");
-				ZoomWindow.ClearWindow();
-
-
-				posX = ((e.X - ImgCol1) / (ImgCol2 - ImgCol1)) * _viewPort.Width;
-				posY = ((e.Y - ImgRow1) / (ImgRow2 - ImgRow1)) * _viewPort.Height;
-				zoomZone = (zoomWndSize / 2) * zoomWndFactor * zoomAddOn;
-
-				ZoomWindow.SetWindowExtents((int)posY - (zoomWndSize / 2),
-											(int)posX - (zoomWndSize / 2),
-											zoomWndSize, zoomWndSize);
-				ZoomWindow.SetPart((int)(e.Y - zoomZone), (int)(e.X - zoomZone),
-								   (int)(e.Y + zoomZone), (int)(e.X + zoomZone));
-				repaint(ZoomWindow);
-
-				HSystem.SetSystem("flush_graphic", "true");
-				ZoomWindow.DispLine(-100.0, -100.0, -100.0, -100.0);
+				if (ZoomWindow != null)
+				{
+					resetZoomWindow(e);
+				}
 			}
 		}
 
@@ -1079,7 +1064,7 @@ namespace ViewROI
 				resetZoomWindow(e);
 				ZoomWindow.SetColor("red");
 				ZoomWindow.DispCross(e.Y, e.X, 16.0, 0.785398);
-				ZoomWindow.SetColor("black");
+				ZoomWindow.SetColor(this.ZoomWindowColor);
 			}
 		}
 		/// <summary>
