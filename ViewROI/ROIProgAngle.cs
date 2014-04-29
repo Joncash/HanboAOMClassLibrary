@@ -115,8 +115,8 @@ namespace ViewROI
 		public override void draw(HalconDotNet.HWindow window)
 		{
 			double arrowSize = 2;
-			double crossSize = 12;
-			double crossAngle = 0.785398;
+			//double crossSize = 12;
+			//double crossAngle = 0.785398;
 
 			HTuple dotLineStyle = new HTuple(new int[4] { 7, 7, 7, 7 });
 			//Reset line Style
