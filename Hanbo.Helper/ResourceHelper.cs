@@ -10,7 +10,10 @@ namespace Hanbo.Helper
 {
 	public class ResourceHelper
 	{
-
+		/// <summary>
+		/// TreeView 專用影像
+		/// </summary>
+		/// <returns></returns>
 		public static ImageList GetTreeViewImageList()
 		{
 			var imageList = new ImageList();
