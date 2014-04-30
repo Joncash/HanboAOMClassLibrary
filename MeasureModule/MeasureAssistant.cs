@@ -756,7 +756,14 @@ namespace MeasureModule
 						mMeasurement = new MeasurementEdge(roi, parent);
 					break;
 				case MeasureType.Point:
-					mMeasurement = new MeasurementEdge(roi, parent);
+					if (roi is ViewROI.SmartROIs.SmartPoint)
+					{
+						mMeasurement = new SmartMeasurements.AutoFitPoint(roi, parent);
+					}
+					else
+					{
+						mMeasurement = new MeasurementEdge(roi, parent);
+					}
 					break;
 				default:
 					mMeasurement = new MeasurementEdge(roi, parent);

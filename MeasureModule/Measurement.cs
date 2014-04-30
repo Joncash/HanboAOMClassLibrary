@@ -198,7 +198,7 @@ namespace MeasureModule
 			//half ¼e
 			double length2 = width;
 
-			if (mRoi is ROIRectangle2)
+			if (mRoi is ROIRectangle2 || mRoi is ViewROI.SmartROIs.SmartPoint)
 			{
 				var midR = line[0];
 				var midC = line[1];
