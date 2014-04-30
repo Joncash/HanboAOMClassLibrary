@@ -202,27 +202,5 @@ namespace MeasureModule
 			}
 			return viewMoel;
 		}
-
-
-		/// <summary>
-		/// 取得中點
-		/// </summary>
-		/// <param name="midX"></param>
-		/// <param name="midY"></param>
-		public void GetMidPoint(out double midX, out double midY)
-		{
-			//有值
-			midX = midY = -1;
-			if (mResult.rowEdge != null && mResult.rowEdge.TupleLength() > 0)
-			{
-				HXLDCont edgeXLD;
-				HTuple rows, cols;
-				edgeXLD = DetermineCrossPoint(mResult.rowEdge.D, mResult.colEdge.D, _crossPointSize, 0.5);
-				edgeXLD.GetContourXld(out rows, out cols);
-				midX = cols[0];
-				midY = rows[0];
-			}
-		}
-
 	}//end of class
 }//end of namespace
