@@ -307,7 +307,10 @@ namespace Hanbo.Helper
 					break;
 				case GeoDataGridViewModuleType.Macro:
 				case GeoDataGridViewModuleType.Measure:
-					inVisibleFields = new string[] { "Selected", "StartPhi", "EndPhi", "PointOrder", "IsExportItem", "RecordID", "ROIID", "ROIModel", "GeoType", "Normal", "LowerBound", "UpperBound" };
+					inVisibleFields = new string[] { "Selected", "StartPhi", "EndPhi", "PointOrder", 
+													"IsExportItem", "RecordID", "ROIID", "ROIModel", 
+													"GeoType", "Normal", "LowerBound", "UpperBound", 
+													"CoordinateID" };
 					break;
 			}
 			return inVisibleFields;
