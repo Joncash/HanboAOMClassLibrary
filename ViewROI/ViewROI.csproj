@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="FunctionPlot.cs" />
     <Compile Include="Interface\IContinueZoom.cs" />
+    <Compile Include="Interface\IROIModelUpdateable.cs" />
     <Compile Include="Interface\IProg.cs" />
     <Compile Include="MeasureParameter.cs" />
     <Compile Include="Model\PositionModel.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="ROIRectangle2.cs" />
     <Compile Include="ROIViewModel.cs" />
     <Compile Include="SmartROIs\PointsLine.cs" />
+    <Compile Include="SmartROIs\SmartPoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

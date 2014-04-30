@@ -8,11 +8,7 @@ using ViewROI.Model;
 
 namespace ViewROI.SmartROIs
 {
-	/// <summary>
-	/// 選取 2 點製作 ROI
-	/// <para>實作 IContinueZoom 方法</para>
-	/// </summary>
-	public class PointsLine : ROI, IContinueZoom
+	public class SmartPoint : ROI, IContinueZoom, IROIModelUpdateable
 	{
 		#region private variables =========================================================
 		/// <summary>Half length of the rectangle side, perpendicular to phi</summary>
@@ -42,18 +38,16 @@ namespace ViewROI.SmartROIs
 		#endregion =========================================================================
 
 		/// <summary>
-		/// 選擇 2 點建立 ROI
-		/// <para>預設量測類型為 FitLine</para>
+		/// 以 ROIRectangle2 為範本, 實作 IContinueZoom, 達成在影像上點選 1 點 形成 ROI 的操作
+		/// <para>預設 ROI 大小為以點選位置向外延伸 10 pixel</para>
 		/// </summary>
-		public PointsLine()
+		public SmartPoint()
 		{
 			NumHandles = 6; // 4 corners +  1 midpoint + 1 rotationpoint			
 			activeHandleIdx = 4;
-			this.ROIMeasureType = MeasureType.Line; // 預設量測類型
+			this.ROIMeasureType = MeasureType.Point; // 預設量測類型			
 			_clickedPointsPositionList = new List<PositionModel>();
 		}
-
-
 		/// <summary>Creates a new ROI instance at the mouse position</summary>
 		/// <param name="midX">
 		/// x (=column) coordinate for interactive ROI
@@ -117,30 +111,16 @@ namespace ViewROI.SmartROIs
 			MakeROI(model.CenterRow, model.CenterCol, model.Phi, model.Length, model.Width);
 		}
 
-		//畫 4個角及中間的 Handle Rectangle 大小
-		private double _HandleRectangleWidth = 10.0;
-		private double _HandleRectangleHeight = 10.0;
-
-		//Arrow 大小
-		private double _ArrowSize = 2.0;
-
 		/// <summary>Paints the ROI into the supplied window</summary>
 		/// <param name="window">HALCON window</param>
 		public override void draw(HalconDotNet.HWindow window)
 		{
-			//畫個 x
-			double crossSize = 12;
-			double crossAngle = 0.785398;
-
-			HTuple dotLineStyle = new HTuple(new int[4] { 7, 7, 7, 7 });
-			//Reset line Style
-			HOperatorSet.SetLineStyle(window, null);
 			if (!_initPointsDone)
 			{
-				foreach (var dot in _clickedPointsPositionList)
-				{
-					HOperatorSet.DispCross(window, dot.RowBegin, dot.ColBegin, crossSize, crossAngle);
-				}
+				//foreach (var dot in _clickedPointsPositionList)
+				//{
+				//	HOperatorSet.DispCross(window, dot.RowBegin, dot.ColBegin, crossSize, crossAngle);
+				//}
 			}
 			else
 			{
@@ -148,8 +128,8 @@ namespace ViewROI.SmartROIs
 				window.DispRectangle2(midR, midC, -phi, length1, length2);
 
 				//畫其它的控制點
-				for (int i = 0; i < NumHandles; i++)
-					window.DispRectangle2(rows[i].D, cols[i].D, -phi, 5, 5);
+				//for (int i = 0; i < NumHandles; i++)
+				//	window.DispRectangle2(rows[i].D, cols[i].D, -phi, 5, 5);
 
 			}
 		}
@@ -190,15 +170,19 @@ namespace ViewROI.SmartROIs
 		public override void displayActive(HalconDotNet.HWindow window)
 		{
 			if (!_initPointsDone) return;
-			window.DispRectangle2(rows[activeHandleIdx].D,
-								  cols[activeHandleIdx].D,
-								  -phi, 5, 5);
-
+			if (activeHandleIdx == 4)
+			{
+				window.DispRectangle2(rows[activeHandleIdx].D,
+									  cols[activeHandleIdx].D,
+									  -phi, 5, 5);
+			}
+			/*
 			if (activeHandleIdx == 5)
 				window.DispArrow(midR, midC,
 								 midR + (Math.Sin(phi) * length1 * 1.2),
 								 midC + (Math.Cos(phi) * length1 * 1.2),
 								 2.0);
+			 */
 		}
 
 
@@ -228,14 +212,14 @@ namespace ViewROI.SmartROIs
 		/// <param name="newY">y mouse coordinate</param>
 		public override void moveByHandle(double newX, double newY)
 		{
-			double vX, vY, x = 0, y = 0;
-
 			switch (activeHandleIdx)
 			{
 				case 0:
 				case 1:
 				case 2:
 				case 3:
+					/*
+					double x = 0, y = 0;
 					tmp = hom2D.HomMat2dInvert();
 					x = tmp.AffineTransPoint2d(newX, newY, out y);
 
@@ -243,20 +227,22 @@ namespace ViewROI.SmartROIs
 					length1 = Math.Abs(x);
 
 					checkForRange(x, y);
+					 */
 					break;
 				case 4:
 					midC = newX;
 					midR = newY;
 					break;
 				case 5:
-					vY = newY - rows[4].D;
-					vX = newX - cols[4].D;
+					/*
+					var vY = newY - rows[4].D;
+					var vX = newX - cols[4].D;
 					phi = Math.Atan2(vY, vX);
+					 */
 					break;
 			}
 			updateHandlePos();
 		}//end of method
-
 
 		/// <summary>
 		/// Auxiliary method to recalculate the contour points of 
@@ -313,6 +299,9 @@ namespace ViewROI.SmartROIs
 			}
 		}
 
+		#region 實作 IContinueZoom  ===============================================================================
+
+		private int _clickPoints = 1; //應點擊的次數
 		private List<PositionModel> _clickedPointsPositionList;
 		private bool _initPointsDone = false;
 		public bool WaitForClickPoints(double x, double y)
@@ -321,7 +310,6 @@ namespace ViewROI.SmartROIs
 			{
 				_clickedPointsPositionList.Add(new PositionModel() { ColBegin = x, RowBegin = y });
 			}
-
 			_initPointsDone = _clickedPointsPositionList.Count == _clickPoints;
 			if (_initPointsDone)
 			{
@@ -329,18 +317,11 @@ namespace ViewROI.SmartROIs
 				midR = _clickedPointsPositionList.Average(p => p.RowBegin);
 				midC = _clickedPointsPositionList.Average(p => p.ColBegin);
 
-				//長度
-				var beginRow = _clickedPointsPositionList[0].RowBegin;
-				var beginCol = _clickedPointsPositionList[0].ColBegin;
-				var endRow = _clickedPointsPositionList[1].RowBegin;
-				var endCol = _clickedPointsPositionList[1].ColBegin;
-
-				var distance = HMisc.DistancePp(beginRow, beginCol, endRow, endCol);
-				length1 = distance / 2.0;
+				length1 = 10;
 				length2 = 10;
 
 				//決定角度
-				creakPointPhi = phi = HMisc.AngleLx(beginRow, beginCol, endRow, endCol) * -1;
+				phi = 0.0;
 
 				rowsInit = new HTuple(new double[] {-1.0, -1.0, 1.0, 
 												   1.0,  0.0, 0.0 });
@@ -355,7 +336,6 @@ namespace ViewROI.SmartROIs
 			return _initPointsDone;
 		}
 
-		private int _clickPoints = 2;
 		public int ClickedPoints
 		{
 			get
@@ -365,6 +345,19 @@ namespace ViewROI.SmartROIs
 			set
 			{
 				return;
+			}
+		}
+		#endregion
+
+		public void UpdateROIModel(ROIViewModel updateModel)
+		{
+			if (updateModel != null)
+			{
+				this.length1 = updateModel.Length;
+				this.length2 = updateModel.Width;
+				this.phi = updateModel.Phi;
+				this.midR = updateModel.CenterRow;
+				this.midC = updateModel.CenterCol;
 			}
 		}
 	}
