@@ -52,6 +52,12 @@ namespace Hanbo.WindowsFormsControlLibrary
 			setWatchGrayLevel(viewPort, viewController);
 			setWatchCameraStatus(camera);
 		}
+		/// <summary>
+		/// <para>***************</para>
+		/// 設定 Camear 狀態
+		/// <para>***************</para>
+		/// </summary>
+		/// <param name="camera"></param>
 		private void setWatchCameraStatus(GrabImageWorkingMan camera)
 		{
 			if (camera != null)
@@ -80,13 +86,25 @@ namespace Hanbo.WindowsFormsControlLibrary
 				};
 				camera.GrabImageException += (ex) =>
 				{
-					SetStatus(SystemStatusType.SystemMsg, ex.Message);
+					var hException = ex as HOperatorException;
+					if (hException != null)
+					{
+						var errorNumber = hException.GetErrorNumber();
+						if (errorNumber == 5312)
+						{
+							MessageBox.Show(Hanbo.Resources.Resource.Message_CameraIsOccupied);
+						}
+					}
+					AddMessage(ex.Message);
+					//SetStatus(SystemStatusType.SystemMsg, ex.Message);
 				};
 			}
 		}
 
 		/// <summary>
+		/// <para>***********************</para>
 		/// 設定狀態列數值
+		/// <para>***********************</para>
 		/// </summary>
 		/// <param name="type">狀態列 Label 類型</param>
 		/// <param name="dispText">顯示文字</param>
@@ -129,7 +147,9 @@ namespace Hanbo.WindowsFormsControlLibrary
 		#region private methods
 
 		/// <summary>
-		/// 訊息儲存
+		/// <para>*******</para>
+		/// 設定訊息儲存
+		/// <para>*******</para>
 		/// </summary>
 		private void setMessageStore()
 		{
@@ -139,8 +159,10 @@ namespace Hanbo.WindowsFormsControlLibrary
 		}
 
 		/// <summary>
+		/// <para>***************************************</para>
 		/// Watch OperationMode Change
 		/// <para>觀察影像操作模式 (移動, 放大/縮小, 放大鏡)</para>
+		/// <para>***************************************</para>
 		/// </summary>
 		/// <param name="viewController"></param>
 		private void setWatchOperationModeChange(HWndCtrl viewController)
@@ -157,7 +179,9 @@ namespace Hanbo.WindowsFormsControlLibrary
 		}
 
 		/// <summary>
-		/// Watch Coordniate
+		/// <para>*****************</para>
+		/// Watch Coordniate (座標)
+		/// <para>*****************</para>
 		/// </summary>
 		/// <param name="viewPort"></param>
 		private void setWatchCoordinate(HWindowControl viewPort)
@@ -173,7 +197,9 @@ namespace Hanbo.WindowsFormsControlLibrary
 		}
 
 		/// <summary>
-		/// Watch Gray Level
+		/// <para>******************</para>
+		/// Watch Gray Level (灰階
+		/// <para>******************</para>
 		/// </summary>
 		/// <param name="viewPort"></param>
 		private void setWatchGrayLevel(HWindowControl viewPort, HWndCtrl viewController)
@@ -211,7 +237,9 @@ namespace Hanbo.WindowsFormsControlLibrary
 		}
 
 		/// <summary>
-		/// Zoom Change Observer
+		/// <para>***********************</para>
+		/// Zoom Change Observer (縮放)
+		/// <para>***********************</para>
 		/// </summary>
 		/// <param name="viewController"></param>
 		private void setWachtZoomChanged(HWndCtrl viewController)
