@@ -78,6 +78,10 @@ namespace Hanbo.WindowsFormsControlLibrary
 					}
 					SetStatus(SystemStatusType.ConnectionStatus, cameraConnStatus);
 				};
+				camera.GrabImageException += (ex) =>
+				{
+					SetStatus(SystemStatusType.SystemMsg, ex.Message);
+				};
 			}
 		}
 
