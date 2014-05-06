@@ -236,7 +236,6 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 			var model = new RefCoordinate() { ID = "", Name = "Default", Desc = "影像座標" };
 			_dfCoordinateBindingList.Clear();
 			_dfCoordinateBindingList.Add(model);
-			//_dfCoordinateBindingList = new BindingList<RefCoordinate>(model);
 			BindingSource ds = new BindingSource() { DataSource = _dfCoordinateBindingList };
 			CoordinateComboBox.ComboBox.DataSource = ds;
 		}
