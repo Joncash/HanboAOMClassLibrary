@@ -16,7 +16,7 @@ using ViewROI;
 
 namespace Hanbo.WindowControlWrapper
 {
-	public enum GeoDataGridViewNotifyType { DeleteRow, ShowGeoImage, TreeView_AfterCheck, TreeView_AfterSelect, ReloadData, UpdateData, ErrorMessage }
+	public enum GeoDataGridViewNotifyType { DeleteRow, ShowGeoImage, TreeView_AfterCheck, TreeView_AfterSelect, ReloadData, UpdateData, ErrorMessage, Coordinate_Removed, Coordinate_NameChanged, Clear }
 	public delegate void GeoDataGridViewRecordChangeNotify(GeoDataGridViewNotifyType notifyType, object data);
 	public class GeoDataGridViewManager
 	{
@@ -59,10 +59,11 @@ namespace Hanbo.WindowControlWrapper
 			_Resolution = resolution;
 			_RoundDigit = roundDigit;
 			mAssistant = assistant;
-			//_refCoordinate = new List<RefCoordinate>();
 			initialize();
 		}
+
 		//
+		[Obsolete("Use another constructor")]
 		public GeoDataGridViewManager(DataGridView container,
 										BindingList<GeoDataGridViewModel> bindingList,
 										string[] invisiableColumnNames,
@@ -82,24 +83,58 @@ namespace Hanbo.WindowControlWrapper
 		}
 
 		#region Public APIs
+		//		#region 過渡時期
+		//		public GeoDataGridViewManager(BindingList<GeoDataGridViewModel> bindingList,
+		//										ContextMenuStrip menuStrip,										
+		//										string[] invisiableColumnNames,
+		//										Dictionary<string, Bitmap> iconImageList,
+		//										double resolution,
+		//										int roundDigit, MeasureAssistant assistant)
+		//		{
+		//			_DataList = bindingList;
+		//			_InvisiableColumnNames = invisiableColumnNames;
+		//			_ImageList = iconImageList;
+		//			_Resolution = resolution;
+		//			_RoundDigit = roundDigit;
+		//			mAssistant = assistant;
+		//			initialize();
+		//		}
+		//		public void UseDataGridView(DataGridView gridview)
+		//		{
+		//			_GridViewContainer = gridview;
+		//			initGridView();
+		//		}
+		//		public void SetCoordinate(BindingList<RefCoordinate> refCoordinate,)
+		//		{
+		//			_refCoordinate = refCoordinate;
+		//		}
+		//#endregion
+
 		#region 參考座標 ******************
-		public bool RemoveRefCoordinate(string modelRecordID)
+
+		/// <summary>
+		/// <para>**********************</para>
+		/// 移除參考座標，並重設相依於此參考座標的資料列
+		/// <para>**********************</para>
+		/// </summary>
+		/// <param name="coordinateID">CoordinateID as RecordID</param>
+		/// <returns></returns>
+		public bool RemoveRefCoordinate(string coordinateID)
 		{
 			bool removed = false;
-			var model = _refCoordinate.SingleOrDefault(p => p.ID == modelRecordID);
-			if (model != null)
+			var coordinate = _refCoordinate.SingleOrDefault(p => p.ID == coordinateID);
+			if (coordinate != null)
 			{
-				removed = _refCoordinate.Remove(model);
+				removed = _refCoordinate.Remove(coordinate);
 				if (removed)
 				{
-					//更新相依的 model
-					foreach (var refModel in _DataList.Where(item => item.CoordinateID == model.ID))
+					//重設相依於此參考座標的資料列
+					foreach (var refModel in _DataList.Where(item => item.CoordinateID == coordinate.ID))
 					{
-						//Clear
-						refModel.CoordinateID = "";
-						refModel.CoordinateCol = refModel.Col1;
-						refModel.CoordinateRow = refModel.Row1;
+						resetModelCoordinate(refModel);
 					}
+					if (_currentCoordinateID == coordinate.ID)
+						_currentCoordinateID = "";
 				}
 			}
 			return removed;
@@ -163,6 +198,25 @@ namespace Hanbo.WindowControlWrapper
 			foreach (var item in _DataList)
 			{
 				updateDependGeoObject(item);
+			}
+
+			//Restore 參考座標
+			var coordinateIDs = bindingList.Where(p => !String.IsNullOrEmpty(p.CoordinateID))
+				.Select(p => new RefCoordinate()
+				{
+					ID = p.CoordinateID,
+					Name = p.CoordinateName,
+					Desc = "",
+				}).Distinct().ToList();
+
+			//Clear	
+			while (_refCoordinate.Count > 1)
+			{
+				_refCoordinate.RemoveAt(1);
+			}
+			foreach (var item in coordinateIDs)
+			{
+				_refCoordinate.Add(item);
 			}
 			this.Refresh();
 		}
@@ -273,6 +327,7 @@ namespace Hanbo.WindowControlWrapper
 			{
 				_TreeViewContainer.Nodes.Clear();
 			}
+			notifyRecordChanged(GeoDataGridViewNotifyType.Clear, null);
 		}
 
 		/// <summary>
@@ -757,29 +812,37 @@ namespace Hanbo.WindowControlWrapper
 
 		private void initialize()
 		{
-			//Data
-			_BindingSource = new BindingSource() { DataSource = _DataList };
-
-			//Data Binding
-			_GridViewContainer.DataSource = _BindingSource;
-
-			//Column initialize
-			initColumn();
-
-			//Event
-			_GridViewContainer.CellClick += _GridViewContainer_CellClick;
-			_GridViewContainer.CellEndEdit += _GridViewContainer_CellEndEdit;
-			_GridViewContainer.CellContentClick += DataGridView_CellContentClick;
-			_GridViewContainer.CellDoubleClick += DataGridView_CellDoubleClick;
-			_GridViewContainer.UserDeletingRow += DataGridView_UserDeletingRow;
-			_GridViewContainer.MouseDown += _GridViewContainer_MouseDown;
-
-			//設定 Row 的 ContextMenu
-			_GridViewContainer.RowsAdded += _GridViewContainer_RowsAdded;
+			initGridView();
 
 			//Default value
 			_ExportUnit = "mm";
 
+		}
+
+		private void initGridView()
+		{
+			if (_GridViewContainer != null)
+			{
+				//Data
+				_BindingSource = new BindingSource() { DataSource = _DataList };
+
+				//Data Binding
+				_GridViewContainer.DataSource = _BindingSource;
+
+				//Column initialize
+				initColumn();
+
+				//Event
+				_GridViewContainer.CellClick += _GridViewContainer_CellClick;
+				_GridViewContainer.CellEndEdit += _GridViewContainer_CellEndEdit;
+				_GridViewContainer.CellContentClick += DataGridView_CellContentClick;
+				_GridViewContainer.CellDoubleClick += DataGridView_CellDoubleClick;
+				_GridViewContainer.UserDeletingRow += DataGridView_UserDeletingRow;
+				_GridViewContainer.MouseDown += _GridViewContainer_MouseDown;
+
+				//設定 Row 的 ContextMenu
+				_GridViewContainer.RowsAdded += _GridViewContainer_RowsAdded;
+			}
 		}
 
 		/// <summary>
@@ -899,9 +962,10 @@ namespace Hanbo.WindowControlWrapper
 							}
 						}
 						//變更座標系統名稱
-						//recordID
+						//recordID						
 						var coordinate = _refCoordinate.SingleOrDefault(p => p.ID == recordID);
-						if (coordinate != null)
+						var isCoordinateNameChanged = coordinate != null;
+						if (isCoordinateNameChanged)
 						{
 							coordinate.Name = newCellValue;
 							foreach (var item in _DataList.Where(p => p.CoordinateID == coordinate.ID))
@@ -911,8 +975,8 @@ namespace Hanbo.WindowControlWrapper
 							this.Refresh();
 						}
 
-						if (dependsRecordIDs != null || parentID != null)
-							notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, null);
+						if (isCoordinateNameChanged)
+							notifyRecordChanged(GeoDataGridViewNotifyType.Coordinate_NameChanged, isCoordinateNameChanged);
 					}
 				}
 				catch (Exception ex)
@@ -991,6 +1055,8 @@ namespace Hanbo.WindowControlWrapper
 			var confirmDelete = MessageBox.Show(message, Hanbo.Resources.Resource.Message_Confirm, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes;
 			if (confirmDelete)
 			{
+				RemoveRefCoordinate(model.RecordID);
+
 				//刪除相依的 Model
 				var modelROIID = model.ROIID;
 				var deletedRows = _DataList.Where(p => relatedModelIDs.Contains(p.RecordID)).ToList();
@@ -998,12 +1064,19 @@ namespace Hanbo.WindowControlWrapper
 				{
 					var row = deletedRows[i];
 					var recordID = row.RecordID;
+					RemoveRefCoordinate(row.RecordID);
 					_DataList.Remove(row);
 				}
 				_DataList.Remove(model);
 				notifyRecordChanged(GeoDataGridViewNotifyType.DeleteRow, modelROIID);
 			}
 			return confirmDelete;
+		}
+		private void resetModelCoordinate(GeoDataGridViewModel model)
+		{
+			model.CoordinateID = model.CoordinateName = "";
+			model.CoordinateRow = model.Row1;
+			model.CoordinateCol = model.Col1;
 		}
 
 		private void notifyRecordChanged(GeoDataGridViewNotifyType notifyType, object notifyData)
