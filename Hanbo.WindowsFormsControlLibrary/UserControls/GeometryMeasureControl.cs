@@ -26,6 +26,9 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 		private ROIController _roiController;
 		private HWndCtrl _mView;
 		private GeoDataGridViewManager _geoManager;
+
+		//
+		private bool _ckLock;
 		public GeometryMeasureControl()
 		{
 			InitializeComponent();
@@ -39,84 +42,215 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 			_roiController = roiController;
 			_mView = mView;
 			_geoManager = geoManager;
+			if (_roiController != null)
+			{
+				_roiController.NotifyRCObserver += new IconicDelegate(resetFinalCheckedBox);
+			}
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		/// <summary>
+		/// 重置所有的幾何元素量測按鈕
+		/// </summary>
+		/// <param name="val"></param>
+		private void resetFinalCheckedBox(int val)
+		{
+			if (val == ROIController.EVENT_CREATED_ROI)
+			{
+				checkBox1.Checked = false;
+				checkBox2.Checked = false;
+				checkBox3.Checked = false;
+				checkBox4.Checked = false;
+				checkBox5.Checked = false;
+			}
+		}
+		/// <summary>
+		/// <para>******</para>
+		/// 檢查並執行 ResetROI, 若 Reset, 則傳為 true
+		/// <para>******</para>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <returns></returns>
+		private bool resetROIDoer(object sender)
+		{
+			bool doResetROI = !(sender as CheckBox).Checked;
+			this._mView.DisableZoomContinue();
+			try
+			{
+				if (doResetROI)
+				{
+					_roiController.resetROI();
+				}
+				else
+				{
+					exclusiveCheckbox(sender);
+				}
+			}
+			catch (Exception ex)
+			{
+				Hanbo.Log.LogManager.Error("GeometryMeasureControl Error");
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			return doResetROI;
+		}
+		private void exclusiveCheckbox(object sender)
+		{
+			_ckLock = true;
+			foreach (var cbox in MM_TabPage1_FlowPanel.Controls.OfType<CheckBox>().Where(p => p != sender))
+			{
+				cbox.Checked = false;
+			}
+			_ckLock = false;
+		}
+		private void checkBox1_CheckedChanged(object sender, EventArgs e)
 		{
 			//幾何元素 - 點測量
-			_roiController.setROIShape(new ROIRectangle2());
+			if (_ckLock) return;
+			if (!resetROIDoer(sender))
+			{
+				_roiController.setROIShape(new ROIRectangle2());
+			}
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void checkBox2_CheckedChanged(object sender, EventArgs e)
 		{
 			//幾何元素 - 線測量
-			_roiController.setROIShape(new ROIRectangle2()
+			if (_ckLock) return;
+			if (!resetROIDoer(sender))
 			{
-				ROIMeasureType = MeasureType.Line
-			});
+				_roiController.setROIShape(new ROIRectangle2()
+				{
+					ROIMeasureType = MeasureType.Line
+				});
+			}
 		}
 
-		private void button3_Click(object sender, EventArgs e)
+		private void checkBox3_CheckedChanged(object sender, EventArgs e)
 		{
 			//幾何元素 - 圓測量
-			_roiController.setROIShape(new ROICircle());
+			if (_ckLock) return;
+			if (!resetROIDoer(sender))
+			{
+				_roiController.setROIShape(new ROICircle());
+			}
 		}
 
-		private void button4_Click(object sender, EventArgs e)
+		private void checkBox4_CheckedChanged(object sender, EventArgs e)
 		{
 			//幾何元素 (點-smart)
-			this._mView.EnableZoomContinue();
-			_roiController.setROIShape(new ViewROI.SmartROIs.SmartPoint());
+			if (_ckLock) return;
+			if (!resetROIDoer(sender))
+			{
+				this._mView.EnableZoomContinue();
+				_roiController.setROIShape(new ViewROI.SmartROIs.SmartPoint());
+			}
 		}
 
-		private void button5_Click(object sender, EventArgs e)
+		private void checkBox5_CheckedChanged(object sender, EventArgs e)
 		{
 			//幾何元素 (線-smart)
-			this._mView.EnableZoomContinue();
-			_roiController.setROIShape(new ViewROI.SmartROIs.PointsLine());
+			if (_ckLock) return;
+			if (!resetROIDoer(sender))
+			{
+				this._mView.EnableZoomContinue();
+				_roiController.setROIShape(new ViewROI.SmartROIs.PointsLine());
+			}
 		}
 
-		private void button6_Click(object sender, EventArgs e)
+		private bool resetCalculateTypeDoer(object sender)
+		{
+			var doResetCalculateType = !(sender as CheckBox).Checked;
+			try
+			{
+				if (doResetCalculateType)
+				{
+					_geoManager.ResetCalcuteType();
+				}
+				else
+				{
+					exclusiveCheckbox(sender);
+				}
+			}
+			catch (Exception ex)
+			{
+				Hanbo.Log.LogManager.Error("GeometryMeasureControl Error");
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			return doResetCalculateType;
+		}
+		private void checkBox6_CheckedChanged(object sender, EventArgs e)
 		{
 			//Distance
-			_geoManager.SetCalcuteType(CalcuteType.Distance);
+			if (_ckLock) return;
+			if (!resetCalculateTypeDoer(sender))
+			{
+				_geoManager.SetCalcuteType(CalcuteType.Distance);
+			}
 		}
 
-		private void button7_Click(object sender, EventArgs e)
+		private void checkBox7_CheckedChanged(object sender, EventArgs e)
 		{
 			//Circle
-			_geoManager.SetCalcuteType(CalcuteType.Point3ToCircle);
+			if (_ckLock) return;
+			if (!resetCalculateTypeDoer(sender))
+			{
+				_geoManager.SetCalcuteType(CalcuteType.Point3ToCircle);
+			}
 		}
 
-		private void button8_Click(object sender, EventArgs e)
+		private void checkBox8_CheckedChanged(object sender, EventArgs e)
 		{
 			//Symetry
-			_geoManager.SetCalcuteType(CalcuteType.SymmetryLine);
+			if (_ckLock) return;
+			if (!resetCalculateTypeDoer(sender))
+			{
+				_geoManager.SetCalcuteType(CalcuteType.SymmetryLine);
+			}
 		}
 
-		private void button9_Click(object sender, EventArgs e)
+		private void checkBox9_CheckedChanged(object sender, EventArgs e)
 		{
 			//angle
-			_geoManager.SetCalcuteType(CalcuteType.Angle);
+			if (_ckLock) return;
+			if (!resetCalculateTypeDoer(sender))
+			{
+				_geoManager.SetCalcuteType(CalcuteType.Angle);
+			}
 		}
 
-		private void button10_Click(object sender, EventArgs e)
+		private void checkBox10_CheckedChanged(object sender, EventArgs e)
 		{
 			//Crosspoint
-			_geoManager.SetCalcuteType(CalcuteType.CrossPoint);
+			if (_ckLock) return;
+			if (!resetCalculateTypeDoer(sender))
+			{
+				_geoManager.SetCalcuteType(CalcuteType.CrossPoint);
+			}
 		}
 
-		private void button11_Click(object sender, EventArgs e)
+		private void checkBox11_CheckedChanged(object sender, EventArgs e)
 		{
 			//Distance X
-			_geoManager.SetCalcuteType(CalcuteType.DistanceX);
+			if (_ckLock) return;
+			if (!resetCalculateTypeDoer(sender))
+			{
+				_geoManager.SetCalcuteType(CalcuteType.DistanceX);
+			}
 		}
 
-		private void button12_Click(object sender, EventArgs e)
+		private void checkBox12_CheckedChanged(object sender, EventArgs e)
 		{
 			//Distance Y
-			_geoManager.SetCalcuteType(CalcuteType.DistanceY);
+			if (_ckLock) return;
+			if (!resetCalculateTypeDoer(sender))
+			{
+				_geoManager.SetCalcuteType(CalcuteType.DistanceY);
+			}
 		}
+		/*
+		#region Buttons
+
+		#endregion
+		*/
 		/*
 		#region Designer===========================================================
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
