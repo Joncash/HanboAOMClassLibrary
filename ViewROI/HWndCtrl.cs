@@ -1041,6 +1041,7 @@ namespace ViewROI
 		/// </summary>
 		public void DisableZoomContinue()
 		{
+			_enableZoomContinue = false;
 			if (_preservedStateView > -1)
 			{
 				this.setViewState(_preservedStateView);
