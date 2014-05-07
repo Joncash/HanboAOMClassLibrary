@@ -794,8 +794,11 @@ namespace MeasureModule
 			for (int i = 0; i < mMeasureList.Count; i++)
 			{
 				var mMeasure = ((Measurement)mMeasureList[i]);
+				/*
+				是否顯示量測的圖形
 				var roi = mMeasure.GetMeasureROI();
 				if (!roi.Visiable) continue;
+				 */
 				val = mMeasure.getMeasureResults();
 				if (val.IsInitialized())
 					obj = obj.ConcatObj(val);
