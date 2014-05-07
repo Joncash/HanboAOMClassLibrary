@@ -316,6 +316,22 @@ namespace Hanbo.WindowControlWrapper
 			DoCalculate = cType;
 			_GridViewContainer.Columns[0].Visible = !(DoCalculate == CalcuteType.None);
 		}
+		/// <summary>
+		/// 取消計算
+		/// </summary>
+		public void ResetCalcuteType()
+		{
+			DoCalculate = CalcuteType.None;
+			var checkIdx = 0;
+			foreach (var row in
+				_GridViewContainer.Rows.Cast<DataGridViewRow>()
+								.Where(p => Convert.ToBoolean(p.Cells[checkIdx].Value) == true)
+								.ToArray())
+			{
+				row.Cells[checkIdx].Value = false;
+			}
+			_GridViewContainer.Columns[checkIdx].Visible = false;
+		}
 
 		/// <summary>
 		/// 清除所有結果
