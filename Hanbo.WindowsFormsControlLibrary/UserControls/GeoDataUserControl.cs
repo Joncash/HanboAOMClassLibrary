@@ -36,6 +36,7 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 		public bool Init(ROIController roicontroller, MeasureAssistant mAssistant
 						, double resolution, int roundDigit, string[] inVisibleFields)
 		{
+			MessageLabel.Text = "";
 			var success = true;
 			var model = new List<RefCoordinate>() { 
 								new RefCoordinate() { ID = "", Name = "Default", Desc = "影像座標" },
@@ -61,6 +62,10 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 			return _geoManager;
 		}
 
+		public ToolStripStatusLabel GetMessageLabel()
+		{
+			return this.MessageLabel;
+		}
 		public void RefreshCoordinate()
 		{
 			var originalSelectedIndex = CoordinateComboBox.ComboBox.SelectedIndex;

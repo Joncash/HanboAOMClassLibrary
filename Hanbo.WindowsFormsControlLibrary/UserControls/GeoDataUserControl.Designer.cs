@@ -32,7 +32,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeoDataUserControl));
 			this.ContentPanel = new System.Windows.Forms.Panel();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.MessageLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.GeoDataGridView = new System.Windows.Forms.DataGridView();
 			this.GeoTreeViewGroupBox = new System.Windows.Forms.GroupBox();
@@ -69,15 +69,16 @@
 			// 
 			// statusStrip1
 			// 
-			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
 			resources.ApplyResources(this.statusStrip1, "statusStrip1");
+			this.statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
+			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MessageLabel});
 			this.statusStrip1.Name = "statusStrip1";
 			// 
-			// toolStripStatusLabel1
+			// MessageLabel
 			// 
-			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-			resources.ApplyResources(this.toolStripStatusLabel1, "toolStripStatusLabel1");
+			resources.ApplyResources(this.MessageLabel, "MessageLabel");
+			this.MessageLabel.Name = "MessageLabel";
 			// 
 			// splitContainer1
 			// 
@@ -219,7 +220,7 @@
 		private System.Windows.Forms.ToolStripButton ExportButton;
 		private System.Windows.Forms.ToolStripButton ClearListButton;
 		private System.Windows.Forms.StatusStrip statusStrip1;
-		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+		private System.Windows.Forms.ToolStripStatusLabel MessageLabel;
 		private System.Windows.Forms.GroupBox GeoTreeViewGroupBox;
 		private System.Windows.Forms.ContextMenuStrip GeoContextMenuStrip;
 		private System.Windows.Forms.ToolStripMenuItem SetCoordinateSystemToolStripMenuItem;
