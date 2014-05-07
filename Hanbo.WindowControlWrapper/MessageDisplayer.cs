@@ -10,7 +10,7 @@ namespace Hanbo.WindowControlWrapper
 	public class MessageDisplayer
 	{
 		private System.Windows.Forms.Timer _timer;
-		private System.Windows.Forms.Label _label;
+		private object _label;
 		private int _count;
 		private int _hold;
 		private int _interval;
@@ -20,7 +20,7 @@ namespace Hanbo.WindowControlWrapper
 		/// </summary>
 		/// <param name="displayLabel">顯示的 Label </param>
 		/// <param name="interval">顯示的秒數</param>
-		public MessageDisplayer(Label displayLabel, int hold)
+		public MessageDisplayer(object displayLabel, int hold)
 		{
 			_label = displayLabel;
 			_interval = 1000;
@@ -43,7 +43,31 @@ namespace Hanbo.WindowControlWrapper
 			}
 			else
 			{
-				_label.BackColor = Color.FromArgb(100 / _count, System.Drawing.Color.Red);
+				var backColor = Color.FromArgb(100 / _count, System.Drawing.Color.Red);
+				setMessageLabel(backColor, null);
+			}
+		}
+		private void setMessageLabel(System.Drawing.Color backColor, string message)
+		{
+			var formLabel = _label as System.Windows.Forms.Label;
+			if (formLabel != null)
+			{
+				formLabel.BackColor = backColor;
+				if (message != null)
+				{
+					formLabel.Text = message;
+				}
+				return;
+			}
+			//==============================================
+			var stripLabel = _label as ToolStripStatusLabel;
+			if (stripLabel != null)
+			{
+				stripLabel.BackColor = backColor;
+				if (message != null)
+				{
+					stripLabel.Text = message;
+				}
 			}
 		}
 
@@ -55,9 +79,8 @@ namespace Hanbo.WindowControlWrapper
 		{
 			_timer.Stop();
 			_timer.Enabled = true;
-			_label.Text = message;
-			_label.BackColor = System.Drawing.Color.Red;
 			_count = 0;
+			setMessageLabel(System.Drawing.Color.Red, message);
 			_timer.Start();
 		}
 
@@ -67,8 +90,7 @@ namespace Hanbo.WindowControlWrapper
 		public void Stop()
 		{
 			_timer.Stop();
-			_label.Text = "";
-			_label.BackColor = System.Drawing.SystemColors.Control;
+			setMessageLabel(System.Drawing.SystemColors.Control, "");
 		}
 	}
 }
