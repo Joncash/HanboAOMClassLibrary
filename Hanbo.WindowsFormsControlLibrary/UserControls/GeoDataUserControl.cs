@@ -61,6 +61,27 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 			return _geoManager;
 		}
 
+		public void RefreshCoordinate()
+		{
+			var originalSelectedIndex = CoordinateComboBox.ComboBox.SelectedIndex;
+			BindingSource ds = new BindingSource() { DataSource = _dfCoordinateBindingList };
+			CoordinateComboBox.ComboBox.DataSource = ds;
+			var selectedIdx = (originalSelectedIndex <= _dfCoordinateBindingList.Count) ?
+								originalSelectedIndex : 0;
+			CoordinateComboBox.ComboBox.SelectedIndex = selectedIdx;
+		}
+
+		/// <summary>
+		/// <para>*************</para>
+		/// 設定 輸出按鈕是否可見
+		/// <para>*************</para>
+		/// </summary>
+		/// <param name="visible"></param>
+		public void SetExportButtonVisibility(bool visible)
+		{
+			ExportButton.Visible = visible;
+		}
+
 		private void initGeoContextMenu()
 		{
 			GeoContextMenuStrip.Opening += GeoContextMenuStrip_Opening;
@@ -240,14 +261,6 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 			CoordinateComboBox.ComboBox.DataSource = ds;
 		}
 
-		public void RefreshCoordinate()
-		{
-			var originalSelectedIndex = CoordinateComboBox.ComboBox.SelectedIndex;
-			BindingSource ds = new BindingSource() { DataSource = _dfCoordinateBindingList };
-			CoordinateComboBox.ComboBox.DataSource = ds;
-			var selectedIdx = (originalSelectedIndex <= _dfCoordinateBindingList.Count) ?
-								originalSelectedIndex : 0;
-			CoordinateComboBox.ComboBox.SelectedIndex = selectedIdx;
-		}
+
 	}
 }
