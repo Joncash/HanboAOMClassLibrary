@@ -28,19 +28,18 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.WinStatusStrip = new Hanbo.WindowsFormsControlLibrary.HalconStatusStrip();
+			this.geometryMeasureControl1 = new Hanbo.WindowsFormsControlLibrary.UserControls.GeometryMeasureControl();
 			this.customHalconControl1 = new Hanbo.WindowsFormsControlLibrary.CustomHalconControl();
+			this.WinStatusStrip = new Hanbo.WindowsFormsControlLibrary.HalconStatusStrip();
 			this.customHalconControl1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// WinStatusStrip
+			// geometryMeasureControl1
 			// 
-			this.WinStatusStrip.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.WinStatusStrip.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.WinStatusStrip.Location = new System.Drawing.Point(0, 387);
-			this.WinStatusStrip.Name = "WinStatusStrip";
-			this.WinStatusStrip.Size = new System.Drawing.Size(764, 22);
-			this.WinStatusStrip.TabIndex = 0;
+			this.geometryMeasureControl1.Location = new System.Drawing.Point(379, 12);
+			this.geometryMeasureControl1.Name = "geometryMeasureControl1";
+			this.geometryMeasureControl1.Size = new System.Drawing.Size(657, 84);
+			this.geometryMeasureControl1.TabIndex = 2;
 			// 
 			// customHalconControl1
 			// 
@@ -53,18 +52,28 @@
 			this.customHalconControl1.HalconContainer.Location = new System.Drawing.Point(0, 31);
 			this.customHalconControl1.HalconContainer.Name = "Panel_Halcon";
 			this.customHalconControl1.HalconContainer.Padding = new System.Windows.Forms.Padding(3);
-			this.customHalconControl1.HalconContainer.Size = new System.Drawing.Size(726, 346);
+			this.customHalconControl1.HalconContainer.Size = new System.Drawing.Size(373, 346);
 			this.customHalconControl1.HalconContainer.TabIndex = 1;
 			this.customHalconControl1.Location = new System.Drawing.Point(0, 0);
 			this.customHalconControl1.Name = "customHalconControl1";
-			this.customHalconControl1.Size = new System.Drawing.Size(726, 377);
+			this.customHalconControl1.Size = new System.Drawing.Size(373, 377);
 			this.customHalconControl1.TabIndex = 1;
+			// 
+			// WinStatusStrip
+			// 
+			this.WinStatusStrip.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.WinStatusStrip.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.WinStatusStrip.Location = new System.Drawing.Point(0, 575);
+			this.WinStatusStrip.Name = "WinStatusStrip";
+			this.WinStatusStrip.Size = new System.Drawing.Size(1048, 22);
+			this.WinStatusStrip.TabIndex = 0;
 			// 
 			// DemoForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(764, 409);
+			this.ClientSize = new System.Drawing.Size(1048, 597);
+			this.Controls.Add(this.geometryMeasureControl1);
 			this.Controls.Add(this.customHalconControl1);
 			this.Controls.Add(this.WinStatusStrip);
 			this.Name = "DemoForm";
@@ -79,5 +88,6 @@
 
 		private HalconStatusStrip WinStatusStrip;
 		private CustomHalconControl customHalconControl1;
+		private UserControls.GeometryMeasureControl geometryMeasureControl1;
 	}
 }
