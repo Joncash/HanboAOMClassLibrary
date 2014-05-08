@@ -64,6 +64,18 @@
       <DependentUpon>CustomHalconControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\CustomHalconControlDesigner.cs" />
+    <Compile Include="UserControls\GeoDataUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\GeoDataUserControl.Designer.cs">
+      <DependentUpon>GeoDataUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\GeometryMeasureControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\GeometryMeasureControl.Designer.cs">
+      <DependentUpon>GeometryMeasureControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\HalconStatusStrip.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -84,6 +96,12 @@
     <EmbeddedResource Include="UserControls\CustomHalconControl.resx">
       <DependentUpon>CustomHalconControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\GeoDataUserControl.resx">
+      <DependentUpon>GeoDataUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\GeometryMeasureControl.resx">
+      <DependentUpon>GeometryMeasureControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\HalconStatusStrip.resx">
       <DependentUpon>HalconStatusStrip.cs</DependentUpon>
     </EmbeddedResource>
@@ -93,6 +111,10 @@
       <Project>{1efa8159-1cc6-4367-8a15-46f85eb869e0}</Project>
       <Name>App.Common.Views</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hanbo.AOM.Configuration\Hanbo.AOM.Configuration.csproj">
+      <Project>{89318695-2639-4236-a1b9-6e4608fdcf9a}</Project>
+      <Name>Hanbo.AOM.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Device.SingleInstance\Hanbo.Device.SingleInstance.csproj">
       <Project>{af11882b-41bd-423f-be54-262554ecc943}</Project>
       <Name>Hanbo.Device.SingleInstance</Name>
@@ -101,9 +123,17 @@
       <Project>{11ee3837-fcab-4492-b7c8-333429ea6d1c}</Project>
       <Name>Hanbo.Image.Grab</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Log\Hanbo.Log.csproj">
+      <Project>{37fd6f2e-0078-4a9e-a447-2ae526cadc7d}</Project>
+      <Name>Hanbo.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Resources\Hanbo.Resources.csproj">
       <Project>{997bcb46-e343-45e3-ba64-b054381499cd}</Project>
       <Name>Hanbo.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.WindowControlWrapper\Hanbo.WindowControlWrapper.csproj">
+      <Project>{b40a3de4-5436-42f6-8b9a-1fc24fced448}</Project>
+      <Name>Hanbo.WindowControlWrapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\MeasureModule\MeasureModule.csproj">
       <Project>{a5b3b77c-7f30-4109-8ef6-8ce30dd1317e}</Project>
@@ -140,6 +170,48 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\zoom_in.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3pointCircle_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\angle_blue32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\crossPoint_blue32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\distance_blue32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\distanceX_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\distanceY_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draw_circle_blue32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draw_line_blue32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draw_point_blue32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\symmetryLine_blue32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clearList_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ExportFile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draw_smart_line.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draw_smart_point.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
