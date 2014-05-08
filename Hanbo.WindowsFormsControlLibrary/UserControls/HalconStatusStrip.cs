@@ -43,14 +43,25 @@ namespace Hanbo.WindowsFormsControlLibrary
 		/// </summary>
 		/// <param name="viewPort"></param>
 		/// <param name="viewController"></param>
-		public void Init(HWindowControl viewPort, HWndCtrl viewController, GrabImageWorkingMan camera)
+		public bool Init(HWindowControl viewPort, HWndCtrl viewController, GrabImageWorkingMan camera)
 		{
-			setMessageStore();
-			setWatchCoordinate(viewPort);
-			setWachtZoomChanged(viewController);
-			setWatchOperationModeChange(viewController);
-			setWatchGrayLevel(viewPort, viewController);
-			setWatchCameraStatus(camera);
+			bool success = true;
+			try
+			{
+				setMessageStore();
+				setWatchCoordinate(viewPort);
+				setWachtZoomChanged(viewController);
+				setWatchOperationModeChange(viewController);
+				setWatchGrayLevel(viewPort, viewController);
+				setWatchCameraStatus(camera);
+			}
+			catch (Exception ex)
+			{
+				success = false;
+				Hanbo.Log.LogManager.Error("UC_StatusStrip Error");
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			return success;
 		}
 		/// <summary>
 		/// <para>***************</para>
