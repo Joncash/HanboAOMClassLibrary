@@ -122,7 +122,7 @@ namespace MeasureModule
 				HOperatorSet.ReduceDomain(himage, ho_MeasureROI, out ho_ImageReduced);
 
 				//******* Filter ****************
-				var subpixThreadhold = 110;
+				var subpixThreadhold = mMeasAssist.SubpixThreadhold;
 				HOperatorSet.GenEmptyObj(out ho_Border);
 				HOperatorSet.ThresholdSubPix(ho_ImageReduced, out ho_Border, subpixThreadhold);
 

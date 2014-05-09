@@ -421,7 +421,7 @@ namespace MeasureModule.ViewModel
 			}
 		}
 
-		//===================  參考座標系 (歸零) ========================
+		#region//===================  參考座標系 (歸零) ========================
 		private string _CoordinateID;
 		/// <summary>
 		/// 參考座標 ID, as RecordID
@@ -485,6 +485,8 @@ namespace MeasureModule.ViewModel
 				OnPropertyChanged("CoordinateRow");
 			}
 		}
+		#endregion
+
 
 
 	}

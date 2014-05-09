@@ -21,10 +21,10 @@ namespace MeasureModule
 		 若有 connected, 則被歸類進 "Edge 的點集合" 中
 		 
 		 */
-		private HTuple _filter = "lanser2";
-		private HTuple _alpha = 0.5;
-		private HTuple _low = 40;
-		private HTuple _high = 90;
+		private HTuple _filter = "lanser2";//default = canny
+		private HTuple _alpha = 0.5; //default = 1.0
+		private HTuple _low = 40;	//default = 20
+		private HTuple _high = 90;	//default = 40
 
 		#endregion
 
@@ -90,13 +90,8 @@ namespace MeasureModule
 			HRegion region = new HRegion();
 			region.GenRectangle2(row.D, column.D, phi.D, length1.D, length2.D);
 			HOperatorSet.ReduceDomain(image, region, out imageReduced);
-			HObject edges, contoursSplit;
-			HOperatorSet.GenEmptyObj(out edges);
-			HOperatorSet.GenEmptyObj(out contoursSplit);
+			var contoursSplit = extractEdges(imageReduced);
 
-			//Edgesubpix
-			HOperatorSet.EdgesSubPix(imageReduced, out edges, _filter, _alpha, _low, _high);
-			HOperatorSet.SegmentContoursXld(edges, out contoursSplit, _mode, _smoothCont, _maxLineDist1, _maxLineDist2);
 			try
 			{
 				if (mMeasAssist.ApplyCalibration && mMeasAssist.IsCalibrationValid)
@@ -123,6 +118,28 @@ namespace MeasureModule
 				Hanbo.Log.LogManager.Error(ex);
 			}
 			UpdateXLD();
+		}
+		private HObject extractEdges(HObject imageReduced)
+		{
+			HObject edges, contoursSplit;
+			HOperatorSet.GenEmptyObj(out edges);
+			HOperatorSet.GenEmptyObj(out contoursSplit);
+
+			//Edgesubpix
+			try
+			{
+				//
+				/**/
+				//HOperatorSet.EdgesSubPix(imageReduced, out edges, _filter, _alpha, _low, _high);
+				 
+				HOperatorSet.ThresholdSubPix(imageReduced, out edges, mMeasAssist.SubpixThreadhold);
+				HOperatorSet.SegmentContoursXld(edges, out contoursSplit, _mode, _smoothCont, _maxLineDist1, _maxLineDist2);
+			}
+			catch (HOperatorException ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+			}
+			return contoursSplit;
 		}
 		private FitLineResult fitline(HObject rectifyImage, bool isImage)
 		{

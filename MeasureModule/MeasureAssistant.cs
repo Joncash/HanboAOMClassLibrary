@@ -77,7 +77,7 @@ namespace MeasureModule
 
 
 		private static bool _doFitLineAlgo = ConfigurationHelper.GetDoFitLineAlgo();
-		public int SubpixThreadhold = 128;
+		public int SubpixThreadhold = 110;
 		public void SetSubpixThreadhold(int val)
 		{
 			SubpixThreadhold = val;
@@ -730,8 +730,6 @@ namespace MeasureModule
 			if (NotifyMeasureObserver != null)
 				NotifyMeasureObserver(EVENT_UPDATE_REMOVE);
 		}
-
-
 
 		/// <summary>
 		/// Factory method to create measure objects
