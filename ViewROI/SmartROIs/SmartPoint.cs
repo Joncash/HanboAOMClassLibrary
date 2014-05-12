@@ -35,6 +35,12 @@ namespace ViewROI.SmartROIs
 		private HTuple cols;
 
 		private HHomMat2D hom2D, tmp;
+
+		/// <summary>
+		/// ROI 寬度, 預設為 10 pixels
+		/// <para>以點選位置向外延伸的 pixel 大小</para>
+		/// </summary>
+		private int _smartWidth = 10;
 		#endregion =========================================================================
 
 		/// <summary>
@@ -317,8 +323,8 @@ namespace ViewROI.SmartROIs
 				midR = _clickedPointsPositionList.Average(p => p.RowBegin);
 				midC = _clickedPointsPositionList.Average(p => p.ColBegin);
 
-				length1 = 10;
-				length2 = 10;
+				length1 = _smartWidth;
+				length2 = _smartWidth;
 
 				//決定角度
 				phi = 0.0;
