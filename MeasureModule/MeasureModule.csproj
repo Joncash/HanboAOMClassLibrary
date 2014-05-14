@@ -76,15 +76,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AngleResult.cs" />
-    <Compile Include="CircleResult.cs" />
+    <Compile Include="ResultModels\AngleResult.cs" />
+    <Compile Include="ResultModels\CircleResult.cs" />
     <Compile Include="ContourDisplayHelper.cs" />
     <Compile Include="Converter\ProgGraphicModelConverter.cs" />
     <Compile Include="DistanceHelper.cs" />
-    <Compile Include="DistanceResult.cs" />
-    <Compile Include="FitLineResult.cs" />
+    <Compile Include="ResultModels\DistanceResult.cs" />
+    <Compile Include="ResultModels\FitLineResult.cs" />
     <Compile Include="IMeasureGeoModel.cs" />
-    <Compile Include="LineResult.cs" />
+    <Compile Include="ResultModels\LineResult.cs" />
     <Compile Include="MeasureAssistant.cs" />
     <Compile Include="MeasureAssistantParam.cs" />
     <Compile Include="Measurement.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="MeasurementEdge.cs" />
     <Compile Include="MeasurementFitLine.cs" />
     <Compile Include="MeasurementPair.cs" />
-    <Compile Include="MeasurementResult.cs" />
+    <Compile Include="ResultModels\MeasurementResult.cs" />
     <Compile Include="MeasurementSymmetryLine.cs" />
     <Compile Include="MeasurementTwoLineAngle.cs" />
     <Compile Include="MeasurementTwoLineCrossPoint.cs" />
