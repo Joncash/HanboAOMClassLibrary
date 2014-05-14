@@ -128,11 +128,14 @@ namespace MeasureModule
 			//Edgesubpix
 			try
 			{
-				//
-				/**/
-				//HOperatorSet.EdgesSubPix(imageReduced, out edges, _filter, _alpha, _low, _high);
-				 
-				HOperatorSet.ThresholdSubPix(imageReduced, out edges, mMeasAssist.SubpixThreadhold);
+				if (mMeasAssist.UseEdgeSubpix)
+				{
+					HOperatorSet.EdgesSubPix(imageReduced, out edges, _filter, _alpha, _low, _high);
+				}
+				else
+				{
+					HOperatorSet.ThresholdSubPix(imageReduced, out edges, mMeasAssist.SubpixThreadhold);
+				}
 				HOperatorSet.SegmentContoursXld(edges, out contoursSplit, _mode, _smoothCont, _maxLineDist1, _maxLineDist2);
 			}
 			catch (HOperatorException ex)
