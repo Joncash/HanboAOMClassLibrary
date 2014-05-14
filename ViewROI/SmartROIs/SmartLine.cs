@@ -12,7 +12,7 @@ namespace ViewROI.SmartROIs
 	/// 選取 2 點製作 ROI
 	/// <para>實作 IContinueZoom 方法</para>
 	/// </summary>
-	public class PointsLine : ROI, IContinueZoom
+	public class SmartLine : ROI, IContinueZoom
 	{
 		#region private variables =========================================================
 		/// <summary>Half length of the rectangle side, perpendicular to phi</summary>
@@ -45,14 +45,13 @@ namespace ViewROI.SmartROIs
 		/// 選擇 2 點建立 ROI
 		/// <para>預設量測類型為 FitLine</para>
 		/// </summary>
-		public PointsLine()
+		public SmartLine()
 		{
 			NumHandles = 6; // 4 corners +  1 midpoint + 1 rotationpoint			
 			activeHandleIdx = 4;
 			this.ROIMeasureType = MeasureType.Line; // 預設量測類型
 			_clickedPointsPositionList = new List<PositionModel>();
 		}
-
 
 		/// <summary>Creates a new ROI instance at the mouse position</summary>
 		/// <param name="midX">
