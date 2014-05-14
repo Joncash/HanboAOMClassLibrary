@@ -77,10 +77,17 @@ namespace MeasureModule
 
 
 		private static bool _doFitLineAlgo = ConfigurationHelper.GetDoFitLineAlgo();
-		public int SubpixThreadhold = 110;
+		public int SubpixThreadhold = ConfigurationHelper.GetSubpixThresholdDefault();
 		public void SetSubpixThreadhold(int val)
 		{
 			SubpixThreadhold = val;
+			UpdateExecute(ALL_ROI);
+		}
+
+		public bool UseEdgeSubpix = ConfigurationHelper.GetUseEdgeSubpixSetting();
+		public void SetUsingEdgeSubpix(bool val)
+		{
+			UseEdgeSubpix = val;
 			UpdateExecute(ALL_ROI);
 		}
 
@@ -993,6 +1000,8 @@ namespace MeasureModule
 			UpdateMeasure(-1);
 		}
 		#endregion
+
+
 
 	}//end of class
 }//end of namespace
