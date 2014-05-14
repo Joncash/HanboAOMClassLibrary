@@ -121,14 +121,7 @@ namespace ViewROI.SmartROIs
 		/// <param name="window">HALCON window</param>
 		public override void draw(HalconDotNet.HWindow window)
 		{
-			if (!_initPointsDone)
-			{
-				//foreach (var dot in _clickedPointsPositionList)
-				//{
-				//	HOperatorSet.DispCross(window, dot.RowBegin, dot.ColBegin, crossSize, crossAngle);
-				//}
-			}
-			else
+			if (_initPointsDone)
 			{
 				//畫中心點
 				window.DispRectangle2(midR, midC, -phi, length1, length2);
