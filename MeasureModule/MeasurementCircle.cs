@@ -79,15 +79,7 @@ namespace MeasureModule
 				_Algorithm = new HTuple(mMeasAssist.FitCircleAlgo);
 
 			//init result
-			mResult = new CircleResult()
-			{
-				Radius = new HTuple(),
-				Row = new HTuple(),
-				Col = new HTuple(),
-				StartPhi = new HTuple(),
-				EndPhi = new HTuple(),
-				PointOrder = new HTuple(),
-			};
+			mResult = new CircleResult();
 
 			// Local iconic variables 
 			HObject ho_MeasureROI, ho_ImageReduced;
@@ -161,15 +153,7 @@ namespace MeasureModule
 
 		private CircleResult fitCircle(HObject ho_Border, double areaPixels)
 		{
-			CircleResult result = new CircleResult()
-			{
-				Radius = new HTuple(),
-				Row = new HTuple(),
-				Col = new HTuple(),
-				StartPhi = new HTuple(),
-				EndPhi = new HTuple(),
-				PointOrder = new HTuple(),
-			};
+			var result = new CircleResult();
 			try
 			{
 				// Local control variables 

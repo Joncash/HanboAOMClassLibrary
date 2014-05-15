@@ -46,7 +46,12 @@ namespace MeasureModule
 		#region 建構子
 		public CircleResult()
 		{
-
+			this.Radius = new HTuple();
+			this.Row = new HTuple();
+			this.Col = new HTuple();
+			this.StartPhi = new HTuple();
+			this.EndPhi = new HTuple();
+			this.PointOrder = new HTuple();
 		}
 		public CircleResult(CircleResult result)
 			: this(result.Row, result.Col, result.Radius, result.StartPhi, result.EndPhi, result.PointOrder)
