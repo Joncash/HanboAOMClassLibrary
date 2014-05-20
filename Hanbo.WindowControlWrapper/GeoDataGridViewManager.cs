@@ -702,17 +702,10 @@ namespace Hanbo.WindowControlWrapper
 		{
 			if (roi == null) return null;
 			Bitmap iconImage = null;
-			switch (roi.ROIMeasureType)
+			var key = roi.ROIMeasureType.ToString();
+			if (_ImageList.ContainsKey(key))
 			{
-				case MeasureType.Point:
-					iconImage = _ImageList[MeasureType.Point.ToString()];
-					break;
-				case MeasureType.Line:
-					iconImage = _ImageList[MeasureType.Line.ToString()];
-					break;
-				case MeasureType.Circle:
-					iconImage = _ImageList[MeasureType.Circle.ToString()];
-					break;
+				iconImage = _ImageList[key];
 			}
 			return iconImage;
 		}
