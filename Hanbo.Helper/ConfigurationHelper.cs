@@ -475,7 +475,7 @@ namespace Hanbo.Helper
 		public static int GetCircleDistanceSetting()
 		{
 			string setting = "radius";
-			var xpath = String.Format("{0}/CircleDistanceSetting", _systemSettingsRootName);
+			var xpath = String.Format("{0}/MeasureSettings/CircleDistanceSetting", _systemSettingsRootName);
 			var elem = getXElementWithXPath(xpath);
 			if (elem != null)
 			{
