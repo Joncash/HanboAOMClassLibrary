@@ -8,6 +8,11 @@ namespace Hanbo.Helper
 {
 	public class ExportHelper
 	{
+		private static string _mahrExportTitle;
+		static ExportHelper()
+		{
+			_mahrExportTitle = ConfigurationHelper.GetMahrExportTitle();
+		}
 		/// <summary>
 		/// Mahr 格式輸出, Encoding 為 utf8
 		/// </summary>
@@ -127,7 +132,7 @@ namespace Hanbo.Helper
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.AppendLine("=====================================================================================");
-			sb.AppendLine("				OSE MEASURING REPORT");
+			sb.AppendLine("				" + _mahrExportTitle);
 			sb.AppendLine("=====================================================================================");
 			sb.AppendLine("");
 			sb.AppendLine("-------------------------------------------------------------------------------------");

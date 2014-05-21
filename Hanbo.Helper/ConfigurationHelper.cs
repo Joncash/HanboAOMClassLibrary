@@ -593,5 +593,39 @@ namespace Hanbo.Helper
 			}
 			return setting;
 		}
+
+		public static int GetSubpixThresholdDefault()
+		{
+			var setting = ConfigurationManager.AppSettings["SubpixThreshold"];
+			var val = 110;
+			if (!Int32.TryParse(setting, out val))
+			{
+				val = 110;
+			}
+			return val;
+		}
+
+		public static bool GetUseEdgeSubpixSetting()
+		{
+			var setting = ConfigurationManager.AppSettings["UseEdgeSubpix"];
+			bool val;
+			if (!Boolean.TryParse(setting, out val))
+			{
+				val = false;
+			}
+			return val;
+		}
+
+		internal static string GetMahrExportTitle()
+		{
+			string setting = "HanboDemo MEASURING REPORT";
+			var xpath = String.Format("{0}/Export/MahrExportTitle", _systemSettingsRootName);
+			var elem = getXElementWithXPath(xpath);
+			if (elem != null)
+			{
+				setting = elem.Value;
+			}
+			return setting;
+		}
 	}
 }
