@@ -28,14 +28,27 @@ namespace Hanbo.Extensions
 
 		/// <summary>
 		/// 把 Halcon 徑度轉為角度
+		/// <para>順時針方向計算角度</para>
 		/// </summary>
-		/// <param name="phi"></param>
+		/// <param name="halconPhi"></param>
 		/// <returns></returns>
-		public static double HalconPhiToDegree(this double phi)
+		public static double HalconPhiToDegree(this double halconPhi)
 		{
-			var halconDegree = Math.Abs(phi * 180.0 / Math.PI);
-			var degree = (phi <= 0) ? halconDegree : 360.0 - halconDegree;
+			var halconDegree = Math.Abs(halconPhi * 180.0 / Math.PI);
+			var degree = (halconPhi <= 0) ? halconDegree : 360.0 - halconDegree;
 			return degree;
+		}
+
+		/// <summary>
+		/// 角度轉徑度
+		/// </summary>
+		/// <param name="degree"></param>
+		/// <returns></returns>
+		public static double DegreeToRad(this double degree)
+		{
+			// 2 pi rad = 360, 1 degree = pi /180
+			double rad = degree * (Math.PI / 180.0);
+			return rad;
 		}
 	}
 }
