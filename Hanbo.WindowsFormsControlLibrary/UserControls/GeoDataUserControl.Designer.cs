@@ -31,12 +31,9 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeoDataUserControl));
 			this.ContentPanel = new System.Windows.Forms.Panel();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.MessageLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.GeoDataGridView = new System.Windows.Forms.DataGridView();
 			this.GeoTreeViewGroupBox = new System.Windows.Forms.GroupBox();
-			this.GeoTreeView = new System.Windows.Forms.TreeView();
 			this.GeoToolStrip = new System.Windows.Forms.ToolStrip();
 			this.UnitComboBox = new System.Windows.Forms.ToolStripComboBox();
 			this.UnitComboBoxLabel = new System.Windows.Forms.ToolStripLabel();
@@ -46,8 +43,10 @@
 			this.ClearListButton = new System.Windows.Forms.ToolStripButton();
 			this.GeoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.SetCoordinateSystemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.MessageLabel = new System.Windows.Forms.ToolStripStatusLabel();
+			this.GeoTreeView = new System.Windows.Forms.TreeView();
 			this.ContentPanel.SuspendLayout();
-			this.statusStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -56,29 +55,16 @@
 			this.GeoTreeViewGroupBox.SuspendLayout();
 			this.GeoToolStrip.SuspendLayout();
 			this.GeoContextMenuStrip.SuspendLayout();
+			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ContentPanel
 			// 
 			this.ContentPanel.BackColor = System.Drawing.SystemColors.Control;
-			this.ContentPanel.Controls.Add(this.statusStrip1);
 			this.ContentPanel.Controls.Add(this.splitContainer1);
 			this.ContentPanel.Controls.Add(this.GeoToolStrip);
 			resources.ApplyResources(this.ContentPanel, "ContentPanel");
 			this.ContentPanel.Name = "ContentPanel";
-			// 
-			// statusStrip1
-			// 
-			resources.ApplyResources(this.statusStrip1, "statusStrip1");
-			this.statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
-			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MessageLabel});
-			this.statusStrip1.Name = "statusStrip1";
-			// 
-			// MessageLabel
-			// 
-			resources.ApplyResources(this.MessageLabel, "MessageLabel");
-			this.MessageLabel.Name = "MessageLabel";
 			// 
 			// splitContainer1
 			// 
@@ -106,14 +92,10 @@
 			// GeoTreeViewGroupBox
 			// 
 			this.GeoTreeViewGroupBox.Controls.Add(this.GeoTreeView);
+			this.GeoTreeViewGroupBox.Controls.Add(this.statusStrip1);
 			resources.ApplyResources(this.GeoTreeViewGroupBox, "GeoTreeViewGroupBox");
 			this.GeoTreeViewGroupBox.Name = "GeoTreeViewGroupBox";
 			this.GeoTreeViewGroupBox.TabStop = false;
-			// 
-			// GeoTreeView
-			// 
-			resources.ApplyResources(this.GeoTreeView, "GeoTreeView");
-			this.GeoTreeView.Name = "GeoTreeView";
 			// 
 			// GeoToolStrip
 			// 
@@ -183,6 +165,23 @@
 			resources.ApplyResources(this.SetCoordinateSystemToolStripMenuItem, "SetCoordinateSystemToolStripMenuItem");
 			this.SetCoordinateSystemToolStripMenuItem.Click += new System.EventHandler(this.SetCoordinateSystemToolStripMenuItem_Click);
 			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MessageLabel});
+			resources.ApplyResources(this.statusStrip1, "statusStrip1");
+			this.statusStrip1.Name = "statusStrip1";
+			// 
+			// MessageLabel
+			// 
+			this.MessageLabel.Name = "MessageLabel";
+			resources.ApplyResources(this.MessageLabel, "MessageLabel");
+			// 
+			// GeoTreeView
+			// 
+			resources.ApplyResources(this.GeoTreeView, "GeoTreeView");
+			this.GeoTreeView.Name = "GeoTreeView";
+			// 
 			// GeoDataUserControl
 			// 
 			resources.ApplyResources(this, "$this");
@@ -191,17 +190,18 @@
 			this.Name = "GeoDataUserControl";
 			this.ContentPanel.ResumeLayout(false);
 			this.ContentPanel.PerformLayout();
-			this.statusStrip1.ResumeLayout(false);
-			this.statusStrip1.PerformLayout();
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.GeoDataGridView)).EndInit();
 			this.GeoTreeViewGroupBox.ResumeLayout(false);
+			this.GeoTreeViewGroupBox.PerformLayout();
 			this.GeoToolStrip.ResumeLayout(false);
 			this.GeoToolStrip.PerformLayout();
 			this.GeoContextMenuStrip.ResumeLayout(false);
+			this.statusStrip1.ResumeLayout(false);
+			this.statusStrip1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -210,7 +210,6 @@
 
 		private System.Windows.Forms.Panel ContentPanel;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.TreeView GeoTreeView;
 		private System.Windows.Forms.DataGridView GeoDataGridView;
 		private System.Windows.Forms.ToolStrip GeoToolStrip;
 		private System.Windows.Forms.ToolStripComboBox UnitComboBox;
@@ -219,10 +218,11 @@
 		private System.Windows.Forms.ToolStripLabel CoordinateLabel;
 		private System.Windows.Forms.ToolStripButton ExportButton;
 		private System.Windows.Forms.ToolStripButton ClearListButton;
-		private System.Windows.Forms.StatusStrip statusStrip1;
-		private System.Windows.Forms.ToolStripStatusLabel MessageLabel;
 		private System.Windows.Forms.GroupBox GeoTreeViewGroupBox;
 		private System.Windows.Forms.ContextMenuStrip GeoContextMenuStrip;
 		private System.Windows.Forms.ToolStripMenuItem SetCoordinateSystemToolStripMenuItem;
+		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.ToolStripStatusLabel MessageLabel;
+		private System.Windows.Forms.TreeView GeoTreeView;
 	}
 }
