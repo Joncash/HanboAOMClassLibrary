@@ -7,6 +7,12 @@ namespace Hanbo.WindowControlWrapper
 {
 	public class RefCoordinate
 	{
+		public RefCoordinate()
+		{
+			ID = "";
+			Name = "Default";
+			Desc = "影像座標";
+		}
 		/// <summary>
 		/// 參考座標 ID
 		/// </summary>
