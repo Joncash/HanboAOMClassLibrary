@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Hanbo.Extensions
 {
+	/// <summary>
+	/// 提供數學計算功能
+	/// </summary>
 	public static class MathExtensions
 	{
 		/// <summary>
@@ -46,9 +49,8 @@ namespace Hanbo.Extensions
 		/// <returns></returns>
 		public static double DegreeToRad(this double degree)
 		{
-			// 2 pi rad = 360, 1 degree = pi /180
-			double rad = degree * (Math.PI / 180.0);
-			return rad;
+			// 1 pi rad = 180 degree, 1 rad = pi /180 degree
+			return degree * (Math.PI / 180.0);
 		}
 	}
 }
