@@ -49,6 +49,30 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 		}
 
 		/// <summary>
+		/// 全部設為 Unchecked
+		/// </summary>
+		public void ResetAllCheckButton()
+		{
+			//ResetROI
+			if (_roiController != null && _mView != null)
+			{
+				this._mView.DisableZoomContinue();
+				_roiController.resetROI();
+			}
+			if (_geoManager != null)
+			{
+				_geoManager.ResetCalcuteType();
+			}
+
+			_ckLock = true;
+			foreach (var cbox in MM_TabPage1_FlowPanel.Controls.OfType<CheckBox>())
+			{
+				cbox.Checked = false;
+			}
+			_ckLock = false;
+		}
+
+		/// <summary>
 		/// 重置所有的幾何元素量測按鈕
 		/// </summary>
 		/// <param name="val"></param>
@@ -61,6 +85,8 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 				checkBox3.Checked = false;
 				checkBox4.Checked = false;
 				checkBox5.Checked = false;
+				checkBox13.Checked = false;
+				checkBox14.Checked = false;
 			}
 		}
 		/// <summary>
@@ -83,6 +109,12 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 				else
 				{
 					exclusiveCheckbox(sender);
+				}
+
+				//如果按下 ROI, 則重置量測設定
+				if (!doResetROI && _geoManager != null)
+				{
+					_geoManager.ResetCalcuteType();
 				}
 			}
 			catch (Exception ex)
@@ -152,7 +184,29 @@ namespace Hanbo.WindowsFormsControlLibrary.UserControls
 			if (!resetROIDoer(sender))
 			{
 				this._mView.EnableZoomContinue();
-				_roiController.setROIShape(new ViewROI.SmartROIs.PointsLine());
+				_roiController.setROIShape(new ViewROI.SmartROIs.SmartLine());
+			}
+		}
+
+		private void checkBox13_CheckedChanged(object sender, EventArgs e)
+		{
+			//幾何元素 (圓-smart)
+			if (_ckLock) return;
+			if (!resetROIDoer(sender))
+			{
+				this._mView.EnableZoomContinue();
+				_roiController.setROIShape(new ViewROI.SmartROIs.SmartCircle());
+			}
+		}
+
+		private void checkBox14_CheckedChanged(object sender, EventArgs e)
+		{
+			//幾何元素 (弧-smart)
+			if (_ckLock) return;
+			if (!resetROIDoer(sender))
+			{
+				this._mView.EnableZoomContinue();
+				_roiController.setROIShape(new ViewROI.SmartROIs.SmartArc());
 			}
 		}
 

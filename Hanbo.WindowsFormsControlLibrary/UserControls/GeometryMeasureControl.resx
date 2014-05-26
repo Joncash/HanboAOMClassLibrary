@@ -125,6 +125,9 @@
   <data name="checkBox1.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
   </data>
+  <data name="checkBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="checkBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
@@ -273,6 +276,69 @@
   <data name="&gt;&gt;checkBox5.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="checkBox13.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
+    <value>Button</value>
+  </data>
+  <data name="checkBox13.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBox13.Location" type="System.Drawing.Point, System.Drawing">
+    <value>273, 3</value>
+  </data>
+  <data name="checkBox13.Size" type="System.Drawing.Size, System.Drawing">
+    <value>48, 48</value>
+  </data>
+  <data name="checkBox13.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="checkBox13.ToolTip" xml:space="preserve">
+    <value>智慧尋圓 (Find the circle with smart detection)</value>
+  </data>
+  <data name="&gt;&gt;checkBox13.Name" xml:space="preserve">
+    <value>checkBox13</value>
+  </data>
+  <data name="&gt;&gt;checkBox13.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBox13.Parent" xml:space="preserve">
+    <value>MM_TabPage1_FlowPanel</value>
+  </data>
+  <data name="&gt;&gt;checkBox13.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="checkBox14.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
+    <value>Button</value>
+  </data>
+  <data name="checkBox14.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBox14.Location" type="System.Drawing.Point, System.Drawing">
+    <value>327, 3</value>
+  </data>
+  <data name="checkBox14.Size" type="System.Drawing.Size, System.Drawing">
+    <value>48, 48</value>
+  </data>
+  <data name="checkBox14.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="checkBox14.ToolTip" xml:space="preserve">
+    <value>智慧尋弧 (Find the arc with smart detection)</value>
+  </data>
+  <data name="checkBox14.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;checkBox14.Name" xml:space="preserve">
+    <value>checkBox14</value>
+  </data>
+  <data name="&gt;&gt;checkBox14.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBox14.Parent" xml:space="preserve">
+    <value>MM_TabPage1_FlowPanel</value>
+  </data>
+  <data name="&gt;&gt;checkBox14.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
   <data name="checkBox6.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
   </data>
@@ -280,7 +346,7 @@
     <value>NoControl</value>
   </data>
   <data name="checkBox6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>293, 3</value>
+    <value>401, 3</value>
   </data>
   <data name="checkBox6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>23, 3, 3, 3</value>
@@ -304,7 +370,7 @@
     <value>MM_TabPage1_FlowPanel</value>
   </data>
   <data name="&gt;&gt;checkBox6.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="checkBox7.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
@@ -313,7 +379,7 @@
     <value>NoControl</value>
   </data>
   <data name="checkBox7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>347, 3</value>
+    <value>455, 3</value>
   </data>
   <data name="checkBox7.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 48</value>
@@ -334,7 +400,7 @@
     <value>MM_TabPage1_FlowPanel</value>
   </data>
   <data name="&gt;&gt;checkBox7.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="checkBox8.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
@@ -343,7 +409,7 @@
     <value>NoControl</value>
   </data>
   <data name="checkBox8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>401, 3</value>
+    <value>509, 3</value>
   </data>
   <data name="checkBox8.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 48</value>
@@ -364,7 +430,7 @@
     <value>MM_TabPage1_FlowPanel</value>
   </data>
   <data name="&gt;&gt;checkBox8.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="checkBox9.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
@@ -373,7 +439,7 @@
     <value>NoControl</value>
   </data>
   <data name="checkBox9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>455, 3</value>
+    <value>563, 3</value>
   </data>
   <data name="checkBox9.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 48</value>
@@ -394,7 +460,7 @@
     <value>MM_TabPage1_FlowPanel</value>
   </data>
   <data name="&gt;&gt;checkBox9.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>10</value>
   </data>
   <data name="checkBox10.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
@@ -403,7 +469,7 @@
     <value>NoControl</value>
   </data>
   <data name="checkBox10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>509, 3</value>
+    <value>617, 3</value>
   </data>
   <data name="checkBox10.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 48</value>
@@ -424,7 +490,7 @@
     <value>MM_TabPage1_FlowPanel</value>
   </data>
   <data name="&gt;&gt;checkBox10.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>11</value>
   </data>
   <data name="checkBox11.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
@@ -433,7 +499,7 @@
     <value>NoControl</value>
   </data>
   <data name="checkBox11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>563, 3</value>
+    <value>671, 3</value>
   </data>
   <data name="checkBox11.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 48</value>
@@ -454,7 +520,7 @@
     <value>MM_TabPage1_FlowPanel</value>
   </data>
   <data name="&gt;&gt;checkBox11.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>12</value>
   </data>
   <data name="checkBox12.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
     <value>Button</value>
@@ -463,7 +529,7 @@
     <value>NoControl</value>
   </data>
   <data name="checkBox12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>617, 3</value>
+    <value>725, 3</value>
   </data>
   <data name="checkBox12.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 48</value>
@@ -484,7 +550,7 @@
     <value>MM_TabPage1_FlowPanel</value>
   </data>
   <data name="&gt;&gt;checkBox12.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>13</value>
   </data>
   <data name="MM_TabPage1_FlowPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -493,7 +559,7 @@
     <value>3, 3</value>
   </data>
   <data name="MM_TabPage1_FlowPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>671, 57</value>
+    <value>780, 57</value>
   </data>
   <data name="MM_TabPage1_FlowPanel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -517,7 +583,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="MM_TabPage1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>677, 63</value>
+    <value>786, 63</value>
   </data>
   <data name="MM_TabPage1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -544,7 +610,7 @@
     <value>0, 0</value>
   </data>
   <data name="MM_TabControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>685, 89</value>
+    <value>794, 89</value>
   </data>
   <data name="MM_TabControl.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -568,7 +634,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>685, 89</value>
+    <value>794, 89</value>
   </data>
   <data name="&gt;&gt;MM_ToolTip.Name" xml:space="preserve">
     <value>MM_ToolTip</value>

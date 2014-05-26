@@ -33,12 +33,13 @@
 			this.MM_TabControl = new System.Windows.Forms.TabControl();
 			this.MM_TabPage1 = new System.Windows.Forms.TabPage();
 			this.MM_TabPage1_FlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.MM_ToolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.checkBox1 = new System.Windows.Forms.CheckBox();
 			this.checkBox2 = new System.Windows.Forms.CheckBox();
 			this.checkBox3 = new System.Windows.Forms.CheckBox();
 			this.checkBox4 = new System.Windows.Forms.CheckBox();
 			this.checkBox5 = new System.Windows.Forms.CheckBox();
+			this.checkBox13 = new System.Windows.Forms.CheckBox();
+			this.checkBox14 = new System.Windows.Forms.CheckBox();
 			this.checkBox6 = new System.Windows.Forms.CheckBox();
 			this.checkBox7 = new System.Windows.Forms.CheckBox();
 			this.checkBox8 = new System.Windows.Forms.CheckBox();
@@ -46,6 +47,7 @@
 			this.checkBox10 = new System.Windows.Forms.CheckBox();
 			this.checkBox11 = new System.Windows.Forms.CheckBox();
 			this.checkBox12 = new System.Windows.Forms.CheckBox();
+			this.MM_ToolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.MM_TabControl.SuspendLayout();
 			this.MM_TabPage1.SuspendLayout();
 			this.MM_TabPage1_FlowPanel.SuspendLayout();
@@ -73,6 +75,8 @@
 			this.MM_TabPage1_FlowPanel.Controls.Add(this.checkBox3);
 			this.MM_TabPage1_FlowPanel.Controls.Add(this.checkBox4);
 			this.MM_TabPage1_FlowPanel.Controls.Add(this.checkBox5);
+			this.MM_TabPage1_FlowPanel.Controls.Add(this.checkBox13);
+			this.MM_TabPage1_FlowPanel.Controls.Add(this.checkBox14);
 			this.MM_TabPage1_FlowPanel.Controls.Add(this.checkBox6);
 			this.MM_TabPage1_FlowPanel.Controls.Add(this.checkBox7);
 			this.MM_TabPage1_FlowPanel.Controls.Add(this.checkBox8);
@@ -126,6 +130,24 @@
 			this.MM_ToolTip.SetToolTip(this.checkBox5, resources.GetString("checkBox5.ToolTip"));
 			this.checkBox5.UseVisualStyleBackColor = true;
 			this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
+			// 
+			// checkBox13
+			// 
+			resources.ApplyResources(this.checkBox13, "checkBox13");
+			this.checkBox13.Image = global::Hanbo.WindowsFormsControlLibrary.Properties.Resources.draw_smart_circle;
+			this.checkBox13.Name = "checkBox13";
+			this.MM_ToolTip.SetToolTip(this.checkBox13, resources.GetString("checkBox13.ToolTip"));
+			this.checkBox13.UseVisualStyleBackColor = true;
+			this.checkBox13.CheckedChanged += new System.EventHandler(this.checkBox13_CheckedChanged);
+			// 
+			// checkBox14
+			// 
+			resources.ApplyResources(this.checkBox14, "checkBox14");
+			this.checkBox14.Image = global::Hanbo.WindowsFormsControlLibrary.Properties.Resources.draw_smart_arc;
+			this.checkBox14.Name = "checkBox14";
+			this.MM_ToolTip.SetToolTip(this.checkBox14, resources.GetString("checkBox14.ToolTip"));
+			this.checkBox14.UseVisualStyleBackColor = true;
+			this.checkBox14.CheckedChanged += new System.EventHandler(this.checkBox14_CheckedChanged);
 			// 
 			// checkBox6
 			// 
@@ -221,6 +243,8 @@
 		private System.Windows.Forms.CheckBox checkBox10;
 		private System.Windows.Forms.CheckBox checkBox11;
 		private System.Windows.Forms.CheckBox checkBox12;
+		private System.Windows.Forms.CheckBox checkBox13;
+		private System.Windows.Forms.CheckBox checkBox14;
 
 
 	}
