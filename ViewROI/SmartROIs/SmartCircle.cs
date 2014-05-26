@@ -213,7 +213,6 @@ namespace ViewROI.SmartROIs
 		private List<PositionModel> _clickedPointsPositionList;
 		private bool _initPointsDone = false;
 
-		private bool _success = false;
 		public bool WaitForClickPoints(double x, double y)
 		{
 			if (_clickedPointsPositionList.Count < _clickPoints)

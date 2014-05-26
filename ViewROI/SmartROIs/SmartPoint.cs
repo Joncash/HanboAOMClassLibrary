@@ -26,8 +26,6 @@ namespace ViewROI.SmartROIs
 		/// <summary>Orientation of rectangle defined in radians.</summary>
 		private double phi;
 
-		private double creakPointPhi;
-
 		//auxiliary variables
 		private HTuple rowsInit;
 		private HTuple colsInit;

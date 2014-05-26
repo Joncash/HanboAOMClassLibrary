@@ -10,7 +10,7 @@ using ViewROI.Model;
 
 namespace ViewROI.SmartROIs
 {
-	public class SmartArc : ROI, IContinueZoom, IROIModelUpdateable
+	public class SmartArc : ROI, IContinueZoom
 	{
 		/// <summary>
 		/// 半徑
@@ -32,13 +32,17 @@ namespace ViewROI.SmartROIs
 		private GeoPoint _SecondPoint;
 		private GeoPoint _EndPoint;
 
-		private double startPhi, extentPhi; // -2*PI <= x <= 2*PI
+		private double _startPhi, _extentPhi; // -2*PI <= x <= 2*PI
+
+		//弧起點
+		private double _beginRow;
+		private double _beginCol;
 
 		//display attributes
 		private HXLDCont contour;
 		private HXLDCont _ArcRegion;
 		private HXLDCont arrowHandleXLD;
-		private string circDir;
+		private string _pointOrder;
 		private double TwoPI;
 		private double PI;
 
@@ -58,7 +62,7 @@ namespace ViewROI.SmartROIs
 			_clickedPointsPositionList = new List<PositionModel>();
 
 			contour = new HXLDCont();
-			circDir = "";
+			_pointOrder = "";
 			_ArcRegion = new HXLDCont();
 
 			TwoPI = 2 * Math.PI;
@@ -111,15 +115,19 @@ namespace ViewROI.SmartROIs
 			{
 				//畫弧線
 				contour.Dispose();
-				contour.GenCircleContourXld(midR, midC, radius, startPhi,
-											(startPhi + extentPhi), circDir, 1.0);
+				contour.GenCircleContourXld(midR, midC, radius, _startPhi,
+											(_startPhi + _extentPhi), _pointOrder, 1.0);
+
+				this._beginRow = midR + Math.Sin(_startPhi) * radius;
+				this._beginCol = midC + Math.Cos(_startPhi) * radius;
+
 				window.DispObj(contour);
 				drawOuterArc(window);
 
 				//畫控制點
 				window.DispRectangle2(sizeR, sizeC, 0, 5, 5);
 				window.DispRectangle2(midR, midC, 0, 5, 5);
-				window.DispRectangle2(startR, startC, startPhi, 10, 2);
+				window.DispRectangle2(startR, startC, _startPhi, 10, 2);
 				window.DispObj(arrowHandleXLD);
 			}
 		}
@@ -141,12 +149,15 @@ namespace ViewROI.SmartROIs
 			outerRad = mMeasROI[4];
 			innerRad = mMeasROI[5];
 
-
+			//畫內圓
 			innerCont.GenCircleContourXld(mMeasROI[0], mMeasROI[1], innerRad, sPhi, (sPhi + extent), (extent > 0) ? "positive" : "negative", 1.0);
+
+			//畫外圓
 			outCont.GenCircleContourXld(mMeasROI[0], mMeasROI[1], outerRad, (sPhi + extent), sPhi, (extent > 0) ? "negative" : "positive", 1.0);
 
 			innerCont.GetContourXld(out innerR, out innerC);
 			outCont.GetContourXld(out outerR, out outerC);
+
 			innerR = innerR.TupleConcat(outerR);
 			innerC = innerC.TupleConcat(outerC);
 
@@ -222,7 +233,7 @@ namespace ViewROI.SmartROIs
 					window.DispRectangle2(sizeR, sizeC, 0, 5, 5);
 					break;
 				case 2:
-					window.DispRectangle2(startR, startC, startPhi, 10, 2);
+					window.DispRectangle2(startR, startC, _startPhi, 10, 2);
 					break;
 				case 3:
 					window.DispObj(arrowHandleXLD);
@@ -269,19 +280,19 @@ namespace ViewROI.SmartROIs
 					dirY = newY - midR;
 					dirX = newX - midC;
 
-					startPhi = Math.Atan2(-dirY, dirX);
+					_startPhi = Math.Atan2(-dirY, dirX);
 
-					if (startPhi < 0)
-						startPhi = PI + (startPhi + PI);
+					if (_startPhi < 0)
+						_startPhi = PI + (_startPhi + PI);
 
 					setStartHandle();
-					prior = extentPhi;
-					extentPhi = HMisc.AngleLl(midR, midC, startR, startC, midR, midC, extentR, extentC);
+					prior = _extentPhi;
+					_extentPhi = HMisc.AngleLl(midR, midC, startR, startC, midR, midC, extentR, extentC);
 
-					if (extentPhi < 0 && prior > PI * 0.8)
-						extentPhi = (PI + extentPhi) + PI;
-					else if (extentPhi > 0 && prior < -PI * 0.7)
-						extentPhi = -PI - (PI - extentPhi);
+					if (_extentPhi < 0 && prior > PI * 0.8)
+						_extentPhi = (PI + _extentPhi) + PI;
+					else if (_extentPhi > 0 && prior < -PI * 0.7)
+						_extentPhi = -PI - (PI - _extentPhi);
 
 					break;
 
@@ -289,32 +300,32 @@ namespace ViewROI.SmartROIs
 					dirY = newY - midR;
 					dirX = newX - midC;
 
-					prior = extentPhi;
+					prior = _extentPhi;
 					next = Math.Atan2(-dirY, dirX);
 
 					if (next < 0)
 						next = PI + (next + PI);
 
-					if (circDir == "positive" && startPhi >= next)
-						extentPhi = (next + TwoPI) - startPhi;
-					else if (circDir == "positive" && next > startPhi)
-						extentPhi = next - startPhi;
-					else if (circDir == "negative" && startPhi >= next)
-						extentPhi = -1.0 * (startPhi - next);
-					else if (circDir == "negative" && next > startPhi)
-						extentPhi = -1.0 * (startPhi + TwoPI - next);
+					if (_pointOrder == "positive" && _startPhi >= next)
+						_extentPhi = (next + TwoPI) - _startPhi;
+					else if (_pointOrder == "positive" && next > _startPhi)
+						_extentPhi = next - _startPhi;
+					else if (_pointOrder == "negative" && _startPhi >= next)
+						_extentPhi = -1.0 * (_startPhi - next);
+					else if (_pointOrder == "negative" && next > _startPhi)
+						_extentPhi = -1.0 * (_startPhi + TwoPI - next);
 
-					valMax = Math.Max(Math.Abs(prior), Math.Abs(extentPhi));
-					valMin = Math.Min(Math.Abs(prior), Math.Abs(extentPhi));
+					valMax = Math.Max(Math.Abs(prior), Math.Abs(_extentPhi));
+					valMin = Math.Min(Math.Abs(prior), Math.Abs(_extentPhi));
 
 					if ((valMax - valMin) >= PI)
-						extentPhi = (circDir == "positive") ? -1.0 * valMin : valMin;
+						_extentPhi = (_pointOrder == "positive") ? -1.0 * valMin : valMin;
 
 					setExtentHandle();
 					break;
 			}
 
-			circDir = (extentPhi < 0) ? "negative" : "positive";
+			_pointOrder = (_extentPhi < 0) ? "negative" : "positive";
 			updateArrowHandle();
 		}
 
@@ -323,17 +334,18 @@ namespace ViewROI.SmartROIs
 		{
 			HRegion region;
 			contour.Dispose();
-			contour.GenCircleContourXld(midR, midC, radius, startPhi, (startPhi + extentPhi), circDir, 1.0);
+			contour.GenCircleContourXld(midR, midC, radius, _startPhi, (_startPhi + _extentPhi), _pointOrder, 1.0);
 			region = new HRegion(contour);
 			return region;
 		}
 
 		/// <summary>
-		/// Gets the model information described by the ROI
-		/// </summary> 
+		/// [0] = row, [1]= col, [2] = radius, [3] = startPhi, [4] = extentPhi, [5] = ROIWidth
+		/// </summary>
+		/// <returns></returns>
 		public override HTuple getModelData()
 		{
-			return new HTuple(new double[] { midR, midC, radius, startPhi, extentPhi });
+			return new HTuple(new double[] { midR, midC, radius, _startPhi, _extentPhi, _ROIWidth });
 		}
 
 		/// <summary>
@@ -351,8 +363,8 @@ namespace ViewROI.SmartROIs
 		/// </summary>
 		private void setStartHandle()
 		{
-			startR = midR - radius * Math.Sin(startPhi);
-			startC = midC + radius * Math.Cos(startPhi);
+			startR = midR - radius * Math.Sin(_startPhi);
+			startC = midC + radius * Math.Cos(_startPhi);
 		}
 
 		/// <summary>
@@ -360,8 +372,8 @@ namespace ViewROI.SmartROIs
 		/// </summary>
 		private void setExtentHandle()
 		{
-			extentR = midR - radius * Math.Sin(startPhi + extentPhi);
-			extentC = midC + radius * Math.Cos(startPhi + extentPhi);
+			extentR = midR - radius * Math.Sin(_startPhi + _extentPhi);
+			extentC = midC + radius * Math.Cos(_startPhi + _extentPhi);
 		}
 
 		/// <summary>
@@ -375,35 +387,41 @@ namespace ViewROI.SmartROIs
 			double headLength = 15;
 			double headWidth = 15;
 
-			arrowHandleXLD.Dispose();
-			arrowHandleXLD.GenEmptyObj();
+			try
+			{
+				arrowHandleXLD.Dispose();
+				arrowHandleXLD.GenEmptyObj();
 
-			row2 = extentR;
-			col2 = extentC;
-			angleRad = (startPhi + extentPhi) + Math.PI * 0.5;
+				row2 = extentR;
+				col2 = extentC;
+				angleRad = (_startPhi + _extentPhi) + Math.PI * 0.5;
 
-			sign = (circDir == "negative") ? -1.0 : 1.0;
-			row1 = row2 + sign * Math.Sin(angleRad) * 20;
-			col1 = col2 - sign * Math.Cos(angleRad) * 20;
+				sign = (_pointOrder == "negative") ? -1.0 : 1.0;
+				row1 = row2 + sign * Math.Sin(angleRad) * 20;
+				col1 = col2 - sign * Math.Cos(angleRad) * 20;
 
-			length = HMisc.DistancePp(row1, col1, row2, col2);
-			if (length == 0)
-				length = -1;
+				length = HMisc.DistancePp(row1, col1, row2, col2);
+				if (length == 0)
+					length = -1;
 
-			dr = (row2 - row1) / length;
-			dc = (col2 - col1) / length;
+				dr = (row2 - row1) / length;
+				dc = (col2 - col1) / length;
 
-			halfHW = headWidth / 2.0;
-			rowP1 = row1 + (length - headLength) * dr + halfHW * dc;
-			rowP2 = row1 + (length - headLength) * dr - halfHW * dc;
-			colP1 = col1 + (length - headLength) * dc - halfHW * dr;
-			colP2 = col1 + (length - headLength) * dc + halfHW * dr;
-
-			if (length == -1)
-				arrowHandleXLD.GenContourPolygonXld(row1, col1);
-			else
-				arrowHandleXLD.GenContourPolygonXld(new HTuple(new double[] { row1, row2, rowP1, row2, rowP2, row2 }),
-					new HTuple(new double[] { col1, col2, colP1, col2, colP2, col2 }));
+				halfHW = headWidth / 2.0;
+				rowP1 = row1 + (length - headLength) * dr + halfHW * dc;
+				rowP2 = row1 + (length - headLength) * dr - halfHW * dc;
+				colP1 = col1 + (length - headLength) * dc - halfHW * dr;
+				colP2 = col1 + (length - headLength) * dc + halfHW * dr;
+				if (length == -1)
+					arrowHandleXLD.GenContourPolygonXld(row1, col1);
+				else
+					arrowHandleXLD.GenContourPolygonXld(new HTuple(new double[] { row1, row2, rowP1, row2, rowP2, row2 }),
+						new HTuple(new double[] { col1, col2, colP1, col2, colP2, col2 }));
+			}
+			catch (Exception ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+			}
 		}
 
 		#region =================================================================
@@ -413,13 +431,16 @@ namespace ViewROI.SmartROIs
 		/// <param name="roiRow">ROI 圓心 Row</param>
 		/// <param name="roiCol">ROI 圓心 Col</param>
 		/// <param name="roiRadius">ROI 半徑</param>
-		public void MakeROI(double roiRow, double roiCol, double roiRadius)
+		public void MakeROI(double roiRow, double roiCol, double roiRadius, double startPhi, double extentPhi, int roiWidth)
 		{
-			midR = roiRow;
-			midC = roiCol;
-			radius = roiRadius;
-
-
+			this._pointOrder = (extentPhi < 0) ? "negative" : "positive";
+			this.midR = roiRow;
+			this.midC = roiCol;
+			this.radius = roiRadius;
+			this._startPhi = startPhi;
+			this._extentPhi = extentPhi;
+			this._ROIWidth = roiWidth;
+			_initPointsDone = true;
 		}
 		public override ROIViewModel ToROIViewModel()
 		{
@@ -428,13 +449,16 @@ namespace ViewROI.SmartROIs
 				CenterRow = midR,
 				CenterCol = midC,
 				Radius = radius,
-				ROIType = ROI.ROI_TYPE_CIRCLE,
+				ROIType = ROI.ROI_TYPE_ARC,
 				ID = ID,
+				StartPhi = _startPhi,
+				ExtentPhi = _extentPhi,
+				ROIWidth = _ROIWidth,
 			};
 		}
 		public override void MakeROI(ROIViewModel model)
 		{
-			MakeROI(model.CenterRow, model.CenterCol, model.Radius);
+			MakeROI(model.CenterRow, model.CenterCol, model.Radius, model.StartPhi, model.ExtentPhi, model.ROIWidth);
 		}
 		#endregion
 
@@ -442,7 +466,6 @@ namespace ViewROI.SmartROIs
 		private int _clickPoints = 3; //應點擊的次數
 		private List<PositionModel> _clickedPointsPositionList;
 		private bool _initPointsDone = false;
-		private int _smartWidth = 10;
 		private bool _success = false;
 		public bool WaitForClickPoints(double x, double y)
 		{
@@ -486,13 +509,16 @@ namespace ViewROI.SmartROIs
 					var angles = agDict.OrderByDescending(p => p.Value)
 										.Where((p, idx) => idx % 2 == 0)
 										.Select(p => p.Value).ToArray();
-					startPhi = angles[0];
+					_startPhi = angles[0];
 					var endPhi = angles[1];
 
 					//計算延伸長度
-					extentPhi = (startPhi < 0) ? Math.Abs(startPhi) - Math.Abs(endPhi)
-												: endPhi - startPhi;
-					circDir = "negative";//clockwise 畫弧
+					/*
+					 * 起始點在第一，二象限，則
+					 */
+					_extentPhi = (_startPhi < 0) ? Math.Abs(_startPhi) - Math.Abs(endPhi)
+												: endPhi - _startPhi;
+					_pointOrder = "negative";//clockwise 畫弧
 
 					determineArcHandles();
 					updateArrowHandle();
@@ -511,11 +537,6 @@ namespace ViewROI.SmartROIs
 			{
 				return;
 			}
-		}
-
-		public void UpdateROIModel(ROIViewModel updateModel)
-		{
-			//throw new NotImplementedException();
 		}
 		#endregion
 	}

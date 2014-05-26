@@ -116,13 +116,6 @@ namespace ViewROI.SmartROIs
 			MakeROI(model.CenterRow, model.CenterCol, model.Phi, model.Length, model.Width);
 		}
 
-		//畫 4個角及中間的 Handle Rectangle 大小
-		private double _HandleRectangleWidth = 10.0;
-		private double _HandleRectangleHeight = 10.0;
-
-		//Arrow 大小
-		private double _ArrowSize = 2.0;
-
 		/// <summary>Paints the ROI into the supplied window</summary>
 		/// <param name="window">HALCON window</param>
 		public override void draw(HalconDotNet.HWindow window)
