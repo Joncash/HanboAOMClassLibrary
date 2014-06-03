@@ -11,7 +11,12 @@ namespace Hanbo.Extensions
 	public static class MathExtensions
 	{
 		/// <summary>
+		/// <para>***************</para>
 		/// 把角度轉為 Halcon 徑度
+		/// <para>角度, 順時針方向遞增 0 ~360</para>
+		/// <para>Halcon Phi, 第一，二象限為正值，逆時針方向遞增 0 ~ PI</para>
+		/// <para>第三，四象限為負值, 順時針方向遞增 0 ~ -PI</para>
+		/// <para>***************</para>
 		/// </summary>
 		/// <param name="degree"></param>
 		/// <returns></returns>
