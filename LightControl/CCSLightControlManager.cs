@@ -64,6 +64,8 @@ namespace LightControl
 		private BackgroundWorker _bgWorker;
 		private BackgroundWorker _heartBeatWorker;
 		private int _heartbeat;
+		private int _heartbeatCountTimeout = 100;
+		private int _heartbeatCount = 0;
 
 		//
 		public event CCSLightControlReceivedDataHandler On_ReceivedData;
@@ -335,9 +337,20 @@ namespace LightControl
 					{
 						_hardwareConnectionStatus = false;
 						_ExceptionMessage = ex.Message;
+						_heartbeatCount++;
+						if (_heartbeatCount >= _heartbeatCountTimeout)
+						{
+							_heartbeatCount = 0;
+							e.Cancel = true;
+							break;
+						}
 					}
-					worker.ReportProgress(1, _hardwareConnectionStatus);
-					Thread.Sleep(_heartbeat);
+					finally
+					{
+						if (_hardwareConnectionStatus) _heartbeatCount = 0;
+						worker.ReportProgress(1, _hardwareConnectionStatus);
+						Thread.Sleep(_heartbeat);
+					}
 				}
 			}
 		}
