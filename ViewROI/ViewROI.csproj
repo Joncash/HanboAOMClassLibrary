@@ -64,7 +64,20 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Extensions\Hanbo.Extensions.csproj">
+      <Project>{8ef04c32-1282-4008-a062-e34ba0750459}</Project>
+      <Name>Hanbo.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Geometry\Hanbo.Geometry.csproj">
+      <Project>{0db109fe-790b-4156-b09c-44658d3a9a68}</Project>
+      <Name>Hanbo.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanbo.Log\Hanbo.Log.csproj">
+      <Project>{37fd6f2e-0078-4a9e-a447-2ae526cadc7d}</Project>
+      <Name>Hanbo.Log</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
@@ -89,6 +102,7 @@
     <Compile Include="Interface\IProg.cs" />
     <Compile Include="MeasureParameter.cs" />
     <Compile Include="Model\PositionModel.cs" />
+    <Compile Include="Prog\ROIProgArc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <!--<Compile Include="obj\FunctionPlot.cs" />-->
     <Compile Include="GraphicsContext.cs" />
@@ -110,7 +124,9 @@
     <Compile Include="ROIRectangle1.cs" />
     <Compile Include="ROIRectangle2.cs" />
     <Compile Include="ROIViewModel.cs" />
-    <Compile Include="SmartROIs\PointsLine.cs" />
+    <Compile Include="SmartROIs\SmartLine.cs" />
+    <Compile Include="SmartROIs\SmartArc.cs" />
+    <Compile Include="SmartROIs\SmartCircle.cs" />
     <Compile Include="SmartROIs\SmartPoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

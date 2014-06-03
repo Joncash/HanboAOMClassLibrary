@@ -97,6 +97,8 @@ namespace ViewROI
 		/// </summary>
 		public IconicDelegate NotifyRCObserver;
 
+		private ROI _waitForClickROI;
+
 		/// <summary>Constructor</summary>
 		public ROIController()
 		{
@@ -352,6 +354,11 @@ namespace ViewROI
 		{
 			window.SetDraw("margin");
 			window.SetLineWidth(1);
+			//畫還未完成的 ROI
+			if (_waitForClickROI != null)
+			{
+				_waitForClickROI.draw(window);
+			}
 
 			if (ROIList.Count > 0)
 			{
@@ -461,12 +468,13 @@ namespace ViewROI
 			var done = smartROI.WaitForClickPoints(imgX, imgY);
 			if (smartROI.ClickedPoints == 1)
 			{
-				ROIList.Add(smartROI);
-				activeROIidx = ROIList.Count - 1;
+				_waitForClickROI = (ROI)smartROI;
 			}
 			viewController.repaint();
 			if (done)
 			{
+				ROIList.Add(smartROI);
+				_waitForClickROI = null;
 				roiMode = null;
 				viewController.DisableZoomContinue();
 				activeROIidx = ROIList.Count - 1;

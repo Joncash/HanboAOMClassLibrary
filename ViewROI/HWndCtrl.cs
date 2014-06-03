@@ -815,7 +815,7 @@ namespace ViewROI
 				 */
 				if (errorNumber != 5106 && errorNumber != 5100)
 				{
-					throw ex;
+					Hanbo.Log.LogManager.Error(ex);
 				}
 			}
 
