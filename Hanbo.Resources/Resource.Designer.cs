@@ -306,6 +306,16 @@ namespace Hanbo.Resources {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap draw_arc {
+            get {
+                object obj = ResourceManager.GetObject("draw_arc", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap draw_circle {
             get {
                 object obj = ResourceManager.GetObject("draw_circle", resourceCulture);
@@ -359,6 +369,26 @@ namespace Hanbo.Resources {
         public static System.Drawing.Bitmap draw_point_blue32 {
             get {
                 object obj = ResourceManager.GetObject("draw_point_blue32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap draw_smart_arc {
+            get {
+                object obj = ResourceManager.GetObject("draw_smart_arc", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap draw_smart_circle {
+            get {
+                object obj = ResourceManager.GetObject("draw_smart_circle", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
