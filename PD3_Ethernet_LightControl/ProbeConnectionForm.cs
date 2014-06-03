@@ -1,4 +1,4 @@
-﻿using Hanbo.System.SingleInstance;
+﻿using Hanbo.Device.SingleInstance;
 using LightControl;
 using System;
 using System.Collections.Generic;

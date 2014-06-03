@@ -18,8 +18,8 @@ namespace PD3_Ethernet_LightControl
 			//Application.Run(new DemoForm());
 			//Application.Run(new LightControlForm());
 			//Application.Run(new ProbeConnectionForm());
-			Application.Run(new AsyncConnectionForm());
-			//Application.Run(new CCSLightControlForm());
+			//Application.Run(new AsyncConnectionForm());
+			Application.Run(new CCSLightControlForm());
 		}
 	}
 }

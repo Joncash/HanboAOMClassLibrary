@@ -47,12 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncConnectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AsyncConnectionForm.Designer.cs">
-      <DependentUpon>AsyncConnectionForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="CCSLightControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,9 +74,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AsyncConnectionForm.resx">
-      <DependentUpon>AsyncConnectionForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="CCSLightControlForm.resx">
       <DependentUpon>CCSLightControlForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -117,6 +108,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Device.SingleInstance\Hanbo.Device.SingleInstance.csproj">
+      <Project>{af11882b-41bd-423f-be54-262554ecc943}</Project>
+      <Name>Hanbo.Device.SingleInstance</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Helper\Hanbo.Helper.csproj">
       <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
       <Name>Hanbo.Helper</Name>
@@ -124,10 +119,6 @@
     <ProjectReference Include="..\Hanbo.Resources\Hanbo.Resources.csproj">
       <Project>{997bcb46-e343-45e3-ba64-b054381499cd}</Project>
       <Name>Hanbo.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Hanbo.System.SingleInstance\Hanbo.System.SingleInstance.csproj">
-      <Project>{af11882b-41bd-423f-be54-262554ecc943}</Project>
-      <Name>Hanbo.System.SingleInstance</Name>
     </ProjectReference>
     <ProjectReference Include="..\LightControl\LightControl.csproj">
       <Project>{e21f80eb-cb40-469e-b1f0-0494ac4b40e9}</Project>

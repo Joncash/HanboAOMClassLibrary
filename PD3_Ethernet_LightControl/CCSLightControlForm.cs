@@ -1,5 +1,5 @@
 ﻿using Hanbo.Helper;
-using Hanbo.System.SingleInstance;
+using Hanbo.Device.SingleInstance;
 using LightControl;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace PD3_Ethernet_LightControl
 
 		private bool _lock = false;
 		private bool _isConnected = false;
-		private int _maxTry = 3;	//最大嘗試次數
+		private int _maxTry = ConfigurationHelper.GetLightControlMaxTryConnection();	//最大嘗試次數
 		private int _curTry = 0;	//目前嘗試次數
 		private int _heartbeatInterval = ConfigurationHelper.GetHeartbeatInterval();
 		private bool _latestHardwareConnectedStatus;
