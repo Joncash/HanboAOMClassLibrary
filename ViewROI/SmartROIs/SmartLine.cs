@@ -311,7 +311,17 @@ namespace ViewROI.SmartROIs
 		{
 			if (_clickedPointsPositionList.Count < _clickPoints)
 			{
-				_clickedPointsPositionList.Add(new PositionModel() { ColBegin = x, RowBegin = y });
+				var isNotTheSamePoint = _clickedPointsPositionList.Count == 0;
+				var prevIdx = _clickedPointsPositionList.Count - 1;
+				var prevPoint = prevIdx > -1 ? _clickedPointsPositionList[prevIdx] : null;
+				if (prevPoint != null)
+				{
+					isNotTheSamePoint = Math.Abs(prevPoint.ColBegin - x) > 0 || Math.Abs(prevPoint.RowBegin - y) > 0;
+				}
+				if (isNotTheSamePoint)
+				{
+					_clickedPointsPositionList.Add(new PositionModel() { ColBegin = x, RowBegin = y });
+				}
 			}
 
 			_initPointsDone = _clickedPointsPositionList.Count == _clickPoints;
