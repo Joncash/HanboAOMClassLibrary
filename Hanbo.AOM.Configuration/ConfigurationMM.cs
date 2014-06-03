@@ -26,7 +26,33 @@ namespace Hanbo.AOM.Configuration
 		private static string _systemSettingFile = @"Configuration\Settings.xml";
 		private static XDocument _systemSettingsDoc;
 		#endregion
+		public static XDocument GetConfigurationDoc()
+		{
+			return _systemSettingsDoc;
+		}
+		public static int SubpixThreshold
+		{
+			get
+			{
+				var threshold = 110;//
+				if (_systemSettingsDoc != null)
+				{
+					var xpath = String.Format("{0}/MeasureSettings/SubpixThreshold", _systemSettingsRootName);
+					var elem = getXElementWithXPath(xpath);
+					if (elem != null)
+					{
+						int intValue;
+						if (Int32.TryParse(elem.Value, out intValue))
+						{
+							threshold = intValue;
+						}
+					}
+				}
+				return threshold;
 
+
+			}
+		}
 		public static string UpperLightChannel
 		{
 			get
@@ -63,6 +89,11 @@ namespace Hanbo.AOM.Configuration
 		}
 		static ConfigurationMM()
 		{
+			loadConfigFile();
+			init();
+		}
+		private static void loadConfigFile()
+		{
 			_systemSettingsDoc = null;
 			if (File.Exists(_systemSettingFile))
 			{
@@ -76,9 +107,6 @@ namespace Hanbo.AOM.Configuration
 					Hanbo.Log.LogManager.Error(ex);
 				}
 			}
-
-			init();
-
 		}
 		private static void init()
 		{
@@ -88,6 +116,8 @@ namespace Hanbo.AOM.Configuration
 				new UnitViewModel(){ Name = "mil", Value = "mil"},
 				new UnitViewModel(){ Name = "inch", Value = "inch"},
 			};
+
+			//小圖示
 			_geoImageDictionary = new Dictionary<string, Bitmap>() { 
 				{"Point", Hanbo.Resources.Resource.draw_point},
 				{"Line", Hanbo.Resources.Resource.draw_line},
@@ -99,6 +129,7 @@ namespace Hanbo.AOM.Configuration
 				{"CrossPoint", Hanbo.Resources.Resource.crossPoint},
 				{"DistanceX", Hanbo.Resources.Resource.distanceX},
 				{"DistanceY", Hanbo.Resources.Resource.distanceY},
+				{"Arc", Hanbo.Resources.Resource.draw_arc},
 			};
 
 			_geoTreeviewImageList = new ImageList();
@@ -106,17 +137,6 @@ namespace Hanbo.AOM.Configuration
 			{
 				_geoTreeviewImageList.Images.Add(item.Key, item.Value);
 			}
-			/*
-			_geoTreeviewImageList.Images.Add("Point", Hanbo.Resources.Resource.draw_point);
-			_geoTreeviewImageList.Images.Add("Line", Hanbo.Resources.Resource.draw_line);
-			_geoTreeviewImageList.Images.Add("Circle", Hanbo.Resources.Resource.draw_circle);
-			_geoTreeviewImageList.Images.Add("Distance", Hanbo.Resources.Resource.distance);
-			_geoTreeviewImageList.Images.Add("Angle", Hanbo.Resources.Resource.angle);
-			_geoTreeviewImageList.Images.Add("SymmetryLine", Hanbo.Resources.Resource.symmetryLine);
-			_geoTreeviewImageList.Images.Add("CrossPoint", Hanbo.Resources.Resource.crossPoint);
-			_geoTreeviewImageList.Images.Add("DistanceX", Hanbo.Resources.Resource.distanceX);
-			_geoTreeviewImageList.Images.Add("DistanceY", Hanbo.Resources.Resource.distanceY);
-			 */
 		}
 
 		/// <summary>
@@ -147,6 +167,86 @@ namespace Hanbo.AOM.Configuration
 				xElem = _systemSettingsDoc.XPathSelectElement(xpath);
 			}
 			return xElem;
+		}
+
+		/// <summary>
+		/// NG Color
+		/// <para>預設為 Red</para>
+		/// </summary>
+		public static Color NGColor
+		{
+			get
+			{
+				var channel = Color.Red;//Default
+				if (_systemSettingsDoc != null)
+				{
+					var xpath = String.Format("{0}/JudgeColorSettings/NGColor", _systemSettingsRootName);
+					var elem = getXElementWithXPath(xpath);
+					if (elem != null)
+					{
+						var settingColor = Color.FromName(elem.Value);
+						if (settingColor.IsKnownColor)
+						{
+							channel = settingColor;
+						}
+					}
+				}
+				return channel;
+			}
+		}
+		/// <summary>
+		/// OKColor
+		/// <para>預設為 Lime</para>
+		/// </summary>
+		public static Color OKColor
+		{
+			get
+			{
+				var channel = Color.Lime;//Default
+				if (_systemSettingsDoc != null)
+				{
+					var xpath = String.Format("{0}/JudgeColorSettings/OKColor", _systemSettingsRootName);
+					var elem = getXElementWithXPath(xpath);
+					if (elem != null)
+					{
+						var settingColor = Color.FromName(elem.Value);
+						if (settingColor.IsKnownColor)
+						{
+							channel = settingColor;
+						}
+					}
+				}
+				return channel;
+			}
+		}
+
+		public static bool SaveConfiguration(Dictionary<string, string> settingDict)
+		{
+			var success = (_systemSettingsDoc != null);
+			if (success)
+			{
+				try
+				{
+					foreach (var item in settingDict)
+					{
+						var xpath = _systemSettingsRootName + "/" + item.Key;
+						var value = item.Value;
+						var elem = _systemSettingsDoc.XPathSelectElement(xpath);
+						if (elem != null)
+						{
+							elem.Value = value;
+						}
+					}
+					_systemSettingsDoc.Save(_systemSettingFile);
+				}
+				catch (Exception ex)
+				{
+					success = false;
+					Hanbo.Log.LogManager.Error(ex);
+					MessageBox.Show(ex.Message);
+				}
+			}
+			return success;
 		}
 	}
 }
