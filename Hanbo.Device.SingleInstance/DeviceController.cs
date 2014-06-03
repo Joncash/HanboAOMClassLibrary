@@ -7,11 +7,10 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 
-namespace Hanbo.System.SingleInstance
+namespace Hanbo.Device.SingleInstance
 {
 	public static class DeviceController
 	{
-		private static CameraSettingSection _section = ConfigurationManager.GetSection("CameraSettingSection") as CameraSettingSection;
 		private static FrameGrabberArgs _fgArgs;
 		private static GrabImageWorkingMan _grabImageWorkingMan;
 		//private static LineScanGrabImageWorkingMan _linescan;
@@ -26,6 +25,18 @@ namespace Hanbo.System.SingleInstance
 
 		public static bool LightControlManagerUsed { get { return _lightControlInstanceUsed; } }
 
+		//建構子
+		static DeviceController()
+		{
+			try
+			{				
+				initGrabImageHandle();
+			}
+			catch (Exception ex)
+			{
+				Hanbo.Log.LogManager.Error(ex);
+			}
+		}
 
 		/// <summary>
 		/// 釋放 CCD 資源
@@ -91,7 +102,8 @@ namespace Hanbo.System.SingleInstance
 		#region private functions
 		private static void initGrabImageHandle()
 		{
-			var fpath = CameraSettingRepo.GetCameraSettingFilepath(_section);
+			var section = ConfigurationManager.GetSection("CameraSettingSection") as CameraSettingSection;
+			var fpath = CameraSettingRepo.GetCameraSettingFilepath(section);
 			var dict = CameraSettingRepo.GetCameraSettingDictionary(fpath);
 			_fgArgs = new FrameGrabberArgs()
 			{

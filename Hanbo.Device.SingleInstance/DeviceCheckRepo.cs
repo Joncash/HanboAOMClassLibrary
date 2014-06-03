@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Hanbo.System.SingleInstance
+namespace Hanbo.Device.SingleInstance
 {
 	public class DeviceCheckRepo
 	{
