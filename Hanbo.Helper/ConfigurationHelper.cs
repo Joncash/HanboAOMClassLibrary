@@ -310,7 +310,9 @@ namespace Hanbo.Helper
 					inVisibleFields = new string[] { "Selected", "StartPhi", "EndPhi", "PointOrder", 
 													"IsExportItem", "RecordID", "ROIID", "ROIModel", 
 													"GeoType", "Normal", "LowerBound", "UpperBound", 
-													"CoordinateID" };
+													"CoordinateID",
+													"SkewID"
+					};
 					break;
 			}
 			return inVisibleFields;
@@ -594,17 +596,6 @@ namespace Hanbo.Helper
 			return setting;
 		}
 
-		public static int GetSubpixThresholdDefault()
-		{
-			var setting = ConfigurationManager.AppSettings["SubpixThreshold"];
-			var val = 110;
-			if (!Int32.TryParse(setting, out val))
-			{
-				val = 110;
-			}
-			return val;
-		}
-
 		public static bool GetUseEdgeSubpixSetting()
 		{
 			var setting = ConfigurationManager.AppSettings["UseEdgeSubpix"];
@@ -626,6 +617,17 @@ namespace Hanbo.Helper
 				setting = elem.Value;
 			}
 			return setting;
+		}
+
+		public static int GetLightControlMaxTryConnection()
+		{
+			var val = ConfigurationManager.AppSettings["MaxTry"];
+			int maxTry;
+			if (!Int32.TryParse(val, out maxTry))
+			{
+				maxTry = 3;
+			}
+			return maxTry;
 		}
 	}
 }
