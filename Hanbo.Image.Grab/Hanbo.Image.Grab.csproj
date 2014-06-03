@@ -55,14 +55,8 @@
     <Compile Include="GrabImageWorkingMan.cs" />
     <Compile Include="IGrabImage.cs" />
     <Compile Include="IGrab.cs" />
-    <Compile Include="LineScanGrabImageWorkingMan.cs" />
-    <Compile Include="LineScanMan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HalconGrabber.cs" />
-    <Compile Include="PylonFeature.cs" />
-    <Compile Include="PylonGrabImageWorkingMan.cs" />
-    <Compile Include="PylonImageProvider.cs" />
-    <Compile Include="PylonImageWorkingMan.cs" />
     <Compile Include="SmartWorkingMan.cs" />
     <Compile Include="WorkingManStatus.cs" />
   </ItemGroup>
@@ -70,7 +64,8 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="packages.config" />  </ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hanbo.Log\Hanbo.Log.csproj">
       <Project>{37fd6f2e-0078-4a9e-a447-2ae526cadc7d}</Project>

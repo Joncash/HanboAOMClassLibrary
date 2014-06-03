@@ -155,13 +155,27 @@ namespace Hanbo.Image.Grab
 		#region Event Binding
 		private void _bgworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			/*setStatus(GrabInstruction.GrabImage, GrabStage.Grabbing, GrabState.Idle);
+			statusChangedNotify(null, new GrabImageStatusChangedEventArgs() { Status = this.Status });
+			 */
 			if (GrabImageStopped != null)
 				GrabImageStopped(sender, e);
 		}
 
 		private void _bgworker_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
-			OnGrabImageChanged(e);
+			var error = e.UserState as HalconDotNet.HOperatorException;
+			if (error != null)
+			{
+				if (GrabImageException != null)
+				{
+					GrabImageException(error);
+				}
+			}
+			else
+			{
+				OnGrabImageChanged(e);
+			}
 		}
 
 		private void _bgworker_DoWork(object sender, DoWorkEventArgs e)
@@ -189,10 +203,7 @@ namespace Hanbo.Image.Grab
 						catch (HalconDotNet.HOperatorException ex)
 						{
 							Hanbo.Log.LogManager.Error(ex);
-							if (GrabImageException != null)
-							{
-								GrabImageException(ex);
-							}
+							worker.ReportProgress(99, ex);
 						}
 					}
 				}
@@ -358,23 +369,23 @@ namespace Hanbo.Image.Grab
 		{
 			if (_hFrameGrabber == null || !_hFrameGrabber.IsInitialized())
 			{
-
 				_hFrameGrabber = new HFramegrabber(_FGArgs.Name,
-															_FGArgs.HorizontalResolution,
-															_FGArgs.VerticalResolution,
-															_FGArgs.ImageWidth,
-															_FGArgs.ImageHeight,
-															_FGArgs.StartRow,
-															_FGArgs.StartColumn,
-															_FGArgs.Field,
-															new HTuple(_FGArgs.BitsPerChannel),
-															new HTuple(_FGArgs.ColorSpace),
-															new HTuple(_FGArgs.Generic),
-															_FGArgs.ExternalTrigger,
-															new HTuple(_FGArgs.CameraType),
-															new HTuple(_FGArgs.Device),
-															new HTuple(_FGArgs.Port),
-															new HTuple(_FGArgs.LineIn));
+																	_FGArgs.HorizontalResolution,
+																	_FGArgs.VerticalResolution,
+																	_FGArgs.ImageWidth,
+																	_FGArgs.ImageHeight,
+																	_FGArgs.StartRow,
+																	_FGArgs.StartColumn,
+																	_FGArgs.Field,
+																	new HTuple(_FGArgs.BitsPerChannel),
+																	new HTuple(_FGArgs.ColorSpace),
+																	new HTuple(_FGArgs.Generic),
+																	_FGArgs.ExternalTrigger,
+																	new HTuple(_FGArgs.CameraType),
+																	new HTuple(_FGArgs.Device),
+																	new HTuple(_FGArgs.Port),
+																	new HTuple(_FGArgs.LineIn));
+
 			}
 		}
 		#endregion
