@@ -10,8 +10,8 @@ namespace Hanbo.Helper
 {
 	public static class CameraSystem
 	{
-		private static int _RoundDigit = GetRoundDigit();
-		private static double _Resolution = GetCurrentResolution();
+		private static int _RoundDigit;
+		private static double _Resolution;
 		private static XDocument _settingDoc;
 		private static string _settingDocFilepath = @"Configuration\Mahr.xml";
 		static CameraSystem()
@@ -23,6 +23,8 @@ namespace Hanbo.Helper
 			try
 			{
 				_settingDoc = XDocument.Load(_settingDocFilepath);
+				_RoundDigit = GetRoundDigit();
+				_Resolution = GetCurrentResolution();
 			}
 			catch (Exception ex)
 			{
@@ -44,6 +46,7 @@ namespace Hanbo.Helper
 				if (avgElement != null)
 				{
 					value = Convert.ToDouble(avgElement.Attribute("value").Value);
+					_Resolution = value;
 				}
 			}
 			return value;
