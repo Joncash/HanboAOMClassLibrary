@@ -12,6 +12,24 @@ namespace Hanbo.Helper
 	{
 		private static int _RoundDigit = GetRoundDigit();
 		private static double _Resolution = GetCurrentResolution();
+		private static XDocument _settingDoc;
+		private static string _settingDocFilepath = @"Configuration\Mahr.xml";
+		static CameraSystem()
+		{
+			init();
+		}
+		private static void init()
+		{
+			try
+			{
+				_settingDoc = XDocument.Load(_settingDocFilepath);
+			}
+			catch (Exception ex)
+			{
+				Hanbo.Log.LogManager.Error(String.Format("載入 「{0}」 發生錯誤", _settingDocFilepath));
+				Hanbo.Log.LogManager.Error(ex);
+			}
+		}
 
 		/// <summary>
 		/// 取得系統校正值, 單位: pixel/um
@@ -19,13 +37,14 @@ namespace Hanbo.Helper
 		/// <returns></returns>
 		public static double GetCurrentResolution()
 		{
-			var fpath = @"Configuration\Mahr.xml";
-			var xDoc = XDocument.Load(fpath);
 			double value = 0.0;
-			var avgElement = xDoc.Root.Elements("Avg").SingleOrDefault();
-			if (avgElement != null)
+			if (_settingDoc != null)
 			{
-				value = Convert.ToDouble(avgElement.Attribute("value").Value);
+				var avgElement = _settingDoc.Root.Elements("Avg").SingleOrDefault();
+				if (avgElement != null)
+				{
+					value = Convert.ToDouble(avgElement.Attribute("value").Value);
+				}
 			}
 			return value;
 		}
@@ -35,15 +54,15 @@ namespace Hanbo.Helper
 			var success = false;
 			try
 			{
-				var fpath = @"Configuration\Mahr.xml";
-				var xDoc = XDocument.Load(fpath);
-				var avgElement = xDoc.Root.Elements("Avg").SingleOrDefault();
-				if (avgElement != null)
+				if (_settingDoc != null)
 				{
-					avgElement.Attribute("value").SetValue(value);
-					//value = Convert.ToDouble(avgElement.Attribute("value").Value);
-					xDoc.Save(fpath);
-					success = true;
+					var avgElement = _settingDoc.Root.Elements("Avg").SingleOrDefault();
+					if (avgElement != null)
+					{
+						avgElement.Attribute("value").SetValue(value);
+						_settingDoc.Save(_settingDocFilepath);
+						success = true;
+					}
 				}
 			}
 			catch (IOException ex)
