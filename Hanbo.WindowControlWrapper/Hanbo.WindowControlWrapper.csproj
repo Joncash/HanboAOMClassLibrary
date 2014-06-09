@@ -53,6 +53,10 @@
     <Compile Include="RefSkew.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hanbo.Extensions\Hanbo.Extensions.csproj">
+      <Project>{8ef04c32-1282-4008-a062-e34ba0750459}</Project>
+      <Name>Hanbo.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hanbo.Helper\Hanbo.Helper.csproj">
       <Project>{7ac32bdf-f82e-4b5b-a6fd-a9b2ca5bcb4e}</Project>
       <Name>Hanbo.Helper</Name>

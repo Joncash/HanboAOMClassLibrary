@@ -12,11 +12,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using ViewROI;
+using ViewROI.SmartROIs;
+using Hanbo.Extensions;
 
 
 namespace Hanbo.WindowControlWrapper
 {
-	public enum GeoDataGridViewNotifyType { DeleteRow, ShowGeoImage, TreeView_AfterCheck, TreeView_AfterSelect, ReloadData, UpdateData, ErrorMessage, Coordinate_Removed, Coordinate_NameChanged, Clear }
+	public enum GeoDataGridViewNotifyType { DeleteRow, ShowGeoImage, TreeView_AfterCheck, TreeView_AfterSelect, ReloadData, UpdateData, ErrorMessage, Coordinate_Removed, Coordinate_NameChanged, Clear, Calculated, Skew_NameChanged }
 	public delegate void GeoDataGridViewRecordChangeNotify(GeoDataGridViewNotifyType notifyType, object data);
 	public class GeoDataGridViewManager
 	{
@@ -35,6 +37,11 @@ namespace Hanbo.WindowControlWrapper
 		private BindingList<RefCoordinate> _refCoordinate;
 		private string _currentCoordinateID;
 
+		//參考軸擺正
+		private BindingList<RefSkew> _refSkew;
+		private string _currentSkewID;
+		private RefSkew _defaultRefSkew;
+
 		//
 		public event GeoDataGridViewRecordChangeNotify On_RecordChanged;
 
@@ -42,9 +49,23 @@ namespace Hanbo.WindowControlWrapper
 		public CalcuteType DoCalculate = CalcuteType.None;
 
 		private ContextMenuStrip _geoContextMenuStrip;
+
+		/// <summary>
+		/// 建構子
+		/// </summary>
+		/// <param name="container">DataGrid</param>
+		/// <param name="menuStrip">右鍵選單</param>
+		/// <param name="refCoordinate">參考座標</param>
+		/// <param name="refSkew">參考軸擺正</param>
+		/// <param name="invisiableColumnNames">不顯示的欄位名稱們</param>
+		/// <param name="iconImageList">圖示s</param>
+		/// <param name="resolution">解析度</param>
+		/// <param name="roundDigit">進位</param>
+		/// <param name="assistant"></param>
 		public GeoDataGridViewManager(DataGridView container,
 										ContextMenuStrip menuStrip,
 										BindingList<RefCoordinate> refCoordinate,
+										BindingList<RefSkew> refSkew,
 										string[] invisiableColumnNames,
 										Dictionary<string, Bitmap> iconImageList,
 										double resolution,
@@ -53,6 +74,17 @@ namespace Hanbo.WindowControlWrapper
 			_GridViewContainer = container;
 			_geoContextMenuStrip = menuStrip;
 			_refCoordinate = refCoordinate;
+			_refSkew = refSkew;
+
+			_defaultRefSkew = new RefSkew();
+			//初始化 skewID
+			if (_refSkew == null)
+			{
+				_refSkew = new BindingList<RefSkew>();
+				_refSkew.Add(_defaultRefSkew);
+			}
+			_currentSkewID = (_refSkew.Count > 0) ? _refSkew[0].ID : "";
+
 			_DataList = new BindingList<GeoDataGridViewModel>();
 			_InvisiableColumnNames = invisiableColumnNames;
 			_ImageList = iconImageList;
@@ -78,37 +110,18 @@ namespace Hanbo.WindowControlWrapper
 			_Resolution = resolution;
 			_RoundDigit = roundDigit;
 			mAssistant = assistant;
-			_refCoordinate = new BindingList<RefCoordinate>();
+
+			var dfCoordinateModel = new List<RefCoordinate>() { new RefCoordinate(), };
+			_refCoordinate = new BindingList<RefCoordinate>(dfCoordinateModel);
+
+			//初始化 軸擺正
+			_defaultRefSkew = new RefSkew();
+			_currentSkewID = _defaultRefSkew.ID;
+			var dfSkewModel = new List<RefSkew>() { _defaultRefSkew };
+			_refSkew = new BindingList<RefSkew>(dfSkewModel);
+
 			initialize();
 		}
-
-		#region Public APIs
-		//		#region 過渡時期
-		//		public GeoDataGridViewManager(BindingList<GeoDataGridViewModel> bindingList,
-		//										ContextMenuStrip menuStrip,										
-		//										string[] invisiableColumnNames,
-		//										Dictionary<string, Bitmap> iconImageList,
-		//										double resolution,
-		//										int roundDigit, MeasureAssistant assistant)
-		//		{
-		//			_DataList = bindingList;
-		//			_InvisiableColumnNames = invisiableColumnNames;
-		//			_ImageList = iconImageList;
-		//			_Resolution = resolution;
-		//			_RoundDigit = roundDigit;
-		//			mAssistant = assistant;
-		//			initialize();
-		//		}
-		//		public void UseDataGridView(DataGridView gridview)
-		//		{
-		//			_GridViewContainer = gridview;
-		//			initGridView();
-		//		}
-		//		public void SetCoordinate(BindingList<RefCoordinate> refCoordinate,)
-		//		{
-		//			_refCoordinate = refCoordinate;
-		//		}
-		//#endregion
 
 		#region 參考座標 ******************
 
@@ -133,12 +146,15 @@ namespace Hanbo.WindowControlWrapper
 					{
 						resetModelCoordinate(refModel);
 					}
+
+					//如果現在設定的 ID 是移除的 ID, 則現在的 ID 設為預設值
 					if (_currentCoordinateID == coordinate.ID)
 						_currentCoordinateID = "";
 				}
 			}
 			return removed;
 		}
+
 		/// <summary>
 		/// <para>**********************</para>
 		/// 設定目前參考座標
@@ -151,9 +167,105 @@ namespace Hanbo.WindowControlWrapper
 			if (exists)
 				_currentCoordinateID = modelRecordID;
 		}
-
 		#endregion 參考座標 ***************
 
+		#region ===== 軸擺正 ==========================================================
+		/// <summary>
+		/// <para>***********</para>
+		/// 設定目前軸擺正參考
+		/// <para>***********</para>
+		/// </summary>
+		/// <param name="modelRecordID"></param>
+		public void SetSkew(string modelRecordID)
+		{
+			var skewModel = _refSkew.SingleOrDefault(p => p.ID == modelRecordID);
+			if (skewModel != null)
+			{
+				_currentSkewID = skewModel.ID;
+				//計算 skew
+				var skew = getSkew(skewModel.ID);
+
+				var selfModel = _DataList.SingleOrDefault(p => p.RecordID == modelRecordID);
+				selfModel.Skew = 0;
+				selfModel.SkewID = _defaultRefSkew.ID;
+				selfModel.SkewName = _defaultRefSkew.Name;
+
+
+				//設定目前所有的參考軸擺正為目前的軸擺正，除了自已
+				var updateModels = _DataList.Where(p => p.RecordID != modelRecordID);
+				foreach (var model in updateModels)
+				{
+					model.SkewID = skewModel.ID;
+					model.SkewName = skewModel.Name;
+					model.Skew = skew;
+				}
+				_GridViewContainer.Refresh();
+			}
+		}
+
+		/// <summary>
+		/// 計算軸擺正角度 (Degree)
+		/// </summary>
+		/// <param name="skewID">skewID as recordID</param>
+		private double getSkew(string skewID)
+		{
+			var skewRadian = 0.0;
+
+			//取得 model
+			var model = _DataList.SingleOrDefault(p => p.RecordID == skewID);
+			if (model != null)
+			{
+				//判斷 model 類型
+				if (DistanceHelper.IsPointType(model.GeoType))
+				{
+					skewRadian = HMisc.AngleLx(0, 0, model.Row1, model.Col1);
+				}
+				else if (DistanceHelper.isLineType(model.GeoType))
+				{
+					if (model.Col1 <= model.Col2)
+						skewRadian = HMisc.AngleLx(model.Row1, model.Col1, model.Row2, model.Col2);
+					else
+						skewRadian = HMisc.AngleLx(model.Row2, model.Col2, model.Row1, model.Col1);
+				}
+			}
+			return skewRadian.HalconPhiToDegree();
+		}
+		/// <summary>
+		/// 移除參考的軸擺正
+		/// </summary>
+		/// <param name="skewID"></param>
+		/// <returns></returns>
+		public bool RemoveRefSkew(string skewID)
+		{
+			bool removed = false;
+			var removeSkew = _refSkew.SingleOrDefault(p => p.ID == skewID);
+			if (removeSkew != null)
+			{
+				removed = _refSkew.Remove(removeSkew);
+				if (removed)
+				{
+					//重設相依於此軸擺正的資料列
+					foreach (var refModel in _DataList.Where(item => item.SkewID == removeSkew.ID))
+					{
+						resetModelSkew(refModel);
+					}
+					if (_currentSkewID == removeSkew.ID)
+						_currentSkewID = "";
+				}
+			}
+			return removed;
+		}
+
+		private void resetModelSkew(GeoDataGridViewModel refModel)
+		{
+			refModel.Skew = 0;
+			refModel.SkewID = "";
+			refModel.SkewName = "";
+		}
+
+		#endregion
+
+		#region public APIs
 		/// <summary>
 		/// 設定欄位顯示名稱
 		/// </summary>
@@ -175,6 +287,10 @@ namespace Hanbo.WindowControlWrapper
 		public void LoadRecord(BindingList<GeoDataGridViewModel> bindingList)
 		{
 			this.Clear();
+
+			//重建擺正資訊
+			reInitSkew(bindingList);
+
 			//把資料全部加入
 			foreach (var geoModel in bindingList)
 			{
@@ -192,6 +308,11 @@ namespace Hanbo.WindowControlWrapper
 				{
 					//加入舊的非 ROI 的資料列
 					addMeasuredViewModel(geoModel);
+
+					//更新skew
+					var skewValue = getSkew(_currentSkewID);
+					geoModel.SkewID = _currentSkewID;
+					geoModel.Skew = skewValue;
 				}
 			}
 			//取得所有的 Record, 並更新其相依的資料列
@@ -209,7 +330,7 @@ namespace Hanbo.WindowControlWrapper
 					Desc = "",
 				}).Distinct().ToList();
 
-			//Clear	
+			//Clear	Coordinate, 保留 Default
 			while (_refCoordinate.Count > 1)
 			{
 				_refCoordinate.RemoveAt(1);
@@ -219,6 +340,30 @@ namespace Hanbo.WindowControlWrapper
 				_refCoordinate.Add(item);
 			}
 			this.Refresh();
+		}
+
+		/// <summary>
+		/// <para>****************</para>
+		/// 重建擺正資訊, 只有一個
+		/// <para>****************</para>
+		/// </summary>
+		/// <param name="bindingList"></param>
+		private void reInitSkew(BindingList<GeoDataGridViewModel> bindingList)
+		{
+			//Restore 參考擺正, 只留一個
+			var skewIDs = bindingList.Where(p => !String.IsNullOrEmpty(p.SkewID))
+				.Select(p => new RefSkew()
+				{
+					ID = p.SkewID,
+					Name = p.SkewName,
+					Desc = "",
+				}).FirstOrDefault();
+			if (skewIDs != null)
+			{
+				_refSkew.Clear();
+				_refSkew.Add(skewIDs);
+				_currentSkewID = _refSkew[0].ID;
+			}
 		}
 
 		/// <summary>
@@ -383,7 +528,7 @@ namespace Hanbo.WindowControlWrapper
 					item.WorldDistance = pixelToRealWorldValue(pixelValue);
 				}
 			}
-			Refresh();
+			_GridViewContainer.Refresh();
 		}
 
 		/// <summary>
@@ -418,6 +563,7 @@ namespace Hanbo.WindowControlWrapper
 			var rowModel = _DataList.SingleOrDefault(p => p.RecordID == recordID);
 			if (rowModel != null)
 			{
+				//
 				var newDistance = tmpGeoDataViewModel.Distance;
 				double coordinateCol, coordinateRow;
 				getRefCoordinate(rowModel, out coordinateCol, out coordinateRow);
@@ -437,10 +583,31 @@ namespace Hanbo.WindowControlWrapper
 				//更新參考我的座標的物件
 				updateDependOnCoordinateObjects(rowModel);
 
+				//更新參考我作為軸擺正的物件
+				updateDependOnSkewObjects(rowModel);
+
 				//更新與此Geo 相關的 Geo Objects
 				updateDependGeoObject(rowModel);
 
-				//Update 參考座標
+			}
+		}
+
+		/// <summary>
+		/// 更新參考我作為軸擺正的物件
+		/// </summary>
+		/// <param name="rowModel"></param>
+		private void updateDependOnSkewObjects(GeoDataGridViewModel rowModel)
+		{
+			var isSkewModel = _refSkew.Any(p => p.ID == rowModel.RecordID);
+			if (isSkewModel)
+			{
+				//參考我的物件們
+				var models = _DataList.Where(p => p.SkewID == rowModel.RecordID);
+				var skewValue = getSkew(rowModel.RecordID);
+				foreach (var model in models)
+				{
+					model.Skew = skewValue;
+				}
 			}
 		}
 		/// <summary>
@@ -638,6 +805,7 @@ namespace Hanbo.WindowControlWrapper
 			distance = (isCircleType) ? distance * _circleDistanceSetting : distance;
 
 			var curCoordinate = _refCoordinate.SingleOrDefault(p => p.ID == _currentCoordinateID);
+			var curSkew = _refSkew.SingleOrDefault(p => p.ID == _currentSkewID);
 			GeoDataGridViewModel geoModel = new GeoDataGridViewModel()
 			{
 				Icon = getGeoViewModelIcon(roi),
@@ -660,6 +828,14 @@ namespace Hanbo.WindowControlWrapper
 				Unit = exportUnit,
 				GeoType = roi.ROIMeasureType,
 			};
+			var arcRoi = roi as SmartArc;
+			if (arcRoi != null)
+			{
+				var roiModelData = arcRoi.getModelData();
+				geoModel.StartPhi = roiModelData[3];
+				geoModel.EndPhi = roiModelData[4];
+			}
+
 			if (isAddNew)
 			{
 				if (curCoordinate != null)
@@ -668,15 +844,24 @@ namespace Hanbo.WindowControlWrapper
 					geoModel.CoordinateName = curCoordinate.Name;
 				}
 			}
-			//參考座標
+			//設定參考座標值
 			double refCoordinateCol, refCoordinateRow;
 			getRefCoordinate(geoModel, out refCoordinateCol, out refCoordinateRow);
 			geoModel.CoordinateCol = refCoordinateCol;
 			geoModel.CoordinateRow = refCoordinateRow;
+
+			//計算軸擺正
+			if (curSkew != null)
+			{
+				geoModel.SkewID = curSkew.ID;
+				geoModel.SkewName = curSkew.Name;
+				geoModel.Skew = getSkew(geoModel.SkewID);
+			}
 			return geoModel;
 		}
 		/// <summary>
 		/// 我的位置 - 我參考的座標的位置
+		/// <para>****取得參考座標位置****</para>
 		/// </summary>
 		/// <param name="geoModel">我</param>
 		/// <param name="coordinateCol"></param>
@@ -731,16 +916,16 @@ namespace Hanbo.WindowControlWrapper
 			//與本列相關的資料列
 			var oneToManyGeoList = hasDependObjectRecords.Where(q => q.DependGeoRowNames.Contains(geoParent.RecordID));
 
-			foreach (var item in oneToManyGeoList)
+			foreach (var geoModel in oneToManyGeoList)
 			{
-				var firstID = item.DependGeoRowNames.Length > 0 ? item.DependGeoRowNames[0] : "";
-				var secondID = item.DependGeoRowNames.Length > 1 ? item.DependGeoRowNames[1] : "";
-				var thirdID = item.DependGeoRowNames.Length > 2 ? item.DependGeoRowNames[2] : "";
+				var firstID = geoModel.DependGeoRowNames.Length > 0 ? geoModel.DependGeoRowNames[0] : "";
+				var secondID = geoModel.DependGeoRowNames.Length > 1 ? geoModel.DependGeoRowNames[1] : "";
+				var thirdID = geoModel.DependGeoRowNames.Length > 2 ? geoModel.DependGeoRowNames[2] : "";
 				var firstModel = _DataList.SingleOrDefault(p => p.RecordID == firstID);
 				var secondModel = _DataList.SingleOrDefault(p => p.RecordID == secondID);
 				var thirdModel = _DataList.SingleOrDefault(p => p.RecordID == thirdID);
 				GeoDataGridViewModel newModel = null;
-				switch (item.GeoType)
+				switch (geoModel.GeoType)
 				{
 					case MeasureType.Angle:
 						newModel = makeAngleGeoDataViewModel(firstModel, secondModel);
@@ -764,10 +949,13 @@ namespace Hanbo.WindowControlWrapper
 						newModel = makeSymmetryLineGeoDataViewModel(firstModel, secondModel);
 						break;
 				}
-				reAssignModelValue(item, newModel);
+				reAssignModelValue(geoModel, newModel);
 
 				//更新參考"我"座標的物件
-				updateDependOnCoordinateObjects(item);
+				updateDependOnCoordinateObjects(geoModel);
+
+				//更新參考我作為軸擺正的物件
+				updateDependOnSkewObjects(geoModel);
 			}
 		}
 
@@ -825,6 +1013,7 @@ namespace Hanbo.WindowControlWrapper
 
 			//Default value
 			_ExportUnit = "mm";
+
 
 		}
 
@@ -973,7 +1162,7 @@ namespace Hanbo.WindowControlWrapper
 						//變更座標系統名稱
 						//recordID						
 						var coordinate = _refCoordinate.SingleOrDefault(p => p.ID == recordID);
-						var isCoordinateNameChanged = coordinate != null;
+						var isCoordinateNameChanged = (coordinate != null);
 						if (isCoordinateNameChanged)
 						{
 							coordinate.Name = newCellValue;
@@ -984,8 +1173,23 @@ namespace Hanbo.WindowControlWrapper
 							this.Refresh();
 						}
 
+						//變更軸擺正名稱
+						var curSkew = _refSkew.SingleOrDefault(p => p.ID == recordID);
+						var isCurSkewNameChanged = (curSkew != null);
+						if (isCurSkewNameChanged)
+						{
+							curSkew.Name = newCellValue;
+							foreach (var item in _DataList.Where(p => p.SkewID == curSkew.ID))
+							{
+								item.SkewName = curSkew.Name;
+							}
+							this.Refresh();
+						}
+
 						if (isCoordinateNameChanged)
 							notifyRecordChanged(GeoDataGridViewNotifyType.Coordinate_NameChanged, isCoordinateNameChanged);
+						if (isCurSkewNameChanged)
+							notifyRecordChanged(GeoDataGridViewNotifyType.Skew_NameChanged, isCurSkewNameChanged);
 					}
 				}
 				catch (Exception ex)
@@ -1064,7 +1268,10 @@ namespace Hanbo.WindowControlWrapper
 			var confirmDelete = MessageBox.Show(message, Hanbo.Resources.Resource.Message_Confirm, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes;
 			if (confirmDelete)
 			{
+				//參考我的座標的資料列
 				RemoveRefCoordinate(model.RecordID);
+
+				RemoveRefSkew(model.RecordID);
 
 				//刪除相依的 Model
 				var modelROIID = model.ROIID;
@@ -1074,6 +1281,7 @@ namespace Hanbo.WindowControlWrapper
 					var row = deletedRows[i];
 					var recordID = row.RecordID;
 					RemoveRefCoordinate(row.RecordID);
+					RemoveRefSkew(row.RecordID);
 					_DataList.Remove(row);
 				}
 				_DataList.Remove(model);
@@ -1081,6 +1289,11 @@ namespace Hanbo.WindowControlWrapper
 			}
 			return confirmDelete;
 		}
+
+		/// <summary>
+		/// 將 Model 的參考座標清空, 設為 Default
+		/// </summary>
+		/// <param name="model"></param>
 		private void resetModelCoordinate(GeoDataGridViewModel model)
 		{
 			model.CoordinateID = model.CoordinateName = "";
@@ -1169,7 +1382,7 @@ namespace Hanbo.WindowControlWrapper
 				{
 					var columnIndex = e.ColumnIndex;
 					restoreGridviewState(columnIndex, gridView, checkRows);
-					notifyRecordChanged(GeoDataGridViewNotifyType.UpdateData, null);
+					notifyRecordChanged(GeoDataGridViewNotifyType.Calculated, null);
 				}
 			}
 		}
@@ -1246,9 +1459,14 @@ namespace Hanbo.WindowControlWrapper
 
 		private void measureDistanceX(DataGridViewRow[] checkRows)
 		{
+			//models
 			var pA = _DataList[checkRows[0].Index];
 			var pB = _DataList[checkRows[1].Index];
+
+			//measure
 			var distanceXModel = makeDistanceXGeoDataViewModel(pA, pB);
+
+			//done
 			if (distanceXModel != null) this.addMeasuredViewModel(distanceXModel);
 		}
 
@@ -1311,6 +1529,7 @@ namespace Hanbo.WindowControlWrapper
 				{
 					var number = _DataList.Count + 1;
 					var measureName = number.ToString("d2") + " " + Hanbo.Resources.Resource.Model_CrossPoint;
+					var curSkew = _refSkew.SingleOrDefault(p => p.ID == _currentSkewID);
 					result = new GeoDataGridViewModel()
 					{
 						Name = measureName,
@@ -1321,7 +1540,14 @@ namespace Hanbo.WindowControlWrapper
 						DependGeoRowNames = new string[] { lineOne.RecordID, lineTwo.RecordID },
 						Selected = false,
 						Unit = "",
+						SkewID = _currentSkewID,
 					};
+					if (curSkew != null)
+					{
+						result.SkewID = _currentSkewID;
+						result.SkewName = curSkew.Name;
+						result.Skew = getSkew(_currentSkewID);
+					}
 				}
 			}
 			else
