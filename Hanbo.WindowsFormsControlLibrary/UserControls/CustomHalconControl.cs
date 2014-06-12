@@ -23,19 +23,26 @@ namespace Hanbo.WindowsFormsControlLibrary
 	[Designer(typeof(CustomHalconControlDesigner))]
 	public partial class CustomHalconControl : UserControl
 	{
+		#region private variables *******************************************
 		private HWndCtrl mView;
 		private MeasureAssistant mAssistant;
-		//public ROIController roiController;
+		private ROIController _roiController;
 		private GrabImageWorkingMan _grabImageWorkingMan;
 		private OpenFileDialog _openImageFileDialog;
 		private SaveFileDialog _saveImageDialog;
-		private string[] _validImageExtensions = new string[] { "bmp", "jpg", "png", "tiff" };//ConfigurationHelper.GetValidImageExtensions();
+
+		//ConfigurationHelper.GetValidImageExtensions();
+		private string[] _validImageExtensions = new string[] { "bmp", "jpg", "png", "tiff" };
 		private bool _saveImageFlag = false;
 		private bool _openImageFlag = false;
 		private bool _isReady = false;
 		private string _edgeColor = "red";
 		private int _lineWidth = 1;
 		private HImage _saveImage;
+		private HImage _curImage;
+
+		#endregion **********************************************************
+
 		public CustomHalconControl()
 		{
 			InitializeComponent();
@@ -52,11 +59,14 @@ namespace Hanbo.WindowsFormsControlLibrary
 			message = "";
 			try
 			{
-				var roiController = new ROIController();
+				_roiController = new ROIController();
 				mView = new HWndCtrl(this.ViewPort);
-				mView.useROIController(roiController);
+				mView.useROIController(_roiController);
+				_roiController.NotifyRCObserver = new IconicDelegate(On_ROIUpdated);// ROI 操作通知
 
-				mAssistant = new MeasureAssistant(roiController);
+				mAssistant = new MeasureAssistant(_roiController);
+				mAssistant.NotifyMeasureObserver = new MeasureDelegate(UpdateMeasureResults);
+
 				initFileDialog();
 				initializeGrabImage();
 			}
@@ -67,6 +77,7 @@ namespace Hanbo.WindowsFormsControlLibrary
 			}
 			return _isReady;
 		}
+
 
 		private void initFileDialog()
 		{
@@ -110,7 +121,7 @@ namespace Hanbo.WindowsFormsControlLibrary
 			}
 			else
 			{
-				//Notify
+				//ToDo
 			}
 		}
 
@@ -130,18 +141,7 @@ namespace Hanbo.WindowsFormsControlLibrary
 
 		private void On_CameraStatusChanged(object sender, GrabImageStatusChangedEventArgs e)
 		{
-			var cameraConnStatus = Hanbo.Resources.Resource.Disconnected;
-			var status = e.Status;
-			switch (status.Stage)
-			{
-				case GrabStage.Connected:
-				case GrabStage.ContinuouslyGrabbing:
-				case GrabStage.Grabbed:
-				case GrabStage.Grabbing:
-					cameraConnStatus = Hanbo.Resources.Resource.Connected;
-					break;
-			}
-			//	WinStatusStrip.SetStatus(SystemStatusType.ConnectionStatus, cameraConnStatus);
+
 		}
 
 		private void On_CameraException(Exception ex)
@@ -155,26 +155,12 @@ namespace Hanbo.WindowsFormsControlLibrary
 					MessageBox.Show(Hanbo.Resources.Resource.Message_CameraIsOccupied);
 				}
 			}
-			else
-			{
-				//addSystemMessage(ex.Message, ex);
-			}
 		}
 
 		private void On_CameraGrabImageChanged(object sender, ProgressChangedEventArgs e)
 		{
 			var ho_Image = e.UserState as HImage;
-			try
-			{
-				//currImage = ho_Image;
-				//mAssistant.setImage(ho_Image);
-				//UpdateView();
-				updateView(ho_Image);
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
+			updateView(ho_Image);
 		}
 		#endregion
 
@@ -201,7 +187,6 @@ namespace Hanbo.WindowsFormsControlLibrary
 		public Panel HalconContainer { get { return this.Panel_Center; } }
 		#endregion
 
-
 		#region ToolStrip Butoon Click Events *****************************
 		private void MoveImageModeButton_Click(object sender, EventArgs e)
 		{
@@ -221,7 +206,7 @@ namespace Hanbo.WindowsFormsControlLibrary
 			if (mView != null)
 			{
 				mView.resetWindow();
-				updateView(null);
+				updateView();
 				//drawNonROIElement();
 			}
 		}
@@ -272,7 +257,7 @@ namespace Hanbo.WindowsFormsControlLibrary
 					HImage image = new HImage(fpath);
 					updateView(image);
 
-					//Notify to geoManager
+					//ToDo geoManager
 					//_geoManager.Clear();
 				}
 				catch (HalconException ex)
@@ -377,27 +362,35 @@ namespace Hanbo.WindowsFormsControlLibrary
 		#endregion*******************************************************************
 
 		/// <summary>
-		/// 更新畫面
+		/// 更新畫面 (影像, ROI, 量測結果)
 		/// </summary>
 		/// <param name="contour"></param>
 		private void updateView(HObject contour)
 		{
-			if (contour != null)
+			var image = contour as HImage;
+			if (image != null)
 			{
-				mView.addIconicVar(contour);
-				var image = contour as HImage;
-				if (image != null)
-				{
-					mAssistant.setImage(image);
-					showMeasureResult();
-					//if (roiController.getROIList().Count > 0)
-					//{
-					//	updateEdges();
-					//	updateRegions();
-					//}
-				}
+				_curImage = image;
+				mAssistant.setImage(image);
 			}
+
+			if (_curImage == null)
+			{
+				mView.clearList();
+			}
+			else
+			{
+				mView.addIconicVar(_curImage);
+			}
+			showMeasureResult();
 			mView.repaint();
+		}
+		/// <summary>
+		/// 更新畫面 (影像, ROI, 量測結果)
+		/// </summary>
+		private void updateView()
+		{
+			updateView(null);
 		}
 
 		/// <summary>
@@ -435,6 +428,95 @@ namespace Hanbo.WindowsFormsControlLibrary
 				statusStrip.Init(ViewPort, mView, _grabImageWorkingMan);
 			}
 		}
+		/// <summary>
+		/// <para>*************</para>
+		/// 取得即時影像
+		/// <para>*************</para>
+		/// </summary>
+		/// <returns></returns>
+		public HImage GetLiveImage()
+		{
+			HImage liveImage = null;
+			if (mAssistant != null)
+			{
+				liveImage = mAssistant.getImage();
+			}
+			return liveImage;
+		}
 		#endregion *************************************************************************
+
+		public void UseGeometryMeasure(UserControls.GeometryMeasureControl geometryMeasureControl)
+		{
+
+		}
+
+		/// <summary>
+		/// ROI 操作事件通知
+		/// </summary>
+		/// <param name="mode"></param>
+		private void On_ROIUpdated(int mode)
+		{
+			switch (mode)
+			{
+				case ROIController.EVENT_CREATED_ROI:
+					mAssistant.AddMeasureObject();
+					break;
+				case ROIController.EVENT_Reload_ROI:
+					mAssistant.AddMeasureObject();
+					mAssistant.UpdateMeasure(_roiController.getActiveROIIdx());
+					break;
+				case ROIController.EVENT_ACTIVATED_ROI:
+					mAssistant.ClickedActiveROI();
+					ROI activeROI = _roiController.getActiveROI();
+
+					//Todo
+					//_geoManager.SetTreeViewNodeActivate(activeROI);
+					break;
+				case ROIController.EVENT_MOVING_ROI:
+					mAssistant.UpdateMeasure(_roiController.getActiveROIIdx());
+					break;
+				case ROIController.EVENT_DELETED_ACTROI:
+					mAssistant.RemoveMeasureObjectActIdx();
+					break;
+				case ROIController.EVENT_DELETED_ALL_ROIS:
+					mAssistant.RemoveAllMeasureObjects();
+					break;
+			}
+			//顯示ROI 資訊
+			//Todo
+			//showROIInfo();
+
+			//ToDo
+			/*if (updateLineProfile)
+				PaintGraph();*/
+
+		}
+
+		public void UpdateMeasureResults(int mode)
+		{
+			switch (mode)
+			{
+				case MeasureAssistant.ERR_READING_FILE:
+					MessageBox.Show("Problem occured while reading file! \n" + mAssistant.exceptionText,
+						"Measure assistant",
+						MessageBoxButtons.OK,
+						MessageBoxIcon.Information);
+					mAssistant.exceptionText = "";
+					break;
+				case MeasureAssistant.EVENT_UPDATE_MEASUREMENT:
+				case MeasureAssistant.EVENT_UPDATE_RESULT_XLD:
+				case MeasureAssistant.EVENT_UPDATE_REMOVE:
+					updateView();
+					break;
+				default:
+					break;
+			}
+
+			if (mAssistant.exceptionText != "")
+			{
+				//ToDo
+				//addSystemMessage(Hanbo.Resources.Resource.Message_MeasurementError + mAssistant.exceptionText, null);
+			}
+		}
 	}
 }
