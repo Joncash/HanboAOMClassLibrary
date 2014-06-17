@@ -43,6 +43,7 @@
     <Compile Include="Argument\AutoExportArgument.cs" />
     <Compile Include="CameraSpecViewModel.cs" />
     <Compile Include="ExportMacroPlanViewModel.cs" />
+    <Compile Include="HWindowSettingViewModel.cs" />
     <Compile Include="LanguageViewModel.cs" />
     <Compile Include="LightDTO.cs" />
     <Compile Include="LightViewModel.cs" />
