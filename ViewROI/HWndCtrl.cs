@@ -28,6 +28,8 @@ namespace ViewROI
 		public double SecArrowY { get; set; }
 	}
 
+
+
 	/// <summary>
 	/// 縮放事件 Handler
 	/// </summary>
@@ -49,6 +51,21 @@ namespace ViewROI
 	/// </summary>
 	public class HWndCtrl
 	{
+		/// <summary>
+		/// 顯示格線
+		/// </summary>
+		public bool ShowGrid = false;
+
+		/// <summary>
+		/// 水平格線
+		/// </summary>
+		public int HLines = 0;
+
+		/// <summary>
+		/// 垂直格線
+		/// </summary>
+		public int VLines = 0;
+
 		public List<WriteStringViewModel> WriteStringList = new List<WriteStringViewModel>();
 		public List<ArrowViewModel> ArrowList = new List<ArrowViewModel>();
 
@@ -800,7 +817,11 @@ namespace ViewROI
 					HOperatorSet.DispArrow(window, arrowModel.CenterY, arrowModel.CenterX, arrowModel.SecArrowY, arrowModel.SecArrowX, arrowSize);
 				}
 
-
+				//畫格線
+				if (ShowGrid)
+				{
+					drawGridLines(window);
+				}
 				HSystem.SetSystem("flush_graphic", "true");
 
 				window.SetColor(this.RepaintWindowColor);
@@ -821,8 +842,49 @@ namespace ViewROI
 
 		}
 
+		/// <summary>
+		/// 畫格線
+		/// </summary>
+		private void drawGridLines(HalconDotNet.HWindow window)
+		{
+			if (this.HLines > 0 || this.VLines > 0)
+			{
+				//算出水平線間隔
+				var interval_H = this.imageHeight / (this.HLines + 1);
 
+				//算出垂直線間隔
+				var interval_W = this.imageWidth / (this.VLines + 1);
 
+				//設定線段樣式
+				HTuple dotLineStyle = new HTuple(new int[4] { 7, 7, 7, 7 });
+
+				HOperatorSet.SetLineStyle(window, dotLineStyle);
+				window.SetColor("red");
+				//畫水平線
+				for (int i = 0; i < this.HLines; i++)
+				{
+					var rowBegin = (i + 1) * interval_H;
+					var rowEnd = rowBegin;
+
+					var colBegin = 0;
+					var colEnd = this.imageWidth;
+					HOperatorSet.DispLine(window, rowBegin, colBegin, rowEnd, colEnd);
+				}
+				//畫垂直線
+				for (int i = 0; i < this.VLines; i++)
+				{
+					var rowBegin = 0;
+					var rowEnd = this.imageHeight;
+
+					var colBegin = (i + 1) * interval_W;
+					var colEnd = colBegin;
+					HOperatorSet.DispLine(window, rowBegin, colBegin, rowEnd, colEnd);
+				}
+
+				//Reset LineStyle
+				HOperatorSet.SetLineStyle(window, null);
+			}
+		}
 
 		/********************************************************************/
 		/*                      GRAPHICSSTACK                               */
