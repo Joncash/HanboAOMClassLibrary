@@ -105,6 +105,61 @@ namespace Hanbo.Helper
 			return shapeModel;
 		}
 
+		/// <summary>
+		/// 取得排序後的 Model, Order by Col theny By Row
+		/// </summary>
+		/// <param name="raw"></param>
+		/// <returns></returns>
+		public ShapeModel GetOrderdShapeModel(ShapeModel raw)
+		{
+			ShapeModel orderedModel = null;
+			if (raw != null)
+			{
+				List<ShapeModelDataTransferObject> aList = new List<ShapeModelDataTransferObject>();
+				for (int i = 0; i < raw.Score.TupleLength(); i++)
+				{
+					aList.Add(new ShapeModelDataTransferObject()
+					{
+						Row = raw.Row[i].D,
+						Col = raw.Col[i].D,
+						Angle = raw.Angle[i].D,
+						Score = raw.Score[i].D,
+					});
+				}
+				var orderedList = aList.OrderBy(p => p.Col).ThenBy(p => p.Row).ToList();
+				orderedModel = new ShapeModel()
+				{
+					ModelId = raw.ModelId,
+					Row = orderedList.Select(p => p.Row).ToArray(),
+					Col = orderedList.Select(p => p.Col).ToArray(),
+					Angle = orderedList.Select(p => p.Angle).ToArray(),
+					Score = orderedList.Select(p => p.Score).ToArray(),
+				};
+			}
+			return orderedModel;
+		}
+
+		/// <summary>
+		/// ReadShapeModel
+		/// </summary>
+		/// <param name="trainingModelFilepath"></param>
+		/// <returns>ModelID</returns>
+		public HTuple ReadShapeModel(string trainingModelFilepath)
+		{
+
+			HTuple hv_A1LModelId = null;
+			try
+			{
+				HOperatorSet.ReadShapeModel(trainingModelFilepath, out hv_A1LModelId);
+			}
+			catch (Exception ex)
+			{
+
+				Hanbo.Log.LogManager.Error("ReadShapeModel Exception: " + ex.Message);
+			}
+			return hv_A1LModelId;
+		}
+
 		#endregion =======================================================================
 		private ShapeModel findShapeModel(HObject hImage, HTuple hv_A1LModelId)
 		{
@@ -138,54 +193,7 @@ namespace Hanbo.Helper
 			}
 			return GetOrderdShapeModel(shapeModel);
 		}
-		public ShapeModel GetOrderdShapeModel(ShapeModel raw)
-		{
-			ShapeModel orderedModel = null;
-			if (raw != null)
-			{
-				List<ShapeModelDataTransferObject> aList = new List<ShapeModelDataTransferObject>();
-				for (int i = 0; i < raw.Score.TupleLength(); i++)
-				{
-					aList.Add(new ShapeModelDataTransferObject()
-					{
-						Row = raw.Row[i].D,
-						Col = raw.Col[i].D,
-						Angle = raw.Angle[i].D,
-						Score = raw.Score[i].D,
-					});
-				}
-				var orderedList = aList.OrderBy(p => p.Col).ThenBy(p => p.Row).ToList();
-				orderedModel = new ShapeModel()
-				{
-					ModelId = raw.ModelId,
-					Row = orderedList.Select(p => p.Row).ToArray(),
-					Col = orderedList.Select(p => p.Col).ToArray(),
-					Angle = orderedList.Select(p => p.Angle).ToArray(),
-					Score = orderedList.Select(p => p.Score).ToArray(),
-				};
-			}
-			return orderedModel;
-		}
-		/// <summary>
-		/// ReadShapeModel
-		/// </summary>
-		/// <param name="trainingModelFilepath"></param>
-		/// <returns>ModelID</returns>
-		public HTuple ReadShapeModel(string trainingModelFilepath)
-		{
 
-			HTuple hv_A1LModelId = null;
-			try
-			{
-				HOperatorSet.ReadShapeModel(trainingModelFilepath, out hv_A1LModelId);
-			}
-			catch (Exception ex)
-			{
-
-				Hanbo.Log.LogManager.Error("ReadShapeModel Exception: " + ex.Message);
-			}
-			return hv_A1LModelId;
-		}
 		class ShapeModelDataTransferObject
 		{
 			public double Row { get; set; }
