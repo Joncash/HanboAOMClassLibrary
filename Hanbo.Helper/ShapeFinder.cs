@@ -24,13 +24,16 @@ namespace Hanbo.Helper
 	/// </summary>
 	public class ShapeFinder
 	{
+		#region private variables
 		private HTuple _minScore = 0.5;
 		private HTuple _numMatches = 9999;
 		private HTuple _maxOverlap = 0.5;
 		private HTuple _subpixAlgo = "least_squares";
 		private HTuple _numberOfLevel = 6;
 		private HTuple _greediness = 0.75;
+		#endregion
 
+		#region 建構子
 		public ShapeFinder()
 		{
 			_minScore = ConfigurationHelper.GetGlobalShapeFinderMinScore();
@@ -53,6 +56,9 @@ namespace Hanbo.Helper
 			_numberOfLevel = numberOfLevel;
 			_greediness = greediness;
 		}
+		#endregion
+
+		#region Public Methods ==========================================================
 
 		/// <summary>
 		/// 找到匹配模型
@@ -99,6 +105,7 @@ namespace Hanbo.Helper
 			return shapeModel;
 		}
 
+		#endregion =======================================================================
 		private ShapeModel findShapeModel(HObject hImage, HTuple hv_A1LModelId)
 		{
 			ShapeModel shapeModel = null;
@@ -106,7 +113,7 @@ namespace Hanbo.Helper
 			HTuple hv_ModelRow, hv_ModelColumn, hv_ModelAngle, hv_ModelScore;
 
 			//find
-			Hanbo.Log.LogManager.Trace("ShapeFinder @Find() => FindShapeModel()");
+			Hanbo.Log.LogManager.Trace("ShapeFinder @Find() => FindShapeModel(), MinScore = " + _minScore);
 			HOperatorSet.FindShapeModel(hImage, hv_A1LModelId, (new HTuple(0)).TupleRad()
 				, (new HTuple(360)).TupleRad(),
 				_minScore,
