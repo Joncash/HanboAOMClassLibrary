@@ -160,6 +160,18 @@ namespace Hanbo.Helper
 			return hv_A1LModelId;
 		}
 
+		/// <summary>
+		/// 設定最小 Matching 分數
+		/// </summary>
+		/// <param name="value">數值介於 [0, 1]</param>
+		public void SetMinScore(double value)
+		{
+			if (value >= 0.0 && value <= 1.0)
+			{
+				_minScore = value;
+			}
+		}
+
 		#endregion =======================================================================
 		private ShapeModel findShapeModel(HObject hImage, HTuple hv_A1LModelId)
 		{
