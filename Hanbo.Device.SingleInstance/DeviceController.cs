@@ -13,14 +13,11 @@ namespace Hanbo.Device.SingleInstance
 	{
 		private static FrameGrabberArgs _fgArgs;
 		private static GrabImageWorkingMan _grabImageWorkingMan;
-		//private static LineScanGrabImageWorkingMan _linescan;
-		//private static MotionController _motionController;
 		private static bool _grabImageManInstanceUsed = false;
 
 		private static CCSLightControlManager _lightControlManager;
 		private static bool _lightControlInstanceUsed = false;
 
-		//public static bool GrabImageManUsed
 		public static bool GrabImageManUsed { get { return _grabImageManInstanceUsed; } }
 
 		public static bool LightControlManagerUsed { get { return _lightControlInstanceUsed; } }
@@ -29,7 +26,7 @@ namespace Hanbo.Device.SingleInstance
 		static DeviceController()
 		{
 			try
-			{				
+			{
 				initGrabImageHandle();
 			}
 			catch (Exception ex)
@@ -43,24 +40,9 @@ namespace Hanbo.Device.SingleInstance
 		/// </summary>
 		public static void ReleaseGrabImageWorkingManInstance()
 		{
-			//_grabImageWorkingMan.Cancel();
 			_grabImageManInstanceUsed = false;
-
-			//_linescan.Cancel();
 		}
-		//public static LineScanGrabImageWorkingMan GetLineScanInstance()
-		//{
-		//    if (_linescan == null)
-		//    {
-		//        _linescan = new LineScanGrabImageWorkingMan();
-		//    }
-		//    else
-		//    {
-		//        _linescan.RemoveAllRegisterEvent();
-		//    }
-		//    _grabImageManInstanceUsed = (_linescan != null);
-		//    return _linescan;
-		//}
+
 		public static GrabImageWorkingMan GetGrabImageWorkingManInstance()
 		{
 			if (_fgArgs == null)
