@@ -86,6 +86,10 @@ namespace Hanbo.Image.Grab
 		#endregion
 
 		#region 建構子
+		public GrabImageWorkingMan()
+		{
+
+		}
 
 		/// <summary>
 		/// 設定鏡頭參數
