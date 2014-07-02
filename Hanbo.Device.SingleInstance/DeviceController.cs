@@ -1,5 +1,6 @@
 ﻿using Hanbo.Configuration.Settings;
 using Hanbo.Image.Grab;
+using Hanbo.Image.Grab.PylonDriver;
 using LightControl;
 using System;
 using System.Collections.Generic;
@@ -45,19 +46,7 @@ namespace Hanbo.Device.SingleInstance
 
 		public static GrabImageWorkingMan GetGrabImageWorkingManInstance()
 		{
-			if (_fgArgs == null)
-			{
-				initGrabImageHandle();
-			}
-			var isArgsReady = _fgArgs != null;
-			if (_grabImageWorkingMan == null && isArgsReady)
-			{
-				_grabImageWorkingMan = new GrabImageWorkingMan(_fgArgs);
-			}
-			else
-			{
-				_grabImageWorkingMan.RemoveAllRegisterEvent();
-			}
+			_grabImageWorkingMan.RemoveAllRegisterEvent();
 			_grabImageManInstanceUsed = (_grabImageWorkingMan != null);
 			return _grabImageWorkingMan;
 		}
@@ -84,6 +73,15 @@ namespace Hanbo.Device.SingleInstance
 		#region private functions
 		private static void initGrabImageHandle()
 		{
+			initGrabArguments();
+			initGrabImageWorkingMan();
+		}
+
+		/// <summary>
+		/// 初始化 Camera 參數
+		/// </summary>
+		private static void initGrabArguments()
+		{
 			var section = ConfigurationManager.GetSection("CameraSettingSection") as CameraSettingSection;
 			var fpath = CameraSettingRepo.GetCameraSettingFilepath(section);
 			var dict = CameraSettingRepo.GetCameraSettingDictionary(fpath);
@@ -106,6 +104,26 @@ namespace Hanbo.Device.SingleInstance
 				Port = Convert.ToInt32(dict["Port"]),
 				LineIn = Convert.ToInt32(dict["LineIn"])
 			};
+		}
+
+		/// <summary>
+		/// 初始化 GrabImageWorkingMan
+		/// </summary>
+		private static void initGrabImageWorkingMan()
+		{
+			var setting = ConfigurationManager.AppSettings["UsePylonDriver"] ?? "false";
+			bool usePylonDriver;
+			Boolean.TryParse(setting, out usePylonDriver);
+
+			if (usePylonDriver)
+			{
+				_grabImageWorkingMan = new PylonGrabImageWorkingMan();
+			}
+			else
+			{
+				_grabImageWorkingMan = new GrabImageWorkingMan(_fgArgs);
+			}
+			
 		}
 		#endregion
 
