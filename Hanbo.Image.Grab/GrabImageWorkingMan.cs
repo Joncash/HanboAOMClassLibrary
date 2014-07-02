@@ -22,11 +22,12 @@ namespace Hanbo.Image.Grab
 	{
 		#region Events (事件)
 		//
-		public event GrabImageStatusNotifyEventHandler On_GrabImageStatusChanged;
+		public virtual event GrabImageStatusNotifyEventHandler On_GrabImageStatusChanged;
 		//
 		public event GrabImageConnectingEventHandler On_GrabImageConnecting;
 		public event GrabImageConnectedEventHandler On_GrabImageConnected;
-		public event GrabImageExceptionEventHandler GrabImageException;
+
+		public virtual event GrabImageExceptionEventHandler GrabImageException;
 
 		/// <summary>
 		/// GrabImageStart, Start()
@@ -36,12 +37,12 @@ namespace Hanbo.Image.Grab
 		/// <summary>
 		/// GrabImageChanged
 		/// </summary>
-		public event GrabImageChangedEventHandler GrabImageChanged;
+		public virtual event GrabImageChangedEventHandler GrabImageChanged;
 
 		/// <summary>
 		/// GrabImageStopped, Stop()
 		/// </summary>
-		public event GrabImageStoppedEventHandler GrabImageStopped;
+		public virtual event GrabImageStoppedEventHandler GrabImageStopped;
 		//
 		#endregion
 
@@ -68,7 +69,7 @@ namespace Hanbo.Image.Grab
 		/// <summary>
 		/// 是否忙碌
 		/// </summary>
-		public bool IsBusy
+		public virtual bool IsBusy
 		{
 			get
 			{
@@ -224,7 +225,7 @@ namespace Hanbo.Image.Grab
 		#endregion
 
 		#region public menthod (公開方法)
-		public void Connect()
+		public virtual void Connect()
 		{
 			if (!Status.IsConnection)
 			{
@@ -235,7 +236,7 @@ namespace Hanbo.Image.Grab
 		/// <summary>
 		/// 連續擷取
 		/// </summary>
-		public void Start()
+		public virtual void Start()
 		{
 			if (!Status.IsConnection)
 			{
@@ -311,7 +312,7 @@ namespace Hanbo.Image.Grab
 		/// <summary>
 		/// 停止擷取
 		/// </summary>
-		public void Cancel()
+		public virtual void Cancel()
 		{
 			if (_bgworker.IsBusy)
 				_bgworker.CancelAsync();
@@ -393,7 +394,7 @@ namespace Hanbo.Image.Grab
 			}
 		}
 		#endregion
-		private void setStatus(GrabInstruction instruction, GrabStage stage, GrabState state)
+		protected void setStatus(GrabInstruction instruction, GrabStage stage, GrabState state)
 		{
 			Status.Instruction = instruction;
 			Status.Stage = stage;

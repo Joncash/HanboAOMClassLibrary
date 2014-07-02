@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hanbo.Image.Grab
 {
-	public enum GrabStage { Initial, Closed, Connecting, Connected, Grabbing, Grabbed, ContinuouslyGrabbing };
+	public enum GrabStage { Initial, Closed, Connecting, Connected, Grabbing, Grabbed, ContinuouslyGrabbing, Stop };
 	public enum GrabState { Idle, Busy };
 	public enum GrabInstruction { Initialize, Connect, DisConnect, GrabImage, ContinuouslyGrabImage };
 	/// <summary>
