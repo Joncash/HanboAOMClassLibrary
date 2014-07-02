@@ -42,6 +42,10 @@ namespace Hanbo.Device.SingleInstance
 		public static void ReleaseGrabImageWorkingManInstance()
 		{
 			_grabImageManInstanceUsed = false;
+			if (_grabImageWorkingMan is PylonGrabImageWorkingMan)
+			{
+				_grabImageWorkingMan.Cancel();
+			}
 		}
 
 		public static GrabImageWorkingMan GetGrabImageWorkingManInstance()
