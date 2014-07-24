@@ -1,4 +1,5 @@
 ﻿using HalconDotNet;
+using System;
 using ViewROI;
 
 namespace MeasureModule
@@ -21,9 +22,16 @@ namespace MeasureModule
 		 若有 connected, 則被歸類進 "Edge 的點集合" 中
 		 
 		 */
+
+		/// <summary>
+		/// 演算法名稱
+		/// </summary>
 		private HTuple _filter = "lanser2";//default = canny
+		[Obsolete("請改用 MeasureAssistant.EdgesAlpha 參數")]
 		private HTuple _alpha = 0.5; //default = 1.0
 		private HTuple _low = 40;	//default = 20
+
+		[Obsolete("請改用 MeasureAssistant.EdgesGrayHigh 參數")]
 		private HTuple _high = 90;	//default = 40
 
 		#endregion
@@ -45,6 +53,7 @@ namespace MeasureModule
 		/*
 		 */
 
+		[Obsolete("請改用 MeasureAssistant.FitLineAlgorithm 參數")]
 		private HTuple _algorithm = "tukey";
 		private HTuple _maxNumPoints = -1;
 		private HTuple _clippingEndPoints = 0;
@@ -83,13 +92,22 @@ namespace MeasureModule
 			var roiModel = mRoi.getModelData();
 			var row = roiModel[0];
 			var column = roiModel[1];
-			var phi = roiModel[2];
+			var phi = roiModel[2].D * -1;//修正為 Retangle 2 的方向
 			var length1 = roiModel[3];
 			var length2 = roiModel[4];
 
 			HRegion region = new HRegion();
-			region.GenRectangle2(row.D, column.D, phi.D, length1.D, length2.D);
+			region.GenRectangle2(row.D, column.D, phi, length1.D, length2.D);
 			HOperatorSet.ReduceDomain(image, region, out imageReduced);
+			try
+			{
+				HOperatorSet.WriteImage(imageReduced, "tiff", 0, @"D:\ttt.tif");
+			}
+			catch (Exception)
+			{
+
+
+			}
 			var contoursSplit = extractEdges(imageReduced);
 
 			try
@@ -130,7 +148,9 @@ namespace MeasureModule
 			{
 				if (mMeasAssist.UseEdgeSubpix)
 				{
-					HOperatorSet.EdgesSubPix(imageReduced, out edges, _filter, _alpha, _low, _high);
+					var alpha = mMeasAssist.EdgesAlpha;
+					var grayHigh = mMeasAssist.EdgesGrayHigh;
+					HOperatorSet.EdgesSubPix(imageReduced, out edges, _filter, alpha, _low, grayHigh);
 				}
 				else
 				{
@@ -151,7 +171,9 @@ namespace MeasureModule
 			HOperatorSet.GenEmptyObj(out contoursSplit);
 
 			//Edgesubpix
-			HOperatorSet.EdgesSubPix(rectifyImage, out edges, _filter, _alpha, _low, _high);
+			var alpha = mMeasAssist.EdgesAlpha;
+			var grayHigh = mMeasAssist.EdgesGrayHigh;
+			HOperatorSet.EdgesSubPix(rectifyImage, out edges, _filter, alpha, _low, grayHigh);
 			HOperatorSet.SegmentContoursXld(edges, out contoursSplit, _mode, _smoothCont, _maxLineDist1, _maxLineDist2);
 			return fitline(contoursSplit);
 		}
@@ -172,11 +194,13 @@ namespace MeasureModule
 
 			HTuple distance, preDistance = 0.0;
 
+			var fitlineContourAlgorithm = (mMeasAssist != null) ? new HTuple(mMeasAssist.FitLineAlgorithm) : _algorithm;
 			HOperatorSet.CountObj(contoursSplit, out number);
 			for (HTuple hv_i = 1; hv_i.Continue(number, 1); hv_i = hv_i.TupleAdd(1))
 			{
 				HOperatorSet.SelectObj(contoursSplit, out objectSelected, hv_i);
-				HOperatorSet.FitLineContourXld(objectSelected, _algorithm, _maxNumPoints, _clippingEndPoints, _iterations, _clippingFactor,
+				HOperatorSet.FitLineContourXld(objectSelected
+					, fitlineContourAlgorithm, _maxNumPoints, _clippingEndPoints, _iterations, _clippingFactor,
 					out rowBegin, out colBegin, out rowEnd, out colEnd, out nr, out nc, out dist);
 
 				HOperatorSet.DistancePp(rowBegin, colBegin, rowEnd, colEnd, out distance);
